@@ -2,20 +2,230 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 100 100% 100%;
+    --foreground: 120 5% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 120 5% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 120 5% 10%;
+
+    --primary: 130 70% 40%;
+    --primary-foreground: 60 100% 97%;
+
+    --secondary: 84 60% 95%;
+    --secondary-foreground: 130 70% 30%;
+
+    --muted: 84 30% 95%;
+    --muted-foreground: 120 5% 45%;
+
+    --accent: 84 40% 90%;
+    --accent-foreground: 130 70% 30%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 100% 97%;
+
+    --border: 130 30% 85%;
+    --input: 130 30% 85%;
+    --ring: 130 70% 40%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 120 5% 10%;
+    --foreground: 60 100% 97%;
+
+    --card: 120 5% 12%;
+    --card-foreground: 60 100% 97%;
+
+    --popover: 120 5% 12%;
+    --popover-foreground: 60 100% 97%;
+
+    --primary: 130 70% 40%;
+    --primary-foreground: 60 100% 97%;
+
+    --secondary: 130 40% 20%;
+    --secondary-foreground: 60 100% 97%;
+
+    --muted: 130 40% 20%;
+    --muted-foreground: 120 5% 65%;
+
+    --accent: 130 40% 20%;
+    --accent-foreground: 60 100% 97%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 100% 97%;
+
+    --border: 130 40% 20%;
+    --input: 130 40% 20%;
+    --ring: 130 70% 60%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* Hide all scrollbars by default */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  /* Hide webkit scrollbars */
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Custom styling for ScrollArea component only */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    display: block;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(16, 185, 129, 0.5);
+    border-radius: 20px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(16, 185, 129, 0.7);
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(16, 185, 129, 0.5) transparent;
+  }
+
+  /* Focus styles for better accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-green-500 ring-offset-2 ring-offset-background transition-all;
+  }
+}
+
+@layer components {
+  .card-shadow {
+    @apply shadow-lg hover:shadow-xl transition-all duration-300;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold mb-6 text-gray-800 dark:text-gray-100;
+  }
+
+  .green-btn {
+    @apply bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .card-animated {
+    @apply transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl;
+  }
+
+  .card-3d {
+    @apply transform transition-all duration-300 hover:scale-105;
+    transform: perspective(1000px);
+  }
+
+  .card-3d:hover {
+    transform: perspective(1000px) rotateY(5deg) rotateX(2deg);
+    box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .hover-scale-tilt {
+    @apply transition-all duration-300;
+    transform-style: preserve-3d;
+  }
+
+  .hover-scale-tilt:hover {
+    transform: scale(1.05) perspective(500px) rotateX(2deg);
+  }
+
+  /* Enhanced navbar styles */
+  .nav-link {
+    @apply relative text-white hover:text-green-300 transition-colors duration-300;
+  }
+
+  .nav-link::after {
+    @apply content-[''] absolute left-0 bottom-0 w-0 h-0.5 bg-green-400 transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  /* Enhanced dropdown menu animations */
+  .dropdown-appear {
+    animation: dropdown-appear 0.2s ease-out forwards;
+  }
+
+  @keyframes dropdown-appear {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+#root {
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 1280px;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
 }

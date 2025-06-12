@@ -1,101 +1,118 @@
-import Image from "next/image";
+export const dynamic = "force-dynamic";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import {
+  dehydrate,
+  QueryClient,
+  InfiniteData,
+  HydrationBoundary,
+} from "@tanstack/react-query";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+import {
+  RoomData,
+  //  PropertyData,
+  CategoryCitiesLocations,
+} from "./types/types";
+
+import { getCategoryCitiesLocationDetails } from "./serverAction";
+
+import RoomsByCity from "@/app/components/home/RoomsByCity";
+import SmartSearch from "@/app/components/home/SmartSearch";
+// import CallToAction from "@/app/components/CallToAction";
+// import VehiclesByCity from "@/app/components/VehiclesByCity";
+// import PropertiesByType from "@/app/components/PropertiesByType";
+import ExploreCategories from "@/app/components/home/ExploreCategories";
+
+const Home = async () => {
+  const queryClient = new QueryClient();
+
+  try {
+    const {
+      city,
+      roomCityDetails,
+      roomCitiesLocations,
+    }: // propertyCityDetails,
+    // propertyCitiesLocations,
+    {
+      city: string;
+      roomCityDetails: RoomData[];
+      // propertyCityDetails: PropertyData[];
+      roomCitiesLocations: CategoryCitiesLocations;
+      // propertyCitiesLocations: CategoryCitiesLocations;
+    } = await getCategoryCitiesLocationDetails();
+
+    // queryClient.setQueryData<string>(["city"], city);
+
+    queryClient.setQueryData<CategoryCitiesLocations>(
+      ["roomCitiesLocations"],
+      roomCitiesLocations
+    );
+
+    queryClient.setQueryData<InfiniteData<RoomData[]>>([`room${city}`], {
+      pageParams: [0],
+      pages: [roomCityDetails],
+    });
+
+    // queryClient.setQueryData<InfiniteData<PropertyData[]>>(
+    //   [`property${city}`],
+    //   {
+    //     pageParams: [0],
+    //     pages: [propertyCityDetails],
+    //   }
+    // );
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <section className="flex-grow ">
+          <div className="relative bg-[url('/bg_images/image_1.jpg')] bg-cover bg-center h-auto min-h-[800px] flex items-center ">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-green-900/30 to-black/70 backdrop-blur-[1px]"></div>
+
+            <div className="max-w-7xl mx-auto text-center relative z-10 px-4 sm:px-6 w-full">
+              <div>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-tight">
+                  <span className="text-white drop-shadow-lg relative inline-block">
+                    Find Your Perfect Space in Nepal
+                    <span className="absolute -inset-1 rounded-lg bg-white/5 blur-md -z-10"></span>
+                  </span>
+                </h1>
+
+                <p className="text-base sm:text-lg md:text-xl text-green-50 mb-8 max-w-3xl mx-auto font-light drop-shadow-md">
+                  Discover rooms, properties, vehicles and more - all in one
+                  place with
+                  <span className="font-bold text-white relative ml-2 inline-block">
+                    AfnoSansaar
+                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-green-300/0 via-green-300 to-green-300/0"></span>
+                  </span>
+                </p>
+
+                {/* Smart Search component */}
+                <div className="mt-10 animate-fade-in [animation-delay:0.5s] transform transition-transform">
+                  <SmartSearch />
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative elements */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent"></div>
+            <div className="absolute top-1/4 left-10 w-32 h-32 rounded-full bg-green-500/10 blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-1/3 right-10 w-24 h-24 rounded-full bg-green-300/10 blur-2xl animate-pulse [animation-delay:1.5s]"></div>
+          </div>
+
+          <ExploreCategories />
+          <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
+          {/* <PropertiesByType /> */}
+          {/* <VehiclesByCity /> */}
+          {/* <CallToAction /> */}
+        </section>
+      </HydrationBoundary>
+    );
+  } catch (error) {
+    console.error("Failed to load details:", error);
+
+    return (
+      <div className="w-screen h-screen flex items-center justify-center text-red-500 p-4 text-center">
+        Failed to load data. Please try again later.
+      </div>
+    );
+  }
+};
+
+export default Home;
