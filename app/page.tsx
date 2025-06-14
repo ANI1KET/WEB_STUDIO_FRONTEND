@@ -98,7 +98,7 @@ const Home = async () => {
           </div>
 
           {/* <ExploreCategories /> */}
-          <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
+          {/* <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} /> */}
           {/* <PropertiesByType /> */}
           {/* <VehiclesByCity /> */}
           {/* <CallToAction /> */}
