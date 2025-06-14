@@ -1,6 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Permission } from "@prisma/client";
 import { useState, useEffect } from "react";
@@ -13,14 +14,22 @@ import {
   FetchCategoryCitiesLocations,
 } from "./hooks/SmartSearch";
 
-import CitySelector from "./SmartSearch/CitySelector";
-import SearchButton from "./SmartSearch/SearchButton";
-import FilterToggle from "./SmartSearch/FilterToggle";
-import SearchFilters from "./SmartSearch/SearchFilters";
-import CategorySelector from "./SmartSearch/CategorySelector";
-import LocationSelector from "./SmartSearch/LocationSelector";
-import SmartSearchHeader from "./SmartSearch/SmartSearchHeader";
-import PropertyTypeSelector from "./SmartSearch/PropertyTypeSelector";
+const CategorySelector = dynamic(
+  () => import("./SmartSearch/CategorySelector")
+);
+const LocationSelector = dynamic(
+  () => import("./SmartSearch/LocationSelector")
+);
+const SmartSearchHeader = dynamic(
+  () => import("./SmartSearch/SmartSearchHeader")
+);
+const PropertyTypeSelector = dynamic(
+  () => import("./SmartSearch/PropertyTypeSelector")
+);
+const CitySelector = dynamic(() => import("./SmartSearch/CitySelector"));
+const SearchButton = dynamic(() => import("./SmartSearch/SearchButton"));
+const FilterToggle = dynamic(() => import("./SmartSearch/FilterToggle"));
+const SearchFilters = dynamic(() => import("./SmartSearch/SearchFilters"));
 
 const SmartSearch = () => {
   const router = useRouter();

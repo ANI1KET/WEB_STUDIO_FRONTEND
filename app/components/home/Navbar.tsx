@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useState, useEffect, useCallback } from "react";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 import { useIsMobile } from "@/app/hooks/use-mobile";
 // import { propertyItems, roomItems, vehicleItems } from "./config/Navbar";
@@ -16,54 +17,29 @@ const ListingsDropdown = dynamic(() => import("./Navbar/ListingsDropdown"));
 
 const Navbar = () => {
   const { data } = useSession();
-
   const isMobile = useIsMobile();
+
+  const { scrollYProgress } = useScroll();
   const [visible, setVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
-  const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
+  const updateVisibility = useCallback(
+    (current: number) => {
+      const previous = scrollYProgress.getPrevious() ?? 0;
+      const direction = current - previous;
+      const threshold = window.innerHeight * 0.05;
 
-  useEffect(() => {
-    let ticking = false;
+      setVisible(window.scrollY < threshold || direction < 0);
+      setScrolled(window.scrollY > 20);
+    },
+    [scrollYProgress]
+  );
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScrollPos = window.scrollY;
-
-          const shouldBeVisible =
-            (prevScrollPos > currentScrollPos &&
-              prevScrollPos - currentScrollPos > 5) ||
-            currentScrollPos < 10;
-
-          if (shouldBeVisible !== visible) {
-            setVisible(shouldBeVisible);
-          }
-
-          const shouldBeScrolled = currentScrollPos > 20;
-          if (shouldBeScrolled !== scrolled) {
-            setScrolled(shouldBeScrolled);
-          }
-
-          setPrevScrollPos(currentScrollPos);
-          ticking = false;
-        });
-
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos, visible, scrolled]);
+  useMotionValueEvent(scrollYProgress, "change", updateVisibility);
 
   // Close mobile menu when switching to desktop view
   useEffect(() => {
@@ -82,10 +58,11 @@ const Navbar = () => {
   }, [isMobile, mobileMenuOpen]);
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: 0 }}
+      animate={{ y: visible ? 0 : -80 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out ${
-        visible ? "translate-y-0" : "-translate-y-full"
-      } ${
         scrolled
           ? "bg-white/98 backdrop-blur-xl shadow-xl border-b border-green-100"
           : "bg-emerald-400 backdrop-blur-md shadow-2xl"
@@ -161,7 +138,7 @@ const Navbar = () => {
 
       {/* Mobile menu - Enhanced responsiveness */}
       <MobileMenu isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
-    </nav>
+    </motion.nav>
   );
 };
 

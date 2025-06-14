@@ -23,6 +23,7 @@
     "cloudinary": "^2.6.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.18.1",
     "googleapis": "^150.0.1",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.511.0",
