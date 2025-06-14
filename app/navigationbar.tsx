@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 // import Footer from "@/components/Footer";
-import Navbar from "./components/home/Navbar";
+// import Navbar from "./components/home/Navbar";
 
 const NavigationBar = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
@@ -31,7 +31,7 @@ const NavigationBar = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <main className="min-h-screen flex flex-col overflow-x-hidden">
-      <Navbar />
+      {/* <Navbar /> */}
 
       <section className="pt-16">{children}</section>
 
