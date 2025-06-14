@@ -16,7 +16,7 @@ import {
 import { getCategoryCitiesLocationDetails } from "./serverAction";
 
 import RoomsByCity from "@/app/components/home/RoomsByCity";
-import SmartSearch from "@/app/components/home/SmartSearch";
+// import SmartSearch from "@/app/components/home/SmartSearch";
 // import CallToAction from "@/app/components/CallToAction";
 // import VehiclesByCity from "@/app/components/VehiclesByCity";
 // import PropertiesByType from "@/app/components/PropertiesByType";
@@ -86,7 +86,7 @@ const Home = async () => {
 
                 {/* Smart Search component */}
                 <div className="mt-10 animate-fade-in [animation-delay:0.5s] transform transition-transform">
-                  <SmartSearch />
+                  {/* <SmartSearch /> */}
                 </div>
               </div>
             </div>

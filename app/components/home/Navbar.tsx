@@ -32,28 +32,38 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollPos = window.scrollY;
 
-      // Set visible state based on scroll direction with smoother threshold
-      setVisible(
-        (prevScrollPos > currentScrollPos &&
-          prevScrollPos - currentScrollPos > 5) ||
-          currentScrollPos < 10
-      );
+          const shouldBeVisible =
+            (prevScrollPos > currentScrollPos &&
+              prevScrollPos - currentScrollPos > 5) ||
+            currentScrollPos < 10;
 
-      // Set scrolled state for background change
-      setScrolled(currentScrollPos > 20);
+          if (shouldBeVisible !== visible) {
+            setVisible(shouldBeVisible);
+          }
 
-      // Update previous scroll position with a small delay for smoother transitions
-      setTimeout(() => {
-        setPrevScrollPos(currentScrollPos);
-      }, 10);
+          const shouldBeScrolled = currentScrollPos > 20;
+          if (shouldBeScrolled !== scrolled) {
+            setScrolled(shouldBeScrolled);
+          }
+
+          setPrevScrollPos(currentScrollPos);
+          ticking = false;
+        });
+
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos]);
+  }, [prevScrollPos, visible, scrolled]);
 
   // Close mobile menu when switching to desktop view
   useEffect(() => {
@@ -61,7 +71,6 @@ const Navbar = () => {
       setMobileMenuOpen(false);
     }
 
-    // Handle resize events to close mobile menu
     const handleResize = () => {
       if (window.innerWidth >= 768 && mobileMenuOpen) {
         setMobileMenuOpen(false);
