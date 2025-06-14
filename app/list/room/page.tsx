@@ -2,14 +2,18 @@
 
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-// import { useMutation } from "@tanstack/react-query";
-import { FurnishingStatusEnum } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { FurnishingStatusEnum, Role } from "@prisma/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
   RoomAmenities,
   RoomWithMedia,
-  // RoomWithMediaUrl,
+  RoomWithMediaUrl,
 } from "@/app/types/types";
+import { upload_Video } from "../uploadUtils";
+import { SubmitRoomDetails, upload_Images } from "../ServerAction";
 
 import { Button } from "@/app/components/ui/button";
 import MediaUploadSection from "@/app/components/list/room/MediaUploadSection";
@@ -19,6 +23,10 @@ import ContactDescriptionSection from "@/app/components/list/room/ContactDescrip
 import AmenitiesFurnishingSection from "@/app/components/list/room/AmenitiesFurnishingSection";
 
 const Room = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
+
   const [furnishingStatus, setFurnishingStatus] =
     useState<FurnishingStatusEnum>("SEMIFURNISHED");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -56,59 +64,50 @@ const Room = () => {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // const { mutate } = useMutation({
-  //   mutationFn: (data: RoomWithMediaUrl) => SubmitRoomDetails(data),
-  //   onSuccess: (response) => {
-  //     queryClient.setQueryData(["CategoryDetails", "room"], response);
-  //     reset();
-  //     setIsComplete(false);
-  //     router.push(`/listed/room/${btoa(response.id)}`);
-  //   },
-  //   onError: (error) => {
-  //     setIsComplete(false);
-  //     console.error("Mutation failed:", error);
-  //   },
-  // });
+  const { mutate } = useMutation({
+    mutationFn: (data: RoomWithMediaUrl) => SubmitRoomDetails(data),
+    onSuccess: (response) => {
+      queryClient.setQueryData(["CategoryDetails", "room"], response);
+      router.push(`/listed/room/${btoa(response.id)}`);
+    },
+    onError: (error) => {
+      console.error("Mutation failed:", error);
+    },
+  });
 
-  const onSubmit = (data: RoomWithMedia) => {
+  const onSubmit = async (data: RoomWithMedia) => {
     data.city =
       data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
     data.location =
       data.location.charAt(0).toUpperCase() +
       data.location.slice(1).toLowerCase();
 
-    // try {
-    //   const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
-    //     upload_Video(data.videos),
-    //     upload_Images("room", data.photos),
-    //   ]);
+    try {
+      const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
+        upload_Video(data.videos),
+        upload_Images("room", selectedImages),
+      ]);
 
-    //   const ImageUrls =
-    //     uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
-    //   const VideoUrl =
-    //     uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
-    //       ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
-    //       : null;
+      const ImageUrls =
+        uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
+      const VideoUrl =
+        uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
+          ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
+          : null;
 
-    //   mutate({
-    //     ...data,
-    //     photos: ImageUrls,
-    //     videos: VideoUrl ?? null,
-    //     postedBy: session?.user.role as Role,
-    //     listerId: session?.user.userId as string,
-    //   });
-    // } catch (error) {
-    //   console.error(
-    //     error instanceof Error ? error.message : "An unknown error occurred"
-    //   );
-    // }
-    // const submissionData = {
-    //   ...data,
-    //   furnishingStatus,
-    //   images: selectedImages,
-    //   amenities: selectedAmenities,
-    // };
-    // console.log("Room listing data:", submissionData);
+      mutate({
+        ...data,
+        furnishingStatus,
+        photos: ImageUrls,
+        videos: VideoUrl ?? null,
+        postedBy: session?.user.role as Role,
+        listerId: session?.user.userId as string,
+      });
+    } catch (error) {
+      console.error(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      );
+    }
   };
 
   return (

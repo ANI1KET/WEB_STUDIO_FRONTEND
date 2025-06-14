@@ -18,10 +18,10 @@ export const authOptions: NextAuthOptions = {
         : "next-auth.session-token",
       options: {
         path: "/",
-        httpOnly: true,
         secure: isProd,
+        httpOnly: true,
         sameSite: "lax",
-        ...(isProd && { domain: ".aniketrouniyar.com.np" }),
+        domain: isProd ? ".aniketrouniyar.com.np" : undefined,
       },
     },
     // callbackUrl: {
@@ -36,12 +36,13 @@ export const authOptions: NextAuthOptions = {
     //   },
     // },
     csrfToken: {
-      name: isProd ? "__Host-next-auth.csrf-token" : "next-auth.csrf-token",
+      name: "next-auth.csrf-token",
       options: {
         path: "/",
         secure: isProd,
         httpOnly: false,
         sameSite: "lax",
+        domain: isProd ? ".aniketrouniyar.com.np" : undefined,
       },
     },
   },
@@ -73,8 +74,8 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "text", placeholder: "Email" },
         password: {
-          label: "Password",
           type: "password",
+          label: "Password",
           placeholder: "Password",
         },
       },
@@ -94,7 +95,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           if (!user.password) {
-            throw new Error("Password is not Created");
+            throw new Error("Password not set. Please set it to log in.");
           }
 
           const isPasswordCorrect = await bcrypt.compare(
@@ -102,22 +103,21 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
 
-          if (isPasswordCorrect) {
-            const { id, email, name, number, role, permission, promoting } =
-              user;
-
-            return {
-              id,
-              name,
-              role,
-              email,
-              promoting,
-              permission,
-              number: number ?? undefined,
-            };
+          if (!isPasswordCorrect) {
+            throw new Error("Incoorect Email or Password");
           }
 
-          throw new Error("Incoorect Email or Password");
+          const { id, email, name, number, role, permission, promoting } = user;
+
+          return {
+            id,
+            name,
+            role,
+            email,
+            promoting,
+            permission,
+            number: number ?? undefined,
+          };
         } catch (error: unknown) {
           if (error instanceof Error) {
             throw new Error(error.message);

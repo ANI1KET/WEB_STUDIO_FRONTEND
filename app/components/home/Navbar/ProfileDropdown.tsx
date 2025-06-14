@@ -103,6 +103,8 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
               </div>
             </DropdownMenuItem>
 
+            <DropdownMenuSeparator className="my-2 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
+
             {canAccessDashboard(session.user.role) && (
               <DropdownMenuItem
                 onClick={() =>
@@ -124,8 +126,6 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
                 </div>
               </DropdownMenuItem>
             )}
-
-            <DropdownMenuSeparator className="my-2 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
             {canPromote(session.user.role) && (
               <DropdownMenuItem
