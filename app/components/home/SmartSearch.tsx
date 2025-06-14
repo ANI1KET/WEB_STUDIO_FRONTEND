@@ -6,13 +6,12 @@ import { useRouter } from "next/navigation";
 import { Permission } from "@prisma/client";
 import { useState, useEffect } from "react";
 
-import { PropertyType } from "@/app/types/types";
-import { propertyTypes, categorySearchData } from "./config/SmartSearch";
-
 import {
   FetchCategoryCityLocations,
   FetchCategoryCitiesLocations,
 } from "./hooks/SmartSearch";
+import { PropertyType } from "@/app/types/types";
+import { propertyTypes, categorySearchData } from "./config/SmartSearch";
 
 const CategorySelector = dynamic(
   () => import("./SmartSearch/CategorySelector")

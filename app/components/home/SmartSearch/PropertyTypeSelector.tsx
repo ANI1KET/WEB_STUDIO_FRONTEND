@@ -113,10 +113,10 @@ const PropertyTypeSelector = ({
                   key={value}
                   onClick={() => handlePropertyTypeSelect(value)}
                   sx={{
+                    py: 1,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
-                    py: 1,
                   }}
                 >
                   {value}

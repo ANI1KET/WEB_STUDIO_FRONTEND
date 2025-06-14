@@ -1,15 +1,18 @@
 "use client";
 
 import { toast } from "sonner";
+import dynamic from "next/dynamic";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constant";
 import { getCategoryDetails } from "./serverAction/RoomsByCity";
 
-import RoomCard from "./RoomsByCity/RoomCard";
-import RoomCitySelector from "./RoomsByCity/RoomCitySelector";
-import { RoomData } from "@/app/types/types";
+const RoomCitySelector = dynamic(
+  () => import("./RoomsByCity/RoomCitySelector")
+);
+const RoomCard = dynamic(() => import("./RoomsByCity/RoomCard"));
 
 const RoomsByCity: React.FC<{
   city: string;

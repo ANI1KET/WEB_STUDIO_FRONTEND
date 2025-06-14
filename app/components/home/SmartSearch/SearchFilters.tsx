@@ -1,14 +1,20 @@
 "use client";
 
 import { memo } from "react";
-
+import dynamic from "next/dynamic";
 import { Permission } from "@prisma/client";
 
-import {
-  FilterHeader,
-  RoomFilterComponent,
-  PropertyFilterComponent,
-} from "./filters";
+type FilterComponents =
+  | "FilterHeader"
+  | "RoomFilterComponent"
+  | "PropertyFilterComponent";
+
+const loadFilter = (component: FilterComponents) =>
+  dynamic(() => import("./filters").then((mod) => mod[component]));
+
+const FilterHeader = loadFilter("FilterHeader");
+const RoomFilterComponent = loadFilter("RoomFilterComponent");
+const PropertyFilterComponent = loadFilter("PropertyFilterComponent");
 
 interface SearchFiltersProps {
   category: Permission | "";

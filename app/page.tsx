@@ -15,7 +15,7 @@ import {
 
 import { getCategoryCitiesLocationDetails } from "./serverAction";
 
-// import RoomsByCity from "@/app/components/home/RoomsByCity";
+import RoomsByCity from "@/app/components/home/RoomsByCity";
 import SmartSearch from "@/app/components/home/SmartSearch";
 // import CallToAction from "@/app/components/CallToAction";
 // import VehiclesByCity from "@/app/components/VehiclesByCity";
@@ -98,7 +98,7 @@ const Home = async () => {
           </div>
 
           {/* <ExploreCategories /> */}
-          {/* <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} /> */}
+          <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
           {/* <PropertiesByType /> */}
           {/* <VehiclesByCity /> */}
           {/* <CallToAction /> */}
