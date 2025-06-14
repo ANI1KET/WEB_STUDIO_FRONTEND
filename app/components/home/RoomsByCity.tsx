@@ -81,7 +81,8 @@ const RoomsByCity: React.FC<{
   }, [handleLoadMore]);
 
   return (
-    <section className="py-8 sm:py-12 px-4 overflow-hidden bg-[url('https://images.unsplash.com/photo-1554995207-c18c203602cb')] bg-cover bg-fixed bg-center relative">
+    <section className="py-8 sm:py-12 px-4 overflow-hidden bg-cover bg-fixed bg-center relative">
+      {/* <section className="py-8 sm:py-12 px-4 overflow-hidden bg-[url('/bg_images/image_3.jpg')] bg-cover bg-fixed bg-center relative"> */}
       <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-green-50/50 to-white/60 backdrop-blur-[1px]"></div>
 
       <div className="max-w-7xl mx-auto relative">

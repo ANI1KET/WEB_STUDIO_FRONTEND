@@ -6,7 +6,7 @@ import { Box, Container, BoxProps } from "@mui/material";
 interface BackgroundSectionProps extends BoxProps {
   blurAmount: number;
   overlayColor?: string;
-  backgroundImage: string;
+  backgroundImage?: string;
   children: React.ReactNode;
   containerMaxWidth?: "xs" | "sm" | "md" | "lg" | "xl" | false;
 }

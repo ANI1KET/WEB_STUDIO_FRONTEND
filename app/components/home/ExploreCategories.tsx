@@ -71,7 +71,7 @@ const ExploreCategories = () => {
     <BackgroundSection
       blurAmount={1.5}
       overlayColor="rgba(0,0,0,0.6)"
-      backgroundImage="/bg_images/image_2.jpg"
+      // backgroundImage="/bg_images/image_2.jpg"
       sx={{
         py: { xs: 4, sm: 6, md: 8 },
         px: { xs: 1, sm: 2, md: 2 },
