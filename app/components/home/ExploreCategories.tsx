@@ -12,23 +12,12 @@ import {
 } from "./config/ExploreCategories";
 
 const ExploreHeader = dynamic(
-  () => import("./ExploreCategories/ExploreHeader"),
-  {
-    ssr: false,
-  }
+  () => import("./ExploreCategories/ExploreHeader")
 );
 const BackgroundSection = dynamic(
-  () => import("./ExploreCategories/BackgroundSection"),
-  {
-    ssr: false,
-  }
+  () => import("./ExploreCategories/BackgroundSection")
 );
-const CategoryItem = dynamic(() => import("./ExploreCategories/CategoryItem"), {
-  ssr: false,
-});
-// import CategoryItem from "./ExploreCategories/CategoryItem";
-// import ExploreHeader from "./ExploreCategories/ExploreHeader";
-// import BackgroundSection from "./ExploreCategories/BackgroundSection";
+const CategoryItem = dynamic(() => import("./ExploreCategories/CategoryItem"));
 
 const ExploreCategories = () => {
   const [activeImageIndex, setActiveImageIndex] = useState({
