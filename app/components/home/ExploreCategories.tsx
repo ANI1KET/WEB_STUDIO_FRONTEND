@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { Container } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
@@ -10,9 +11,24 @@ import {
   propertyImages,
 } from "./config/ExploreCategories";
 
-import CategoryItem from "./ExploreCategories/CategoryItem";
-import ExploreHeader from "./ExploreCategories/ExploreHeader";
-import BackgroundSection from "./ExploreCategories/BackgroundSection";
+const ExploreHeader = dynamic(
+  () => import("./ExploreCategories/ExploreHeader"),
+  {
+    ssr: false,
+  }
+);
+const BackgroundSection = dynamic(
+  () => import("./ExploreCategories/BackgroundSection"),
+  {
+    ssr: false,
+  }
+);
+const CategoryItem = dynamic(() => import("./ExploreCategories/CategoryItem"), {
+  ssr: false,
+});
+// import CategoryItem from "./ExploreCategories/CategoryItem";
+// import ExploreHeader from "./ExploreCategories/ExploreHeader";
+// import BackgroundSection from "./ExploreCategories/BackgroundSection";
 
 const ExploreCategories = () => {
   const [activeImageIndex, setActiveImageIndex] = useState({
@@ -71,7 +87,7 @@ const ExploreCategories = () => {
     <BackgroundSection
       blurAmount={1.5}
       overlayColor="rgba(0,0,0,0.6)"
-      // backgroundImage="/bg_images/image_2.jpg"
+      backgroundImage="/bg_images/image_2.webp"
       sx={{
         py: { xs: 4, sm: 6, md: 8 },
         px: { xs: 1, sm: 2, md: 2 },
