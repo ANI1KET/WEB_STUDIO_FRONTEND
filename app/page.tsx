@@ -62,7 +62,7 @@ const Home = async () => {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <section className="flex-grow ">
-          <div className="relative bg-[url('/bg_images/image_1.jpg')] bg-cover bg-center min-h-[calc(100vh-4rem)] flex items-center ">
+          <div className="relative bg-[url('/bg_images/image_1.webp')] bg-cover bg-center min-h-[calc(100vh-4rem)] flex items-center ">
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-green-900/30 to-black/70 backdrop-blur-[1px]"></div>
 
             <div className="max-w-7xl mx-auto text-center relative z-10 w-full">
