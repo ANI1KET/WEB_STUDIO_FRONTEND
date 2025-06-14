@@ -14,21 +14,33 @@ import { PropertyType } from "@/app/types/types";
 import { propertyTypes, categorySearchData } from "./config/SmartSearch";
 
 const CategorySelector = dynamic(
-  () => import("./SmartSearch/CategorySelector")
+  () => import("./SmartSearch/CategorySelector"),
+  { ssr: false }
 );
 const LocationSelector = dynamic(
-  () => import("./SmartSearch/LocationSelector")
+  () => import("./SmartSearch/LocationSelector"),
+  { ssr: false }
 );
 const SmartSearchHeader = dynamic(
-  () => import("./SmartSearch/SmartSearchHeader")
+  () => import("./SmartSearch/SmartSearchHeader"),
+  { ssr: false }
 );
 const PropertyTypeSelector = dynamic(
-  () => import("./SmartSearch/PropertyTypeSelector")
+  () => import("./SmartSearch/PropertyTypeSelector"),
+  { ssr: false }
 );
-const CitySelector = dynamic(() => import("./SmartSearch/CitySelector"));
-const SearchButton = dynamic(() => import("./SmartSearch/SearchButton"));
-const FilterToggle = dynamic(() => import("./SmartSearch/FilterToggle"));
-const SearchFilters = dynamic(() => import("./SmartSearch/SearchFilters"));
+const CitySelector = dynamic(() => import("./SmartSearch/CitySelector"), {
+  ssr: false,
+});
+const SearchButton = dynamic(() => import("./SmartSearch/SearchButton"), {
+  ssr: false,
+});
+const FilterToggle = dynamic(() => import("./SmartSearch/FilterToggle"), {
+  ssr: false,
+});
+const SearchFilters = dynamic(() => import("./SmartSearch/SearchFilters"), {
+  ssr: false,
+});
 
 const SmartSearch = () => {
   const router = useRouter();

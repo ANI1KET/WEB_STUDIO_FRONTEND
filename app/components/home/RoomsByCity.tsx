@@ -10,9 +10,12 @@ import { PAGE_SIZE } from "@/app/lib/constant";
 import { getCategoryDetails } from "./serverAction/RoomsByCity";
 
 const RoomCitySelector = dynamic(
-  () => import("./RoomsByCity/RoomCitySelector")
+  () => import("./RoomsByCity/RoomCitySelector"),
+  { ssr: false }
 );
-const RoomCard = dynamic(() => import("./RoomsByCity/RoomCard"));
+const RoomCard = dynamic(() => import("./RoomsByCity/RoomCard"), {
+  ssr: false,
+});
 
 const RoomsByCity: React.FC<{
   city: string;
@@ -84,8 +87,7 @@ const RoomsByCity: React.FC<{
   }, [handleLoadMore]);
 
   return (
-    <section className="py-8 sm:py-12 px-4 overflow-hidden bg-cover bg-fixed bg-center relative">
-      {/* <section className="py-8 sm:py-12 px-4 overflow-hidden bg-[url('/bg_images/image_3.jpg')] bg-cover bg-fixed bg-center relative"> */}
+    <section className="py-8 sm:py-12 px-4 overflow-hidden bg-[url('/bg_images/image_3.jpg')] bg-cover bg-fixed bg-center relative">
       <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-green-50/50 to-white/60 backdrop-blur-[1px]"></div>
 
       <div className="max-w-7xl mx-auto relative">

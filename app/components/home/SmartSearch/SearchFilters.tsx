@@ -10,8 +10,9 @@ type FilterComponents =
   | "PropertyFilterComponent";
 
 const loadFilter = (component: FilterComponents) =>
-  dynamic(() => import("./filters").then((mod) => mod[component]));
-
+  dynamic(() => import("./filters").then((mod) => mod[component]), {
+    ssr: false,
+  });
 const FilterHeader = loadFilter("FilterHeader");
 const RoomFilterComponent = loadFilter("RoomFilterComponent");
 const PropertyFilterComponent = loadFilter("PropertyFilterComponent");
