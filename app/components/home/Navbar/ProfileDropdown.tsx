@@ -107,14 +107,16 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
 
             {canAccessDashboard(session.user.role) && (
               <DropdownMenuItem
-                onClick={() =>
+                onClick={() => {
+                  const hostname = window.location.hostname;
+                  const parts = hostname.split(".");
+                  const baseDomain = parts.slice(-3).join(".");
+
                   window.open(
-                    `https://dashboard.${
-                      window.location.hostname
-                    }/${session.user.role?.toLowerCase()}`,
+                    `https://dashboard.${baseDomain}/${session.user.role?.toLowerCase()}`,
                     "_blank"
-                  )
-                }
+                  );
+                }}
                 className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
               >
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-200 shadow-sm">
@@ -129,12 +131,13 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
 
             {canPromote(session.user.role) && (
               <DropdownMenuItem
-                onClick={() =>
-                  window.open(
-                    `https://promote.${window.location.hostname}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => {
+                  const hostname = window.location.hostname;
+                  const parts = hostname.split(".");
+                  const baseDomain = parts.slice(-3).join(".");
+
+                  window.open(`https://promote.${baseDomain}`, "_blank");
+                }}
                 className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
               >
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-200 rounded-lg group-hover:from-green-200 group-hover:to-emerald-300 transition-all duration-200 shadow-sm">

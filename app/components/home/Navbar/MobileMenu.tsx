@@ -144,14 +144,16 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   <MobileNavItem
                     label="Dashboard"
                     description="View your overview"
-                    onClick={() =>
+                    onClick={() => {
+                      const hostname = window.location.hostname;
+                      const parts = hostname.split(".");
+                      const baseDomain = parts.slice(-3).join(".");
+
                       window.open(
-                        `https://dashboard.${
-                          window.location.hostname
-                        }/${session.user.role?.toLowerCase()}`,
+                        `https://dashboard.${baseDomain}/${session.user.role?.toLowerCase()}`,
                         "_blank"
-                      )
-                    }
+                      );
+                    }}
                     icon={
                       <LayoutDashboard size={18} className="text-purple-600" />
                     }
@@ -162,12 +164,13 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   <MobileNavItem
                     label="Promote Listings"
                     description="Boost visibility"
-                    onClick={() =>
-                      window.open(
-                        `https://promote.${window.location.hostname}`,
-                        "_blank"
-                      )
-                    }
+                    onClick={() => {
+                      const hostname = window.location.hostname;
+                      const parts = hostname.split(".");
+                      const baseDomain = parts.slice(-3).join(".");
+
+                      window.open(`https://promote.${baseDomain}`, "_blank");
+                    }}
                     icon={<Rocket size={18} className="text-green-600" />}
                   />
                 )}

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
@@ -83,7 +84,7 @@ const Navbar = () => {
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Logo - Enhanced with gradient */}
-          <div className="flex-shrink-0 flex items-center group">
+          <Link href={"/"} className="flex-shrink-0 flex items-center group">
             <h1 className="text-xl lg:text-2xl font-bold flex items-center cursor-pointer transition-all duration-300 hover:scale-105">
               <span
                 className={
@@ -100,7 +101,7 @@ const Navbar = () => {
                 Sansaar
               </span>
             </h1>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
