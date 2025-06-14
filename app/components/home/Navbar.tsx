@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 import { useIsMobile } from "@/app/hooks/use-mobile";
 // import { propertyItems, roomItems, vehicleItems } from "./config/Navbar";
 
-import MobileMenu from "./Navbar/MobileMenu";
-import NavbarDropdown from "./Navbar/NavbarDropdown";
-import ProfileDropdown from "./Navbar/ProfileDropdown";
-import MobileMenuButton from "./Navbar/MobileMenuButton";
-import ListingsDropdown from "./Navbar/ListingsDropdown";
+const MobileMenu = dynamic(() => import("./Navbar/MobileMenu"));
+const NavbarDropdown = dynamic(() => import("./Navbar/NavbarDropdown"));
+const ProfileDropdown = dynamic(() => import("./Navbar/ProfileDropdown"));
+const MobileMenuButton = dynamic(() => import("./Navbar/MobileMenuButton"));
+const ListingsDropdown = dynamic(() => import("./Navbar/ListingsDropdown"));
 
 const Navbar = () => {
   const { data } = useSession();
