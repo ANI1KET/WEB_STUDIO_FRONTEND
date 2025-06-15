@@ -57,6 +57,10 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             errors={errors}
             label="Bedrooms"
             register={register}
+            validation={{
+              valueAsNumber: true,
+              required: "Bedroom is required",
+            }}
           />
           <FormField
             min={0}
@@ -67,6 +71,10 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             placeholder="0"
             errors={errors}
             register={register}
+            validation={{
+              valueAsNumber: true,
+              required: "Hall is required",
+            }}
           />
           <FormField
             min={0}
@@ -77,6 +85,10 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             errors={errors}
             label="Kitchens"
             register={register}
+            validation={{
+              valueAsNumber: true,
+              required: "Kitchen is required",
+            }}
           />
           <FormField
             min={0}
@@ -87,6 +99,10 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             errors={errors}
             label="Bathrooms"
             register={register}
+            validation={{
+              valueAsNumber: true,
+              required: "Bathroom is required",
+            }}
           />
         </div>
 
@@ -100,8 +116,12 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             name="minCapacity"
             register={register}
             label="Min Capacity"
+            validation={{
+              valueAsNumber: true,
+              required: "Min Capacity is required",
+              min: { value: 1, message: "Min Capacity must be at least 1" },
+            }}
           />
-
           <FormField
             min={1}
             required
@@ -112,10 +132,11 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             register={register}
             label="Max Capacity"
             validation={{
+              valueAsNumber: true,
               required: "Max Capacity is required",
-              min: { value: 1, message: "Min value is 1" },
+              min: { value: 1, message: "Max Capacity must be at least 1" },
               validate: (value) =>
-                Number(value) > Number(getValues("minCapacity")) ||
+                Number(value) > getValues("minCapacity") ||
                 "Max Capacity must be > Min Capacity",
             }}
           />
@@ -143,6 +164,11 @@ const RoomDetailsSection: React.FC<RoomDetailsSectionProps> = ({
             register={register}
             placeholder="25000"
             label="Monthly Rent (NPR)"
+            validation={{
+              valueAsNumber: true,
+              required: "Price is required",
+              min: { value: 1, message: "Price must be at least 1" },
+            }}
           />
         </div>
       </CardContent>

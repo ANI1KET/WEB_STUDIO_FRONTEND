@@ -51,7 +51,7 @@ model User {
   password String?
 
   // ENUM
-  role       Role         @default(ADMIN)
+  role       Role         @default(USER)
   permission Permission[] @default([])
   promoting  Permission[] @default([])
 

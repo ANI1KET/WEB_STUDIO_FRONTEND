@@ -12,18 +12,20 @@ import {
   CardContent,
 } from "@/app/components/ui/card";
 import { Label } from "@/app/components/ui/label";
-import { UseFormRegister } from "react-hook-form";
 import { Button } from "@/app/components/ui/button";
+import { FieldErrors, UseFormRegister } from "react-hook-form";
 
 interface MediaUploadSectionProps {
   selectedImages: File[];
   selectedVideo: File | undefined;
+  errors: FieldErrors<RoomWithMedia>;
   onRemoveImage: (index: number) => void;
   register: UseFormRegister<RoomWithMedia>;
   onImageUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function MediaUploadSection({
+  errors,
   register,
   onImageUpload,
   onRemoveImage,
@@ -43,7 +45,7 @@ function MediaUploadSection({
         {/* Image Upload */}
         <div>
           <Label className="text-xs font-medium text-gray-700 mb-2 block">
-            Room Images
+            Room Images <span className="text-red-500">*</span>
           </Label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 hover:bg-gray-50 transition-all duration-300">
             <input
@@ -52,6 +54,9 @@ function MediaUploadSection({
               accept="image/*"
               id="image-upload"
               className="hidden"
+              {...register("photos", {
+                required: "Image is required",
+              })}
               onChange={onImageUpload}
             />
             <Label htmlFor="image-upload" className="cursor-pointer">
@@ -60,6 +65,11 @@ function MediaUploadSection({
                 Click to upload room images
               </p>
             </Label>
+            {errors.photos && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.photos.message}
+              </p>
+            )}
           </div>
 
           {selectedImages.length > 0 && (

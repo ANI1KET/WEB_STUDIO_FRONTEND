@@ -43,6 +43,13 @@ const ContactDescriptionSection: React.FC<ContactDescriptionSectionProps> = ({
             name="primaryContact"
             label="Primary Contact"
             placeholder="9812345678"
+            validation={{
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Owner Contact must be exactly 10 digits",
+              },
+              required: "Primary Contact is required",
+            }}
           />
 
           <FormField
@@ -54,6 +61,13 @@ const ContactDescriptionSection: React.FC<ContactDescriptionSectionProps> = ({
             name="ownerContact"
             label="Owner Contact"
             placeholder="9812345678"
+            validation={{
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Owner Contact must be exactly 10 digits",
+              },
+              required: "Owner Contact is required",
+            }}
           />
         </div>
 
@@ -66,6 +80,9 @@ const ContactDescriptionSection: React.FC<ContactDescriptionSectionProps> = ({
           name="description"
           register={register}
           label={`Description`}
+          validation={{
+            required: "Description is required",
+          }}
           placeholder="Describe your room, nearby facilities, rules, etc."
         />
       </CardContent>

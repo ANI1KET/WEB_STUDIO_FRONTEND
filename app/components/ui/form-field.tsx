@@ -54,28 +54,6 @@ export function FormField<T extends FieldValues>({
   const error = errors[name];
   const isTextarea = type === "textarea";
 
-  const validationRules = {
-    required: required ? `${label} is required` : false,
-    ...(min !== undefined && {
-      min: { value: min, message: `${label} must be at least ${min}` },
-    }),
-    ...(max !== undefined && {
-      max: { value: max, message: `${label} must be at most ${max}` },
-    }),
-    ...(maxLength && {
-      maxLength: {
-        value: maxLength,
-        message: `${label} must be ${maxLength} characters or less`,
-      },
-    }),
-    ...(type === "tel" && {
-      pattern: {
-        value: /^[0-9]{10}$/,
-        message: `${label} must be a 10 digit number`,
-      },
-    }),
-  };
-
   const handleKeyDown: React.KeyboardEventHandler = (e) => {
     const target = e.target as HTMLInputElement | HTMLTextAreaElement;
     const value = target.value;
@@ -99,7 +77,7 @@ export function FormField<T extends FieldValues>({
           rows={rows}
           maxLength={maxLength}
           placeholder={placeholder}
-          {...register(name, validationRules)}
+          {...register(name, validation)}
           onChange={onChange}
           onKeyDown={handleKeyDown}
           className="text-sm border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md resize-none"
@@ -110,9 +88,9 @@ export function FormField<T extends FieldValues>({
           min={min}
           max={max}
           type={type}
-          {...register(name, validation || validationRules)}
-          placeholder={placeholder}
           maxLength={maxLength}
+          placeholder={placeholder}
+          {...register(name, validation)}
           onChange={onChange}
           className="h-9 text-sm border border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-md"
         />

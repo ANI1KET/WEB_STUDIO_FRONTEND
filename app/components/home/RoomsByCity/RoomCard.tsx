@@ -9,7 +9,7 @@ import {
   Calendar,
   Image as ImageIcon,
 } from "lucide-react";
-import React from "react";
+import { memo } from "react";
 import Image from "next/image";
 
 import { RoomData } from "@/app/types/types";
@@ -31,7 +31,7 @@ interface RoomCardProps {
   setShowVideo: (id: string, show: boolean) => void;
 }
 
-const RoomCard = ({ room, showVideo, setShowVideo }: RoomCardProps) => {
+const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
   const getPostedByColor = (postedBy: string) => {
     switch (postedBy) {
       case "ADMIN":
@@ -48,7 +48,7 @@ const RoomCard = ({ room, showVideo, setShowVideo }: RoomCardProps) => {
   return (
     <Card className="w-[320px] shadow-xl bg-white/95 backdrop-blur-sm border-t border-l border-white/40">
       <div className="w-[320px] relative rounded-t-xl overflow-hidden group">
-        {room.videos ? (
+        {showVideo && room.videos ? (
           <iframe
             allowFullScreen={false}
             allow="autoplay; encrypted-media"
@@ -131,7 +131,7 @@ const RoomCard = ({ room, showVideo, setShowVideo }: RoomCardProps) => {
 
       <CardContent className="py-2">
         <h3 className="font-semibold text-base sm:text-lg mb-2 text-gray-800 line-clamp-2">
-          {room.name}
+          {room.description}
         </h3>
 
         <div className="flex items-center text-gray-500 text-xs sm:text-sm mb-3">
@@ -186,6 +186,7 @@ const RoomCard = ({ room, showVideo, setShowVideo }: RoomCardProps) => {
       </CardFooter>
     </Card>
   );
-};
+});
 
+RoomCard.displayName = "RoomCard";
 export default RoomCard;

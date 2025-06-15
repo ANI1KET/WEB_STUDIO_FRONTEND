@@ -304,7 +304,6 @@ export async function uploadChunkVideo({
 
 export async function SubmitRoomDetails(formData: RoomWithMediaUrl) {
   "use server";
-  console.log(formData);
 
   try {
     const newRoomDetails = await prisma.room.create({

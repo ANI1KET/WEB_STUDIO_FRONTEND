@@ -51,6 +51,9 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
             errors={errors}
             register={register}
             placeholder="e.g., Cozy 2BHK in Thamel"
+            validation={{
+              required: "Name is required",
+            }}
           />
 
           <div className="space-y-1">
@@ -88,6 +91,9 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
             errors={errors}
             register={register}
             label="Specific Location"
+            validation={{
+              required: "Location is required",
+            }}
             placeholder="e.g., Near Ratna Park, Ward 15"
           />
 

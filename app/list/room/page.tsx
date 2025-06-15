@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -27,6 +28,7 @@ const Room = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
+  const [isListing, setIsListing] = useState(false);
   const [furnishingStatus, setFurnishingStatus] =
     useState<FurnishingStatusEnum>("SEMIFURNISHED");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -68,14 +70,18 @@ const Room = () => {
     mutationFn: (data: RoomWithMediaUrl) => SubmitRoomDetails(data),
     onSuccess: (response) => {
       queryClient.setQueryData(["CategoryDetails", "room"], response);
+      setIsListing(false);
       router.push(`/listed/room/${btoa(response.id)}`);
     },
     onError: (error) => {
-      console.error("Mutation failed:", error);
+      setIsListing(false);
+      toast.error(error.message);
     },
   });
 
   const onSubmit = async (data: RoomWithMedia) => {
+    setIsListing(true);
+
     data.city =
       data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
     data.location =
@@ -100,8 +106,8 @@ const Room = () => {
         furnishingStatus,
         photos: ImageUrls,
         videos: VideoUrl ?? null,
+        listerId: session?.user.id as string,
         postedBy: session?.user.role as Role,
-        listerId: session?.user.userId as string,
       });
     } catch (error) {
       console.error(
@@ -146,6 +152,7 @@ const Room = () => {
         <ContactDescriptionSection errors={errors} register={register} />
 
         <MediaUploadSection
+          errors={errors}
           register={register}
           selectedVideo={video}
           onRemoveImage={removeImage}
@@ -159,9 +166,10 @@ const Room = () => {
             size="lg"
             type="submit"
             asChild={true}
+            disabled={isListing}
             className="bg-green-600 hover:bg-green-700 text-white font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 rounded-full border-0 min-w-[200px]"
           >
-            🏠 List Room
+            {isListing ? "Listing room..." : "🏠 List Room"}
           </Button>
         </div>
       </form>
