@@ -73,8 +73,8 @@ const ContactDescriptionSection: React.FC<ContactDescriptionSectionProps> = ({
 
         <FormField
           required
-          rows={1}
-          maxLength={100}
+          rows={2}
+          maxLength={500}
           errors={errors}
           type="textarea"
           name="description"

@@ -13,8 +13,11 @@ import {
   RoomWithMedia,
   RoomWithMediaUrl,
 } from "@/app/types/types";
-import { upload_Video } from "../uploadUtils";
-import { SubmitRoomDetails, upload_Images } from "../ServerAction";
+import { upload_Video } from "../../components/list/room/utils/uploadUtils";
+import {
+  SubmitRoomDetails,
+  upload_Images,
+} from "../../components/list/room/ServerAction/utils";
 
 import { Button } from "@/app/components/ui/button";
 import MediaUploadSection from "@/app/components/list/room/MediaUploadSection";

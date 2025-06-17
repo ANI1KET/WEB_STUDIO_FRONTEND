@@ -8,7 +8,7 @@ import { CategoryCitiesLocations } from "@/app/types/types";
 import {
   getCategoryCityLocations,
   getCategoryCitiesLocations,
-} from "../serverAction/SmartSearch";
+} from "../ServerAction/SmartSearch";
 
 export function FetchCategoryCitiesLocations(category: string, city: string) {
   return useQuery({

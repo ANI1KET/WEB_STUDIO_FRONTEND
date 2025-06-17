@@ -127,6 +127,12 @@ const Navbar = () => {
 
           {/* Mobile menu button - Enhanced for small screens */}
           <div className="md:hidden flex items-center">
+            <ListingsDropdown
+              scrolled={scrolled}
+              isAuthenticated={!!data}
+              userSubscriptions={data?.user.permission}
+            />
+
             <MobileMenuButton
               scrolled={scrolled}
               isOpen={mobileMenuOpen}

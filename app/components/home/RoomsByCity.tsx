@@ -7,15 +7,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constant";
-import { getCategoryDetails } from "./serverAction/RoomsByCity";
+import { getCategoryDetails } from "./ServerAction/RoomsByCity";
 
 const RoomCitySelector = dynamic(
-  () => import("./RoomsByCity/RoomCitySelector"),
-  { ssr: false }
+  () => import("./RoomsByCity/RoomCitySelector")
 );
-const RoomCard = dynamic(() => import("./RoomsByCity/RoomCard"), {
-  ssr: false,
-});
+const RoomCard = dynamic(() => import("./RoomsByCity/RoomCard"));
 
 const RoomsByCity: React.FC<{
   city: string;
@@ -36,7 +33,7 @@ const RoomsByCity: React.FC<{
     toast.success(`Showing rooms in ${city}`);
   };
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  const { data, hasNextPage, isFetchingNextPage, isLoading ,fetchNextPage} =
     useInfiniteQuery({
       queryKey: [`room${activeCity}`],
       queryFn: ({ pageParam = 0 }) =>

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { memo } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import { RoomData } from "@/app/types/types";
 
@@ -32,6 +33,8 @@ interface RoomCardProps {
 }
 
 const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
+  const router = useRouter();
+
   const getPostedByColor = (postedBy: string) => {
     switch (postedBy) {
       case "ADMIN":
@@ -131,7 +134,7 @@ const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
 
       <CardContent className="py-2">
         <h3 className="font-semibold text-base sm:text-lg mb-2 text-gray-800 line-clamp-2">
-          {room.description}
+          {room.name}
         </h3>
 
         <div className="flex items-center text-gray-500 text-xs sm:text-sm mb-3">
@@ -179,6 +182,9 @@ const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
       <CardFooter>
         <Button
           variant="outline"
+          onClick={() =>
+            router.push(`/room/${btoa(`${room.id},${room.city}`)}`)
+          }
           className="w-full border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 shadow-sm text-sm sm:text-base"
         >
           View Details

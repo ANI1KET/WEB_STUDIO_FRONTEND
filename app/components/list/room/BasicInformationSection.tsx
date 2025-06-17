@@ -47,7 +47,7 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
           <FormField
             required
             name="name"
-            label="Name"
+            label="Title"
             errors={errors}
             register={register}
             placeholder="e.g., Cozy 2BHK in Thamel"

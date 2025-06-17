@@ -5,7 +5,7 @@ import {
   uploadChunkVideo,
   // getImageResumableUploadUrl,
   getvideoResumableUploadUrl,
-} from "./ServerAction";
+} from "../ServerAction/utils";
 
 // export const upload_Images = async (
 //   photos: FileList | File[]
@@ -25,7 +25,7 @@ import {
 //         fileType: image.type,
 //       });
 //       const imageWorker = new Worker(
-//         new URL('./ImageChunkWorker.ts', import.meta.url)
+//         new URL('../WebWorker/ImageChunkWorker.ts', import.meta.url)
 //       );
 
 //       uploadImageUrl = await new Promise<string>((resolve, reject) => {
@@ -79,7 +79,7 @@ export const upload_Video = async (
       });
 
       const videoWorker = new Worker(
-        new URL("./VideoChunkWorker.ts", import.meta.url)
+        new URL("../WebWorker/VideoChunkWorker.ts", import.meta.url)
       );
 
       return new Promise<string>((resolve, reject) => {
@@ -129,7 +129,7 @@ export const upload_Video = async (
 //       fileType: image.type,
 //     });
 //     const imageWorker = new Worker(
-//       new URL("@/app/lib/webWorker/ImageChunkWorker.ts", import.meta.url)
+//       new URL("../WebWorker/ImageChunkWorker.ts", import.meta.url)
 //     );
 //     imageWorker.postMessage({ image });
 //     imageWorker.onmessage = async (event: MessageEvent) => {
@@ -161,7 +161,7 @@ export const upload_Video = async (
 //       fileName: video.name,
 //     });
 //     const videoWorker = new Worker(
-//       new URL("@/app/lib/webWorker/VideoChunkWorker.ts", import.meta.url)
+//       new URL("../WebWorker/VideoChunkWorker.ts", import.meta.url)
 //     );
 //     videoWorker.postMessage({ video });
 //     videoWorker.onmessage = async (event: MessageEvent) => {

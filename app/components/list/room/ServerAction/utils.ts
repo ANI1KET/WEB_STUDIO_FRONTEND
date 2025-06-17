@@ -5,7 +5,7 @@ import { google } from "googleapis";
 import prisma from "@/prisma/prismaClient";
 import { v2 as cloudinary } from "cloudinary";
 
-import { RoomWithMediaUrl } from "../types/types";
+import { RoomWithMediaUrl } from "../../../../types/types";
 
 // Configuration
 cloudinary.config({
