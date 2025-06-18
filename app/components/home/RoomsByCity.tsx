@@ -7,12 +7,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constant";
-import { getCategoryDetails } from "./serverAction/RoomsByCity";
+import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
 const RoomCitySelector = dynamic(
   () => import("./RoomsByCity/RoomCitySelector")
 );
-const RoomCard = dynamic(() => import("./RoomsByCity/RoomCard"));
+const RoomCard = dynamic(() => import("@/app/common/ui/RoomCard"));
 
 const RoomsByCity: React.FC<{
   city: string;

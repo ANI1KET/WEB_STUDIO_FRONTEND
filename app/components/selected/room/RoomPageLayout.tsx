@@ -1,16 +1,21 @@
 "use client";
 
-import React from "react";
 import { User } from "next-auth";
 import { useSession } from "next-auth/react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   useRoomActions,
   useRoomDetails,
   useImageModalControl,
 } from "./hooks/RoomPageLayout";
+import { RoomData } from "@/app/types/types";
+import { PAGE_SIZE } from "@/app/lib/constant";
 import { amenityIcons } from "./icons/RoomPageLayout";
+import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
+import RoomCard from "@/app/common/ui/RoomCard";
 import RoomImageModal from "./RoomPageLayout/RoomImageModal";
 import RoomDetailsMain from "./RoomPageLayout/RoomDetailsMain";
 import RoomAmenitiesLayout from "./RoomPageLayout/RoomAmenities";
@@ -36,12 +41,71 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     handleContactVerification,
   } = useRoomActions();
 
+  const [activeVideoRoomId, setActiveVideoRoomId] = useState<string | null>(
+    null
+  );
+
+  const handleToggleVideo = (roomId: string, show: boolean) => {
+    setActiveVideoRoomId(show ? roomId : null);
+  };
+
+  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
+    useInfiniteQuery({
+      queryKey: [`room${city}`],
+      queryFn: ({ pageParam = 0 }) =>
+        getCategoryDetails({
+          city,
+          category: "room",
+          offset: pageParam,
+        }),
+      getNextPageParam: (lastPage, allPages) => {
+        const currentOffset = allPages.length * PAGE_SIZE;
+        return lastPage.length === PAGE_SIZE ? currentOffset : undefined;
+      },
+      initialPageParam: 0,
+      gcTime: 1000 * 60 * 10,
+      staleTime: 1000 * 60 * 10,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    });
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const handleLoadMore = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          handleLoadMore();
+        }
+      },
+      {
+        root: null,
+        threshold: 0,
+        rootMargin: "300px",
+      }
+    );
+
+    const target = observerRef.current;
+    if (target) observer.observe(target);
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [handleLoadMore]);
+
   if (isLoading) {
     return <LoadingSkeletop />;
   }
   if (isError) {
     return <ErrorLayout city={city} />;
   }
+
   return (
     <div className="bg-gray-50/50 min-h-[calc(100vh-4rem)] font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -92,39 +156,44 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
           amenityIcons={amenityIcons}
           amenities={roomData.amenities}
         />
-
-        {/* <div
-            className="bg-gradient-to-r from-white/95 to-green-50/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-200/50 overflow-hidden hover:shadow-green-200/40"
-            >
-            <RoomPremiumSection
-              className="p-6"
-              roomId={room.id}
-              isOwner={!!isOwner}
-              roomTitle={room.name}
-              ownerId={room.ownerId}
-              ratings={room.ratings}
-              postedBy={room.postedBy}
-              verified={room.verified}
-              available={room.available}
-              ownerContact={room.ownerContact}
-              isAuthenticated={isAuthenticated}
-              getPostedByColor={getPostedByColor}
-              primaryContact={room.primaryContact}
-            />
-          </div> */}
       </div>
 
-      {/* <div className="bg-gradient-to-r from-green-50/80 via-white/50 to-green-50/80 border-t border-green-200/30 mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <NearbyRoomsSection
-            city={room.city}
-            navigate={navigate}
-            nearbyRooms={nearbyRooms}
-            activeVideoRoomId={activeVideoRoomId}
-            handleToggleVideo={handleToggleVideo}
-          />
+      <div className="py-4 sm:py-8 px-4 bg-gradient-to-r from-green-50/80 via-white/50 to-green-50/80 border-t border-green-200/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-4 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Explore More Rooms in {city}
+            </h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+              Still looking? There&apos;s more to see in {city}.
+            </p>
+          </div>
+
+          <div className="flex space-x-4 md:space-x-6 pb-2 overflow-x-auto">
+            {data?.pages.map((page) =>
+              page.map((room) => (
+                <RoomCard
+                  key={room.id}
+                  room={room as RoomData}
+                  setShowVideo={handleToggleVideo}
+                  showVideo={activeVideoRoomId === room.id}
+                />
+              ))
+            )}
+
+            <div ref={observerRef} className="h-1 "></div>
+            {isFetchingNextPage && (
+              <div className="flex justify-center items-center">
+                <div
+                  className={
+                    "w-8 h-8 bg-green-600 border-4 border-t-transparent rounded-full animate-spin"
+                  }
+                ></div>
+              </div>
+            )}
+          </div>
         </div>
-      </div> */}
+      </div>
 
       <RoomImageModal
         onNext={next}

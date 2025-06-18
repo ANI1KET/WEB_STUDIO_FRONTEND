@@ -96,8 +96,8 @@ const Home = async () => {
             <div className="absolute bottom-1/3 right-10 w-24 h-24 rounded-full bg-green-300/10 blur-2xl animate-pulse [animation-delay:1.5s]"></div>
           </div>
 
-          <ExploreCategories />
           <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
+          <ExploreCategories />
           {/* <PropertiesByType /> */}
           {/* <VehiclesByCity /> */}
           {/* <CallToAction /> */}

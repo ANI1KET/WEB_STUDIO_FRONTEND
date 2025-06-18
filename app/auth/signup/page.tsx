@@ -237,7 +237,7 @@ const Signup = () => {
           <p className="mt-2 text-center text-gray-600">
             Already have an account?{" "}
             <Link
-              href="/login"
+              href="/auth/login"
               className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
             >
               Sign in

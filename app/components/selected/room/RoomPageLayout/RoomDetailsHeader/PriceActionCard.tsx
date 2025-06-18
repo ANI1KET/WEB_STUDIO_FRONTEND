@@ -1,12 +1,12 @@
 "use client";
 
+import { toast } from "sonner";
 import { User } from "next-auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heart, Share, GitCompare } from "lucide-react";
 
 import { Button } from "@/app/components/ui/button";
-import { toast } from "sonner";
 
 interface PriceActionCardProps {
   user: User;
@@ -31,7 +31,8 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
 
   const handleInterestClick = () => {
-    if (!user.number) {
+    if (!user) router.push("/auth/login");
+    else if (!user.number) {
       setIsPhoneDialogOpen(true);
     } else {
       onShowInterest();
@@ -61,9 +62,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
       <div className="flex flex-col gap-3">
         <Button
           size="lg"
-          onClick={
-            user ? handleInterestClick : () => router.push("/auth/login")
-          }
+          onClick={handleInterestClick}
           className="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] active:scale-100 font-bold"
         >
           <div className="p-2 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
