@@ -2,11 +2,9 @@ import { toast } from "sonner";
 import { useCallback, useState } from "react";
 import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { RoomSearchQueries } from "@/app/types/filters";
-
 import { RoomData } from "@/app/types/types";
+import { fetchRoom } from "../serverAction/RoomPageLayout";
 import { useGetRoomSearchData } from "@/app/providers/reactqueryProvider";
-import { fetchSelectedRoomDetails } from "../ServerAction/RoomPageLayout";
 
 const findMatchingRoom = (
   roomId: string,
@@ -16,30 +14,36 @@ const findMatchingRoom = (
     for (const room of page) if (room.id === roomId) return room;
 };
 
-const getRoomCacheKey = (city: string, searchData: RoomSearchQueries) =>
-  city ? [`room${city}`] : ["search/room", searchData];
-
 export const useRoomDetails = (city: string, roomId: string) => {
   const queryClient = useQueryClient();
   const searchData = useGetRoomSearchData();
 
-  const cacheKey = getRoomCacheKey(city, searchData);
-  const cachedData =
-    queryClient.getQueryData<InfiniteData<RoomData[]>>(cacheKey);
+  const cachedData = city
+    ? queryClient.getQueryData<InfiniteData<RoomData[]>>([`room${city}`])
+    : queryClient.getQueryData<InfiniteData<RoomData[]>>([
+        "search/room",
+        searchData,
+      ]);
 
-  const roomDetails = cachedData
+  const roomFromCache = cachedData
     ? findMatchingRoom(roomId, cachedData)
     : undefined;
 
-  const { data: fallbackRoomDetails } = useQuery<RoomData>({
+  const {
+    isError,
+    isLoading,
+    data: fallbackRoomDetails,
+  } = useQuery<RoomData>({
     queryKey: ["selectedRoom", roomId],
-    queryFn: () => fetchSelectedRoomDetails(roomId),
-    enabled: !roomDetails,
+    queryFn: () => fetchRoom(roomId),
+    enabled: !roomFromCache,
     staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
-  return roomDetails ?? (fallbackRoomDetails as RoomData);
+  const roomData = roomFromCache ?? (fallbackRoomDetails as RoomData);
+
+  return { roomData, isLoading, isError };
 };
 
 export function useImageModalControl(totalImages: number) {

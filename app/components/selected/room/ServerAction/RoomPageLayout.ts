@@ -3,9 +3,7 @@
 import { RoomData } from "@/app/types/types";
 import axiosInstance from "@/app/lib/axiosInstance";
 
-export const fetchSelectedRoomDetails = async (
-  roomId: string
-): Promise<RoomData> => {
+export const fetchRoom = async (roomId: string): Promise<RoomData> => {
   "use server";
 
   try {
