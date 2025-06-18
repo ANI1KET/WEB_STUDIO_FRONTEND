@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constant";
-import { getCategoryDetails } from "./ServerAction/RoomsByCity";
+import { getCategoryDetails } from "./serverAction/RoomsByCity";
 
 const RoomCitySelector = dynamic(
   () => import("./RoomsByCity/RoomCitySelector")
