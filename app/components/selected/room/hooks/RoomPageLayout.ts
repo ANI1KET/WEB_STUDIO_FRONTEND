@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { RoomData } from "@/app/types/types";
-import { fetchRoom } from "../serverAction/RoomPageLayout";
+import { fetchRoom } from "../ServerAction/RoomPageLayout";
 import { useGetRoomSearchData } from "@/app/providers/reactqueryProvider";
 
 const findMatchingRoom = (

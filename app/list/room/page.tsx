@@ -16,7 +16,7 @@ import {
 import {
   upload_Images,
   SubmitRoomDetails,
-} from "../../components/list/room/serverAction/utils";
+} from "../../components/list/room/ServerAction/utils";
 import { upload_Video } from "../../components/list/room/utils/uploadUtils";
 
 import { Button } from "@/app/components/ui/button";
