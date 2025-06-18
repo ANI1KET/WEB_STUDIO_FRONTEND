@@ -88,7 +88,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         }`}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-emerald-400 px-4 py-4 flex items-center justify-between shadow-lg">
+        <div className="sticky top-0 z-50 bg-emerald-400 px-4 py-4 flex items-center justify-between shadow-lg">
           <h2 className="text-xl font-semibold drop-shadow-sm">Menu</h2>
           <Button
             size="icon"

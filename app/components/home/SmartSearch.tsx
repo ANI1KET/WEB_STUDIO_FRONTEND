@@ -138,70 +138,68 @@ const SmartSearch = () => {
   };
 
   return (
-    <div className="relative w-full mx-auto max-w-3xl ">
-      <div className="w-full rounded-2xl mx-auto border border-gray-100 shadow-lg overflow-hidden bg-white">
-        <div className="p-2 md:p-3">
-          <SmartSearchHeader />
+    <div className="relative w-full mx-auto p-4 max-w-3xl ">
+      <div className="w-full rounded-2xl mx-auto border p-2 border-gray-100 shadow-lg overflow-hidden bg-white">
+        <SmartSearchHeader />
 
-          <div className="">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <CategorySelector
-                category={category}
-                onCategoryChange={handleCategoryChange}
-              />
-
-              <CitySelector
-                selectedCity={selectedCity}
-                selectedCategory={category}
-                handleCityChange={handleCityChange}
-                availableCities={
-                  CitiesLocations ? Object.keys(CitiesLocations) : []
-                }
-              />
-            </div>
-
-            {showPropertyType ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <PropertyTypeSelector
-                  propertyType={propertyType}
-                  setPropertyType={setPropertyType}
-                  propertyTypeOptions={propertyTypes}
-                />
-
-                <LocationSelector
-                  disabled={!category}
-                  selectedCity={selectedCity}
-                  toggleLocation={toggleLocation}
-                  selectedLocations={selectedLocations}
-                  availableLocations={CitiesLocations?.[selectedCity] ?? []}
-                />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-2">
-                <LocationSelector
-                  disabled={!category}
-                  selectedCity={selectedCity}
-                  toggleLocation={toggleLocation}
-                  selectedLocations={selectedLocations}
-                  availableLocations={CitiesLocations?.[selectedCity] ?? []}
-                />
-              </div>
-            )}
-
-            <FilterToggle
-              showFilters={showFilters}
-              setShowFilters={setShowFilters}
+        <div className="">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <CategorySelector
+              category={category}
+              onCategoryChange={handleCategoryChange}
             />
 
-            {showFilters && (
-              <SearchFilters
-                category={category}
-                propertyTypeExist={!!propertyType}
-              />
-            )}
-
-            <SearchButton category={category} onClick={handleSearch} />
+            <CitySelector
+              selectedCity={selectedCity}
+              selectedCategory={category}
+              handleCityChange={handleCityChange}
+              availableCities={
+                CitiesLocations ? Object.keys(CitiesLocations) : []
+              }
+            />
           </div>
+
+          {showPropertyType ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <PropertyTypeSelector
+                propertyType={propertyType}
+                setPropertyType={setPropertyType}
+                propertyTypeOptions={propertyTypes}
+              />
+
+              <LocationSelector
+                disabled={!category}
+                selectedCity={selectedCity}
+                toggleLocation={toggleLocation}
+                selectedLocations={selectedLocations}
+                availableLocations={CitiesLocations?.[selectedCity] ?? []}
+              />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-2">
+              <LocationSelector
+                disabled={!category}
+                selectedCity={selectedCity}
+                toggleLocation={toggleLocation}
+                selectedLocations={selectedLocations}
+                availableLocations={CitiesLocations?.[selectedCity] ?? []}
+              />
+            </div>
+          )}
+
+          <FilterToggle
+            showFilters={showFilters}
+            setShowFilters={setShowFilters}
+          />
+
+          {showFilters && (
+            <SearchFilters
+              category={category}
+              propertyTypeExist={!!propertyType}
+            />
+          )}
+
+          <SearchButton category={category} onClick={handleSearch} />
         </div>
       </div>
     </div>
