@@ -33,7 +33,7 @@ const RoomsByCity: React.FC<{
     toast.success(`Showing rooms in ${city}`);
   };
 
-  const { data, hasNextPage, isFetchingNextPage, isLoading ,fetchNextPage} =
+  const { data, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage } =
     useInfiniteQuery({
       queryKey: [`room${activeCity}`],
       queryFn: ({ pageParam = 0 }) =>
