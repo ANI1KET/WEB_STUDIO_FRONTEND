@@ -86,12 +86,12 @@ export function useRoomActions() {
   };
 
   const handleCompare = () => {
-    toast.success("Room Details are saved for comparison.");
+    toast.success("Room Details added to comparison list.");
   };
 
   const handleInterest = () => {
     toast.success(
-      "The owner has been notified of your interest. They will contact you soon."
+      "Lister has been notified of your interest. They will contact you soon."
     );
   };
 

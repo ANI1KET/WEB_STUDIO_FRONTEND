@@ -12,7 +12,7 @@ import { getCategoryDetails } from "@/app/common/serverAction/Room";
 const RoomCitySelector = dynamic(
   () => import("./RoomsByCity/RoomCitySelector")
 );
-const RoomCard = dynamic(() => import("@/app/common/ui/RoomCard"));
+const RoomCard = dynamic(() => import("@/app/common/ui/Room"));
 
 const RoomsByCity: React.FC<{
   city: string;
@@ -100,7 +100,7 @@ const RoomsByCity: React.FC<{
               {Array.from({ length: 5 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className="w-[320px] h-[58vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
+                  className="w-[320px] h-[46vh] md:h-[58vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
                 >
                   <div className="w-full h-[26vh] bg-gray-300/30"></div>
                 </div>

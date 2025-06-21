@@ -15,7 +15,7 @@ import { PAGE_SIZE } from "@/app/lib/constant";
 import { amenityIcons } from "./icons/RoomPageLayout";
 import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
-import RoomCard from "@/app/common/ui/RoomCard";
+import RoomCard from "@/app/common/ui/Room";
 import RoomImageModal from "./RoomPageLayout/RoomImageModal";
 import RoomDetailsMain from "./RoomPageLayout/RoomDetailsMain";
 import RoomAmenitiesLayout from "./RoomPageLayout/RoomAmenities";
@@ -44,30 +44,35 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
   const [activeVideoRoomId, setActiveVideoRoomId] = useState<string | null>(
     null
   );
-
   const handleToggleVideo = (roomId: string, show: boolean) => {
     setActiveVideoRoomId(show ? roomId : null);
   };
 
-  const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
-    useInfiniteQuery({
-      queryKey: [`room${city}`],
-      queryFn: ({ pageParam = 0 }) =>
-        getCategoryDetails({
-          city,
-          category: "room",
-          offset: pageParam,
-        }),
-      getNextPageParam: (lastPage, allPages) => {
-        const currentOffset = allPages.length * PAGE_SIZE;
-        return lastPage.length === PAGE_SIZE ? currentOffset : undefined;
-      },
-      initialPageParam: 0,
-      gcTime: 1000 * 60 * 10,
-      staleTime: 1000 * 60 * 10,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading: isLoadingData,
+  } = useInfiniteQuery({
+    queryKey: [`room${roomData.city}`],
+    queryFn: ({ pageParam = 0 }) =>
+      getCategoryDetails({
+        city,
+        category: "room",
+        offset: pageParam,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      const currentOffset = allPages.length * PAGE_SIZE;
+      return lastPage.length === PAGE_SIZE ? currentOffset : undefined;
+    },
+    initialPageParam: 0,
+    gcTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 10,
+    enabled: !!roomData.city,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
 
   const observerRef = useRef<HTMLDivElement | null>(null);
 
@@ -105,7 +110,6 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
   if (isError) {
     return <ErrorLayout city={city} />;
   }
-
   return (
     <div className="bg-gray-50/50 min-h-[calc(100vh-4rem)] font-sans antialiased">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -170,26 +174,41 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
           </div>
 
           <div className="flex space-x-4 md:space-x-6 pb-2 overflow-x-auto">
-            {data?.pages.map((page) =>
-              page.map((room) => (
-                <RoomCard
-                  key={room.id}
-                  room={room as RoomData}
-                  setShowVideo={handleToggleVideo}
-                  showVideo={activeVideoRoomId === room.id}
-                />
-              ))
-            )}
-
-            <div ref={observerRef} className="h-1 "></div>
-            {isFetchingNextPage && (
-              <div className="flex justify-center items-center">
-                <div
-                  className={
-                    "w-8 h-8 bg-green-600 border-4 border-t-transparent rounded-full animate-spin"
-                  }
-                ></div>
+            {isLoadingData ? (
+              <div className="flex gap-4">
+                {Array.from({ length: 5 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="w-[320px] h-[46vh] md:h-[58vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
+                  >
+                    <div className="w-full h-[26vh] bg-gray-300/30"></div>
+                  </div>
+                ))}
               </div>
+            ) : (
+              <>
+                {data?.pages.map((page) =>
+                  page.map((room) => (
+                    <RoomCard
+                      key={room.id}
+                      room={room as RoomData}
+                      setShowVideo={handleToggleVideo}
+                      showVideo={activeVideoRoomId === room.id}
+                    />
+                  ))
+                )}
+
+                <div ref={observerRef} className="h-1 "></div>
+                {isFetchingNextPage && (
+                  <div className="flex justify-center items-center">
+                    <div
+                      className={
+                        "w-8 h-8 bg-green-600 border-4 border-t-transparent rounded-full animate-spin"
+                      }
+                    ></div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

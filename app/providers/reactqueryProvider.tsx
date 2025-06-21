@@ -8,7 +8,11 @@ import {
 import { makeVar, useReactiveVar } from "@apollo/client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { RoomSearchQueries, PropertySearchQueries } from "../types/filters";
+import {
+  RoomFilters,
+  RoomSearchQueries,
+  PropertySearchQueries,
+} from "../types/filters";
 
 export const searchRoomData = makeVar<RoomSearchQueries>({
   city: "",
@@ -98,6 +102,17 @@ export function setRoomSearchData(filtersToApply: RoomSearchQueries) {
 export function useUpdateRoomSearchData() {
   return (filtersToApply: RoomSearchQueries) => {
     searchRoomData({
+      ...filtersToApply,
+    });
+  };
+}
+
+export function useUpdateRoomFiletrsData() {
+  return (filtersToApply: Partial<RoomFilters>) => {
+    const prevData = searchRoomData();
+
+    searchRoomData({
+      ...prevData,
       ...filtersToApply,
     });
   };

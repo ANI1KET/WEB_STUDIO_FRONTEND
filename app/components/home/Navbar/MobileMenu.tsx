@@ -134,8 +134,8 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
             {session ? (
               <>
                 <MobileNavItem
-                  label="Login"
-                  description="Access your account"
+                  label="Logout"
+                  description="Have a good day"
                   onClick={() => signOut({ redirect: false })}
                   icon={<User size={18} className="text-blue-600" />}
                 />
