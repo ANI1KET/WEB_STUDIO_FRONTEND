@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { User } from "@prisma/client";
+import { Session } from "next-auth";
 
 import ContactCard from "./RoomDetailsHeader/ContactCard";
 import { Card, CardContent } from "@/app/components/ui/card";
@@ -9,8 +9,7 @@ import RoomStatusRow from "./RoomDetailsHeader/RoomStatusRow";
 import PriceActionCard from "./RoomDetailsHeader/PriceActionCard";
 import RoomTitleSection from "./RoomDetailsHeader/RoomTitleSection";
 
-interface RoomDetailsHeaderProps {
-  user: User;
+interface RoomDetailsActionrProps {
   name: string;
   city: string;
   price: number;
@@ -23,14 +22,15 @@ interface RoomDetailsHeaderProps {
   onCompare: () => void;
   primaryContact: string;
   onInterest: () => void;
+  session: Session | null;
   verifyContact: (phoneNumber: string) => Promise<void>;
 }
 
-const RoomDetailsAction: React.FC<RoomDetailsHeaderProps> = ({
-  user,
+const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
   name,
   city,
   price,
+  session,
   onShare,
   ratings,
   verified,
@@ -68,8 +68,8 @@ const RoomDetailsAction: React.FC<RoomDetailsHeaderProps> = ({
 
           {/* Price Action Card */}
           <PriceActionCard
-            user={user}
             price={price}
+            session={session}
             onShare={onShare}
             onCompare={onCompare}
             onShowInterest={onInterest}

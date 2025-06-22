@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "sonner";
-import { User } from "@prisma/client";
+import { Session } from "next-auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heart, Share, GitCompare } from "lucide-react";
@@ -9,17 +9,17 @@ import { Heart, Share, GitCompare } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 interface PriceActionCardProps {
-  user: User;
   price: number;
   onShare: () => void;
   onCompare: () => void;
+  session: Session | null;
   onShowInterest: () => void;
   verifyContact: (phoneNumber: string) => Promise<void>;
 }
 
 const PriceActionCard: React.FC<PriceActionCardProps> = ({
-  user,
   price,
+  session,
   onShare,
   onCompare,
   verifyContact,
@@ -31,8 +31,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
 
   const handleInterestClick = () => {
-    if (!user) router.push("/auth/login");
-    else if (!user.number) {
+    if (!session?.user.number) {
       setIsPhoneDialogOpen(true);
     } else {
       onShowInterest();
@@ -59,59 +58,66 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
       </div>
 
       {/* Action Buttons */}
-      {user.role === "USER" && (
-        <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3">
+        {session ? (
+          <>
+            {session.user.role === "USER" && (
+              <Button
+                size="lg"
+                onClick={handleInterestClick}
+                className="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] active:scale-100 font-bold"
+              >
+                <div className="p-2 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
+                  <Heart className="h-5 w-5 text-white" />
+                </div>
+                <span className="ml-2 relative">I&apos;m Interested</span>
+              </Button>
+            )}
+          </>
+        ) : (
           <Button
             size="lg"
-            onClick={handleInterestClick}
+            onClick={() => router.push("/auth/login")}
             className="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] active:scale-100 font-bold"
           >
             <div className="p-2 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
               <Heart className="h-5 w-5 text-white" />
             </div>
             <span className="ml-2 relative">
-              {user ? (
-                "I'm Interested"
-              ) : (
-                <>
-                  <span className="block group-hover:hidden">
-                    I&apos;m Interested
-                  </span>
-                  <span className="hidden group-hover:block">
-                    Login to proceed
-                  </span>
-                </>
-              )}
+              <span className="block group-hover:hidden">
+                I&apos;m Interested
+              </span>
+              <span className="hidden group-hover:block">Login to proceed</span>
             </span>
           </Button>
+        )}
 
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={onShare}
-              className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
-            >
-              <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
-                <Share className="h-4 w-4 text-green-600" />
-              </div>
-              Share
-            </Button>
+        <div className="grid grid-cols-2 gap-3">
+          <Button
+            size="lg"
+            variant="ghost"
+            onClick={onShare}
+            className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
+          >
+            <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
+              <Share className="h-4 w-4 text-green-600" />
+            </div>
+            Share
+          </Button>
 
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={onCompare}
-              className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
-            >
-              <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
-                <GitCompare className="h-4 w-4 text-green-600" />
-              </div>
-              Compare
-            </Button>
-          </div>
+          <Button
+            size="lg"
+            variant="ghost"
+            onClick={onCompare}
+            className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
+          >
+            <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
+              <GitCompare className="h-4 w-4 text-green-600" />
+            </div>
+            Compare
+          </Button>
         </div>
-      )}
+      </div>
 
       {/* Phone Number Dialog */}
       {isPhoneDialogOpen && (
