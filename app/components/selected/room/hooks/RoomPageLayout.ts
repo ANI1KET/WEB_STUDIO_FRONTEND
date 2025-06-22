@@ -155,8 +155,9 @@ export function useRoomActions(roomData: RoomData) {
         },
       });
       toast.success("Contact number is updated.");
+    } else {
+      toast.error("Contact couldn't be updated. Please try again.");
     }
-    toast.error("Contact couldn't be updated. Please try again.");
   };
 
   return {

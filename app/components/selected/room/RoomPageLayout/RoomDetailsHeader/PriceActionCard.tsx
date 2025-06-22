@@ -40,9 +40,9 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
 
   const handlePhoneSubmit = async () => {
     if (phoneNumber.length !== 10) return toast.error("Enter correct number");
+    setIsPhoneDialogOpen(false);
 
     await verifyContact(phoneNumber);
-    setIsPhoneDialogOpen(false);
     setPhoneNumber("");
     onShowInterest();
   };
