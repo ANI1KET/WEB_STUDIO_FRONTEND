@@ -5,7 +5,7 @@ import { Divider } from "@mui/material";
 
 import {
   formatPrice,
-  formatRating,
+  // formatRating,
   formatCapacity,
 } from "@/app/lib/formatters";
 import {
@@ -46,26 +46,26 @@ const RoomFilterComponent = () => {
 
   return (
     <div className="flex flex-col gap-2 p-2">
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <DoubleSlider
-            min={1}
-            step={1}
-            max={25}
-            label="Capacity"
-            showTooltip="auto"
-            valueFormatter={formatCapacity}
-            defaultValue={roomSearchData.capacity ?? [2, 5]}
-            onValueChange={(newValue) =>
-              updateRoomSearchData({
-                ...roomSearchData,
-                capacity: newValue,
-              })
-            }
-          />
-        </div>
+      {/* <div className="grid grid-cols-2 gap-2"> */}
+      <div>
+        <DoubleSlider
+          min={1}
+          step={1}
+          max={25}
+          label="Capacity"
+          showTooltip="auto"
+          valueFormatter={formatCapacity}
+          defaultValue={roomSearchData.capacity ?? [2, 5]}
+          onValueChange={(newValue) =>
+            updateRoomSearchData({
+              ...roomSearchData,
+              capacity: newValue,
+            })
+          }
+        />
+        {/* </div> */}
 
-        <div className="">
+        {/* <div className="">
           <DoubleSlider
             min={1}
             max={5}
@@ -81,7 +81,7 @@ const RoomFilterComponent = () => {
               })
             }
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="">

@@ -5,7 +5,7 @@ import { Divider } from "@mui/material";
 
 import {
   formatPrice,
-  formatRating,
+  // formatRating,
   formatCapacity,
 } from "@/app/lib/formatters";
 import {
@@ -57,7 +57,7 @@ const RoomFilterComponent = () => {
         />
       </div>
 
-      <div className="">
+      {/* <div className="">
         <DoubleSlider
           min={1}
           max={5}
@@ -68,7 +68,7 @@ const RoomFilterComponent = () => {
           defaultValue={roomSearchData.rating ?? [2, 3]}
           onValueChange={(newValue) => updateFilter("rating", newValue)}
         />
-      </div>
+      </div> */}
 
       <div className="">
         <DoubleSlider

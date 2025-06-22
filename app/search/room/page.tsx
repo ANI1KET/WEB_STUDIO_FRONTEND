@@ -18,13 +18,14 @@ import {
   DrawerContent,
 } from "../../components/ui/drawer";
 import { Button } from "@/app/components/ui/button";
+import { Card, CardContent } from "@/app/components/ui/card";
 import SearchFilters from "@/app/components/search/room/SearchFilters";
 import SearchResults from "@/app/components/search/room/SearchResults";
 
 const RoomSearch = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
+  const { data, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage } =
     useInfiniteRoomQuery();
   const memoizedPages = useMemo(() => data?.pages ?? [], [data?.pages]);
 
@@ -45,8 +46,8 @@ const RoomSearch = () => {
       },
       {
         root: null,
-        rootMargin: "300px",
         threshold: 0,
+        rootMargin: "300px",
       }
     );
 
@@ -72,13 +73,19 @@ const RoomSearch = () => {
         </div>
 
         <div className="w-full py-2 grid [@media(max-width:460px)]:grid-cols-1 grid-cols-2 lg:grid-cols-3 gap-2">
-          {memoizedPages.map((roomDetails, pageIndex) => (
-            <SearchResults
-              key={pageIndex}
-              rooms={roomDetails}
-              isLoading={isLoading}
-            />
-          ))}
+          {isLoading ? (
+            <>
+              {Array.from({ length: 6 }, (_, i) => (
+                <RoomCardSkeleton key={`skeleton-${i}`} />
+              ))}
+            </>
+          ) : (
+            <>
+              {memoizedPages.map((roomDetails, pageIndex) => (
+                <SearchResults key={pageIndex} rooms={roomDetails} />
+              ))}
+            </>
+          )}
 
           <div ref={observerRef} className="h-1 "></div>
           {isFetchingNextPage && (
@@ -136,3 +143,16 @@ const RoomSearch = () => {
 };
 
 export default RoomSearch;
+
+const RoomCardSkeleton = () => {
+  return (
+    <Card className="animate-pulse">
+      <div className="h-48 bg-gray-200 rounded-t-lg"></div>
+      <CardContent className="p-4 space-y-3">
+        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-8 bg-gray-200 rounded"></div>
+      </CardContent>
+    </Card>
+  );
+};

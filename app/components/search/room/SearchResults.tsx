@@ -13,104 +13,79 @@ import ImageCarousel from "./SearchResults/ImageCarousel";
 import { Card, CardContent } from "@/app/components/ui/card";
 
 interface SearchResultsProps {
-  isLoading: boolean;
   rooms: ListedRoom[];
 }
 
-const SearchResults: React.FC<SearchResultsProps> = memo(
-  ({ rooms, isLoading }) => {
-    const router = useRouter();
+const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
+  const router = useRouter();
 
-    const [showVideo, setShowVideo] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
-    const handleToggleVideo = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setShowVideo(!showVideo);
-    };
+  const handleToggleVideo = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowVideo(!showVideo);
+  };
 
-    const handleViewDetails = (roomId: string) => {
-      router.push(`/room/${btoa(roomId)}`);
-    };
+  const handleViewDetails = (roomId: string) => {
+    router.push(`/room/${btoa(roomId)}`);
+  };
 
-    if (isLoading) {
-      return (
-        <>
-          {Array.from({ length: 6 }, (_, i) => (
-            <RoomCardSkeleton key={`skeleton-${i}`} />
-          ))}
-        </>
-      );
-    }
-    if (rooms.length === 0) {
-      return <NoResults />;
-    }
-    return (
-      <>
-        {rooms.map((room) => (
-          <Card
-            key={room.id}
-            className="hover:shadow-2xl transition-all duration-300 transform border-0 overflow-hidden rounded-2xl bg-white flex flex-col"
-          >
-            {/* Image/Video Section */}
-            <div className="relative">
-              <ImageCarousel
-                photos={room.photos}
-                videos={room.videos}
-                roomName={room.name}
-                showVideo={showVideo}
-                onToggleVideo={handleToggleVideo}
-              />
-              <RoomStatus verified={room.verified} available={room.available} />
-            </div>
-
-            {/* Content */}
-            <CardContent className="flex-grow flex flex-col p-0">
-              <RoomInfo
-                name={room.name}
-                city={room.city}
-                price={room.price}
-                ratings={room.ratings}
-                location={room.location}
-                roomType={room.roomType}
-                postedBy={room.postedBy}
-                minCapacity={room.minCapacity}
-                maxCapacity={room.maxCapacity}
-                furnishingStatus={room.furnishingStatus}
-              />
-
-              {/* View Details Button */}
-              <div className="px-4 pb-2">
-                <Button
-                  size="sm"
-                  onClick={() => handleViewDetails(room.id)}
-                  className="w-full hover:bg-green-200 text-white text-xs px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
-                >
-                  View Details
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </>
-    );
+  if (rooms.length === 0) {
+    return <NoResults />;
   }
-);
+  return (
+    <>
+      {rooms.map((room) => (
+        <Card
+          key={room.id}
+          className="hover:shadow-2xl transition-all duration-300 transform border-0 overflow-hidden rounded-2xl bg-white flex flex-col"
+        >
+          {/* Image/Video Section */}
+          <div className="relative">
+            <ImageCarousel
+              photos={room.photos}
+              videos={room.videos}
+              roomName={room.name}
+              showVideo={showVideo}
+              onToggleVideo={handleToggleVideo}
+            />
+            <RoomStatus verified={room.verified} available={room.available} />
+          </div>
+
+          {/* Content */}
+          <CardContent className="flex-grow flex flex-col p-0">
+            <RoomInfo
+              name={room.name}
+              city={room.city}
+              price={room.price}
+              ratings={room.ratings}
+              location={room.location}
+              roomType={room.roomType}
+              postedBy={room.postedBy}
+              minCapacity={room.minCapacity}
+              maxCapacity={room.maxCapacity}
+              furnishingStatus={room.furnishingStatus}
+            />
+
+            {/* View Details Button */}
+            <div className="px-4 pb-2">
+              <Button
+                size="sm"
+                onClick={() => handleViewDetails(room.id)}
+                className="w-full hover:bg-green-200 text-white text-xs px-4 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+              >
+                View Details
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </>
+  );
+});
 
 SearchResults.displayName = "SearchResults";
 export default React.memo(SearchResults);
-
-const RoomCardSkeleton = () => {
-  return (
-    <Card className="animate-pulse">
-      <div className="h-48 bg-gray-200 rounded-t-lg"></div>
-      <CardContent className="p-4 space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-        <div className="h-8 bg-gray-200 rounded"></div>
-      </CardContent>
-    </Card>
-  );
-};
 
 const NoResults = () => {
   return (
