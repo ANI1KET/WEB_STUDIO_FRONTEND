@@ -102,7 +102,7 @@ const RoomsByCity: React.FC<{
                   key={idx}
                   className="w-[320px] h-[46vh] md:h-[58vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
                 >
-                  <div className="w-full h-[26vh] bg-gray-300/30"></div>
+                  <div className="w-full h-[20vh] md:h-[26vh] bg-gray-300/30"></div>
                 </div>
               ))}
             </div>

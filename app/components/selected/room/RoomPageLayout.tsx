@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "next-auth";
+import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -29,6 +29,7 @@ interface RoomLayoutProps {
 
 const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
   const { data: session } = useSession();
+  console.log("! ", session);
 
   const { roomData, isLoading, isError } = useRoomDetails(city, roomId);
 
@@ -39,7 +40,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     handleCompare,
     handleInterest,
     handleContactVerification,
-  } = useRoomActions();
+  } = useRoomActions(roomData);
 
   const [activeVideoRoomId, setActiveVideoRoomId] = useState<string | null>(
     null

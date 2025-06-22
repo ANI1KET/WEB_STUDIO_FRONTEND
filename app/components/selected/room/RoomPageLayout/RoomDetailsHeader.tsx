@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { User } from "next-auth";
+import { User } from "@prisma/client";
 
 import ContactCard from "./RoomDetailsHeader/ContactCard";
 import { Card, CardContent } from "@/app/components/ui/card";
@@ -45,7 +45,7 @@ const RoomDetailsAction: React.FC<RoomDetailsHeaderProps> = ({
   return (
     <Card className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden hover:shadow-xl transition-all duration-300">
       <CardContent className="p-6">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8">
           {/* Main Content */}
           <div className="flex-1 space-y-6">
             <div className="space-y-4">

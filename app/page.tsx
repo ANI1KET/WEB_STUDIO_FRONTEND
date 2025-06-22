@@ -17,10 +17,7 @@ import { getCategoryCitiesLocationDetails } from "./serverAction";
 
 import RoomsByCity from "@/app/components/home/RoomsByCity";
 import SmartSearch from "@/app/components/home/SmartSearch";
-// import CallToAction from "@/app/components/CallToAction";
-// import VehiclesByCity from "@/app/components/VehiclesByCity";
-// import PropertiesByType from "@/app/components/PropertiesByType";
-import ExploreCategories from "@/app/components/home/ExploreCategories";
+// import ExploreCategories from "@/app/components/home/ExploreCategories";
 
 const Home = async () => {
   const queryClient = new QueryClient();
@@ -97,7 +94,8 @@ const Home = async () => {
           </div>
 
           <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
-          <ExploreCategories />
+          {/* <ExploreCategories /> */}
+
           {/* <PropertiesByType /> */}
           {/* <VehiclesByCity /> */}
           {/* <CallToAction /> */}
@@ -108,7 +106,7 @@ const Home = async () => {
     console.error("Failed to load details:", error);
 
     return (
-      <div className="w-screen h-screen flex items-center justify-center text-red-500 p-4 text-center">
+      <div className="w-screen min-h-[calc(100vh-4rem)] flex items-center justify-center text-red-500 p-4 text-center">
         Failed to load data. Please try again later.
       </div>
     );
