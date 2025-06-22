@@ -54,7 +54,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     isFetchingNextPage,
     isLoading: isLoadingData,
   } = useInfiniteQuery({
-    queryKey: [`room${roomData.city}`],
+    queryKey: [`room${roomData?.city}`],
     queryFn: ({ pageParam = 0 }) =>
       getCategoryDetails({
         city,
@@ -68,7 +68,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     initialPageParam: 0,
     gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 10,
-    enabled: !!roomData.city,
+    enabled: !!roomData?.city,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
