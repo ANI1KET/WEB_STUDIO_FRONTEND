@@ -1,11 +1,22 @@
 "use client";
 
+import {
+  User,
+  Heart,
+  Rocket,
+  GitCompare,
+  CircleUserRound,
+  LayoutDashboard,
+} from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { User, LayoutDashboard, Heart, Rocket } from "lucide-react";
 
-import { canAccessDashboard, canPromote } from "./config/common";
+import {
+  canPromote,
+  canAccessDashboard,
+  canAccessInterested,
+} from "../../../common/config/authorization";
 
 import {
   DropdownMenu,
@@ -76,15 +87,15 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
         </div>
 
         <DropdownMenuItem
-          onClick={() => router.push("/interested")}
-          className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+          onClick={() => router.push("/auth/login")}
+          className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-orange-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
         >
-          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
-            <Heart size={16} className="text-red-600" />
+          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg group-hover:from-orange-200 group-hover:to-orange-300 transition-all duration-200 shadow-sm">
+            <GitCompare size={16} className="text-orange-600" />
           </div>
           <div className="flex-1">
-            <span className="font-medium text-gray-800">Saved Listings</span>
-            <p className="text-xs text-gray-500">Your favorites</p>
+            <span className="font-medium text-gray-800">Compare Listings</span>
+            <p className="text-xs text-gray-500">Compare saved listings</p>
           </div>
         </DropdownMenuItem>
 
@@ -103,20 +114,31 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
               </div>
             </DropdownMenuItem>
 
+            <DropdownMenuItem
+              onClick={() => router.push("/profile")}
+              className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-amber-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-amber-100 to-amber-200 rounded-lg group-hover:from-amber-200 group-hover:to-amber-300 transition-all duration-200 shadow-sm">
+                <CircleUserRound size={16} className="text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium text-gray-800">Profile</span>
+                <p className="text-xs text-gray-500">Manage your account</p>
+              </div>
+            </DropdownMenuItem>
+
             <DropdownMenuSeparator className="my-2 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
             {canAccessDashboard(session.user.role) && (
               <DropdownMenuItem
-                onClick={() => {
-                  const hostname = window.location.hostname;
-                  const parts = hostname.split(".");
-                  const baseDomain = parts.slice(-3).join(".");
-
+                onClick={() =>
                   window.open(
-                    `https://dashboard.${baseDomain}/${session.user.role?.toLowerCase()}`,
+                    `https://dashboard.${
+                      process.env.NEXT_PUBLIC_BASE_DOMAIN
+                    }/${session.user.role?.toLowerCase()}`,
                     "_blank"
-                  );
-                }}
+                  )
+                }
                 className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
               >
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-purple-100 to-purple-200 rounded-lg group-hover:from-purple-200 group-hover:to-purple-300 transition-all duration-200 shadow-sm">
@@ -129,15 +151,36 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
               </DropdownMenuItem>
             )}
 
+            {canAccessInterested(session.user.role) && (
+              <DropdownMenuItem
+                onClick={() =>
+                  window.open(
+                    `https://interested.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+                    "_blank"
+                  )
+                }
+                className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+              >
+                <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
+                  <Heart size={16} className="text-red-600" />
+                </div>
+                <div className="flex-1">
+                  <span className="font-medium text-gray-800">
+                    Interested Listings
+                  </span>
+                  <p className="text-xs text-gray-500">Your favorites</p>
+                </div>
+              </DropdownMenuItem>
+            )}
+
             {canPromote(session.user.role) && (
               <DropdownMenuItem
-                onClick={() => {
-                  const hostname = window.location.hostname;
-                  const parts = hostname.split(".");
-                  const baseDomain = parts.slice(-3).join(".");
-
-                  window.open(`https://promote.${baseDomain}`, "_blank");
-                }}
+                onClick={() =>
+                  window.open(
+                    `https://promote.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+                    "_blank"
+                  )
+                }
                 className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
               >
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-green-100 to-emerald-200 rounded-lg group-hover:from-green-200 group-hover:to-emerald-300 transition-all duration-200 shadow-sm">
@@ -153,18 +196,35 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
             )}
           </div>
         ) : (
-          <DropdownMenuItem
-            onClick={() => router.push("/auth/login")}
-            className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-blue-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
-          >
-            <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-200 shadow-sm">
-              <User size={16} className="text-blue-600" />
-            </div>
-            <div className="flex-1">
-              <span className="font-medium text-gray-800">Login</span>
-              <p className="text-xs text-gray-500">Access your account</p>
-            </div>
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuItem
+              onClick={() => router.push("/auth/login")}
+              className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-blue-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-200 shadow-sm">
+                <User size={16} className="text-blue-600" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium text-gray-800">Login</span>
+                <p className="text-xs text-gray-500">Access your account</p>
+              </div>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => router.push("/auth/login")}
+              className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
+                <Heart size={16} className="text-red-600" />
+              </div>
+              <div className="flex-1">
+                <span className="font-medium text-gray-800">
+                  Interested Listings
+                </span>
+                <p className="text-xs text-gray-500">Your favorites</p>
+              </div>
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -6,7 +6,7 @@ import Image from "next/image";
 interface RoomImageModalProps {
   isOpen: boolean;
   photos: string[];
-  roomName: string;
+  title: string;
   onNext: () => void;
   onPrev: () => void;
   onClose: () => void;
@@ -14,12 +14,12 @@ interface RoomImageModalProps {
 }
 
 const RoomImageModal: React.FC<RoomImageModalProps> = ({
+  title,
   isOpen,
   photos,
   onNext,
   onPrev,
   onClose,
-  roomName,
   currentImageIndex,
 }) => {
   if (!isOpen) return null;
@@ -32,7 +32,7 @@ const RoomImageModal: React.FC<RoomImageModalProps> = ({
           priority
           src={photos[currentImageIndex]}
           className="object-contain rounded-lg"
-          alt={`${roomName} - Full view ${currentImageIndex + 1}`}
+          alt={`${title} - Full view ${currentImageIndex + 1}`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 80vw"
         />
         <button

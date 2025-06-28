@@ -76,8 +76,6 @@ model User {
   // RELATIONSHIP
   reMarketItems             ReMarketItem[]                   @relation("UserReMarketItems")
   // RELATIONSHIP
-  interestedRooms           InterestedRoomsUsers[]           @relation("InterestedUsers")
-  // RELATIONSHIP
   interestedHouseProperties InterestedHousePropertiesUsers[] @relation("InterestedHouseUsers")
   // RELATIONSHIP
   interestedLandProperties  InterestedLandPropertiesUsers[]  @relation("InterestedLandUsers")
@@ -104,35 +102,42 @@ model Promoter {
 }
 
 model InterestedRooms {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  listerId String
-
-  // RELATIONSHIP
-  roomId       String                 @unique @db.ObjectId
-  room         Room                   @relation(fields: [roomId], references: [id], name: "RoomInterested", onDelete: Cascade)
-  // RELATIONSHIP
-  interestedBy InterestedRoomsUsers[] @relation("InterestedRooms")
-
-  @@index([listerId])
-}
-
-model InterestedRoomsUsers {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   // RELATIONSHIP
-  user             User            @relation(name: "InterestedUsers", fields: [userId], references: [id], onDelete: Cascade)
-  userId           String          @db.ObjectId
+  roomId       String                     @db.ObjectId
+  room         Room                       @relation(fields: [roomId], references: [id], name: "RoomInterested", onDelete: Cascade)
   // RELATIONSHIP
-  interestedRoom   InterestedRooms @relation(name: "InterestedRooms", fields: [interestedRoomId], references: [id], onDelete: Cascade)
-  interestedRoomId String          @db.ObjectId
+  listerUserId String                     @unique @db.ObjectId
+  listerUser   ListerRoomsInterestedUsers @relation(fields: [listerUserId], references: [id], name: "listerUser", onDelete: Cascade)
 
   // TIMESTAMPS
   createdAt DateTime @default(now())
 
-  @@unique([userId, interestedRoomId])
+  @@unique([listerUserId, roomId])
+}
+
+model ListerRoomsInterestedUsers {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  // RELATIONSHIP
+  listerId      String            @db.ObjectId
+  listerName    String
+  listerContact String
+  // RELATIONSHIP
+  userId        String            @db.ObjectId
+  userName      String
+  userEmail     String
+  userContact   String
+  // RELATIONSHIP
+  rooms         InterestedRooms[] @relation("listerUser")
+
+  // TIMESTAMPS
+  createdAt DateTime @default(now())
+
+  @@unique([listerId, userId])
   @@index([userId])
   @@index([createdAt])
-  @@index([interestedRoomId])
 }
 
 model RoomPromotionDeals {
@@ -236,6 +241,7 @@ model Room {
   ratings        Float    @default(0)
   name           String
   city           String
+  title          String
   location       String
   roomType       String
   description    String
@@ -256,14 +262,14 @@ model Room {
   furnishingStatus FurnishingStatusEnum
 
   // RELATIONSHIP
-  reviews        RoomReview[]     @relation("RoomReviews")
+  reviews        RoomReview[]      @relation("RoomReviews")
   // RELATIONSHIP
-  lister         User             @relation(fields: [listerId], references: [id], name: "UserRooms", onDelete: Cascade)
-  listerId       String           @db.ObjectId
+  lister         User              @relation(fields: [listerId], references: [id], name: "UserRooms", onDelete: Cascade)
+  listerId       String            @db.ObjectId
   // RELATIONSHIP
-  interestedRoom InterestedRooms? @relation(name: "RoomInterested")
+  interestedRoom InterestedRooms[] @relation(name: "RoomInterested")
   // RELATIONSHIP
-  roomPromotions RoomPromotion[]  @relation("PromotedRooms")
+  roomPromotions RoomPromotion[]   @relation("PromotedRooms")
 
   // TIMESTAMPS
   createdAt DateTime @default(now())

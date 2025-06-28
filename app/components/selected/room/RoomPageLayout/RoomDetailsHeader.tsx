@@ -10,8 +10,8 @@ import PriceActionCard from "./RoomDetailsHeader/PriceActionCard";
 import RoomTitleSection from "./RoomDetailsHeader/RoomTitleSection";
 
 interface RoomDetailsActionrProps {
-  name: string;
   city: string;
+  title: string;
   price: number;
   ratings: number;
   location: string;
@@ -27,8 +27,8 @@ interface RoomDetailsActionrProps {
 }
 
 const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
-  name,
   city,
+  title,
   price,
   session,
   onShare,
@@ -49,7 +49,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
           {/* Main Content */}
           <div className="flex-1 space-y-6">
             <div className="space-y-4">
-              <RoomTitleSection name={name} location={location} city={city} />
+              <RoomTitleSection title={title} location={location} city={city} />
 
               <RoomStatusRow
                 ratings={ratings}

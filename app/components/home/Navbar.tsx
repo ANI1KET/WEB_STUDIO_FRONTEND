@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect, useCallback } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
-import { useIsMobile } from "@/app/hooks/use-mobile";
+import { useIsMobile } from "@/app/common/hooks/use-mobile";
 // import { propertyItems, roomItems, vehicleItems } from "./config/Navbar";
 
 const MobileMenu = dynamic(() => import("./Navbar/MobileMenu"));

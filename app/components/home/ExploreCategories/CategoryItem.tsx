@@ -9,7 +9,7 @@ import {
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 
-import { useIsMobile } from "@/app/hooks/use-mobile";
+import { useIsMobile } from "@/app/common/hooks/use-mobile";
 
 import CategoryCard from "./CategoryItem/CategoryCard";
 

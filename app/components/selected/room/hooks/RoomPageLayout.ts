@@ -95,7 +95,7 @@ export function useRoomActions(roomData: RoomData) {
   const handleCompare = () => {
     try {
       const existingRooms = JSON.parse(
-        localStorage.getItem("ComparisionRooms") || "[]"
+        localStorage.getItem("ComparisonRooms") || "[]"
       ) as RoomData[];
 
       if (existingRooms.some((room) => room.id === roomData.id)) {
@@ -104,7 +104,7 @@ export function useRoomActions(roomData: RoomData) {
       }
 
       existingRooms.push(roomData);
-      localStorage.setItem("ComparisionRooms", JSON.stringify(existingRooms));
+      localStorage.setItem("ComparisonRooms", JSON.stringify(existingRooms));
       toast.success("Room Details added to comparison list.");
     } catch (error) {
       console.error(error);
@@ -125,8 +125,13 @@ export function useRoomActions(roomData: RoomData) {
 
       await pushSavedRoom({
         roomId: roomData.id,
+        listerName: roomData.name,
         listerId: roomData.listerId,
+        listerContact: roomData.primaryContact,
         userId: session?.user.userId as string,
+        userName: session?.user.name as string,
+        userEmail: session?.user.email as string,
+        userContact: session?.user.number as string,
       });
 
       existingRooms.push(roomData);

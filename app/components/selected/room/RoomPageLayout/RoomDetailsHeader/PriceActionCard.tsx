@@ -4,7 +4,9 @@ import { toast } from "sonner";
 import { Session } from "next-auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Heart, Share, GitCompare } from "lucide-react";
+import { Heart, Share2, GitCompare } from "lucide-react";
+
+import { canShowInterest } from "@/app/common/config/authorization";
 
 import { Button } from "@/app/components/ui/button";
 
@@ -61,7 +63,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
       <div className="flex flex-col gap-3">
         {session ? (
           <>
-            {session.user.role === "USER" && (
+            {canShowInterest(session.user.role) && (
               <Button
                 size="lg"
                 onClick={handleInterestClick}
@@ -100,7 +102,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
             className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
           >
             <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
-              <Share className="h-4 w-4 text-green-600" />
+              <Share2 className="h-4 w-4 text-green-600" />
             </div>
             Share
           </Button>

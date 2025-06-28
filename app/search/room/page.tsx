@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { X, Filter, SlidersHorizontal } from "lucide-react";
 
-import { useInfiniteRoomQuery } from "@/app/components/search/room/hooks/SearchFilters";
+import { useInfiniteRoomQuery } from "./hooks";
 
 import {
   Drawer,

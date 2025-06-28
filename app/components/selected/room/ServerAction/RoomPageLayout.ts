@@ -57,13 +57,23 @@ export const updateNumber = async ({
 };
 
 export const pushSavedRoom = async ({
-  userId,
   roomId,
+  userId,
+  userName,
   listerId,
+  userEmail,
+  listerName,
+  userContact,
+  listerContact,
 }: {
-  userId: string;
   roomId: string;
+  userId: string;
+  userName: string;
   listerId: string;
+  userEmail: string;
+  listerName: string;
+  userContact: string;
+  listerContact: string;
 }) => {
   "use server";
 
@@ -74,6 +84,11 @@ export const pushSavedRoom = async ({
         userId,
         roomId,
         listerId,
+        userName,
+        userEmail,
+        listerName,
+        userContact,
+        listerContact,
       },
       await getAutheticationHeader()
       // { ...(await getAutheticationHeader()) }

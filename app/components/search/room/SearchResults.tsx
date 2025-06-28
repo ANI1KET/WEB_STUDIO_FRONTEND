@@ -45,7 +45,7 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
             <ImageCarousel
               photos={room.photos}
               videos={room.videos}
-              roomName={room.name}
+              roomTitle={room.title}
               showVideo={showVideo}
               onToggleVideo={handleToggleVideo}
             />
@@ -55,8 +55,8 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
           {/* Content */}
           <CardContent className="flex-grow flex flex-col p-0">
             <RoomInfo
-              name={room.name}
               city={room.city}
+              title={room.title}
               price={room.price}
               ratings={room.ratings}
               location={room.location}

@@ -6,7 +6,7 @@ import { Permission } from "@prisma/client";
 import { getCategorySearchIcon } from "./config/SearchButtonIcon";
 
 import { Button } from "@/app/components/ui/button";
-import { useIsMobile } from "@/app/hooks/use-mobile";
+import { useIsMobile } from "@/app/common/hooks/use-mobile";
 
 interface SearchButtonProps {
   onClick: () => void;

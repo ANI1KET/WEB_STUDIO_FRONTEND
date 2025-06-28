@@ -10,8 +10,8 @@ import React from "react";
 import { Badge } from "@/app/components/ui/badge";
 
 interface RoomInfoProps {
-  name: string;
   city: string;
+  title: string;
   price: number;
   ratings: number;
   location: string;
@@ -23,7 +23,7 @@ interface RoomInfoProps {
 }
 
 const RoomInfo: React.FC<RoomInfoProps> = ({
-  name,
+  title,
   city,
   price,
   // ratings,
@@ -37,7 +37,7 @@ const RoomInfo: React.FC<RoomInfoProps> = ({
   <div className="p-4 space-y-3 flex-grow flex flex-col">
     <div className="flex-grow">
       <h3 className="font-bold text-lg text-gray-900 mb-1 line-clamp-2">
-        {name}
+        {title}
       </h3>
       <div className="flex items-center text-gray-500 text-sm mb-2">
         <MapPin className="h-4 w-4 mr-1 text-green-600" />

@@ -8,9 +8,10 @@ export type RoomType = "FLAT" | "1BHK" | "2BHK" | "3BHK" | "4BHK";
 export type RoomAmenities = "BIKE PARK" | "CAR PARK" | "WIFI" | "24/7 WATER";
 
 export type Room = {
+  hall: number;
   name: string;
   city: string;
-  hall: number;
+  title: string;
   price: number;
   kitchen: number;
   bedroom: number;

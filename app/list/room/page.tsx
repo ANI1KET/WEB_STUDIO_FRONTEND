@@ -109,6 +109,7 @@ const Room = () => {
         furnishingStatus,
         photos: ImageUrls,
         videos: VideoUrl ?? null,
+        name: session?.user.name as string,
         listerId: session?.user.id as string,
         postedBy: session?.user.role as Role,
       });

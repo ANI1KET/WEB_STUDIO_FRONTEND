@@ -53,7 +53,6 @@ const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
       <div className="w-[320px] relative rounded-t-xl overflow-hidden group">
         {showVideo && room.videos ? (
           <iframe
-            allowFullScreen={false}
             allow="autoplay; encrypted-media"
             style={{ pointerEvents: "none" }}
             src={
@@ -134,7 +133,7 @@ const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
 
       <CardContent className="py-2">
         <h3 className="font-semibold text-base sm:text-lg mb-2 text-gray-800 line-clamp-2">
-          {room.name}
+          {room.title}
         </h3>
 
         <div className="flex items-center text-gray-500 text-xs sm:text-sm mb-3">

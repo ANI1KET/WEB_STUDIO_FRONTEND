@@ -114,7 +114,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="overflow-hidden shadow-2xl border border-green-100/50 rounded-3xl bg-white/95 backdrop-blur-sm hover:shadow-green-200/40">
           <OptimizedRoomGallery
-            name={roomData.name}
+            title={roomData.title}
             onImageModalOpen={open}
             videos={roomData.videos}
             photos={roomData.photos}
@@ -123,9 +123,9 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
 
         <RoomDetailsAction
           session={session}
-          name={roomData.name}
           city={roomData.city}
           onShare={handleShare}
+          title={roomData.title}
           price={roomData.price}
           onCompare={handleCompare}
           ratings={roomData.ratings}
@@ -180,7 +180,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
                     key={idx}
                     className="w-[320px] h-[46vh] md:h-[58vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
                   >
-                    <div className="w-full h-[26vh] bg-gray-300/30"></div>
+                    <div className="w-full h-[20vh] md:h-[26vh] bg-gray-300/30"></div>
                   </div>
                 ))}
               </div>
@@ -219,7 +219,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
         onClose={close}
         isOpen={isOpen}
         photos={roomData.photos}
-        roomName={roomData.name}
+        title={roomData.title}
         currentImageIndex={currentIndex}
       />
     </div>

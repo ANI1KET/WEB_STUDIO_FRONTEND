@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Alert, Snackbar } from "@mui/material";
 
-import { useToast } from "@/app/hooks/use-toast";
+import { useToast } from "@/app/common/hooks/use-toast";
 
 export function Toaster() {
   const { toasts } = useToast();

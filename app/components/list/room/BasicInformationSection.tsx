@@ -46,13 +46,13 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
             required
-            name="name"
+            name="title"
             label="Title"
             errors={errors}
             register={register}
             placeholder="e.g., Cozy 2BHK in Thamel"
             validation={{
-              required: "Name is required",
+              required: "Title is required",
             }}
           />
 

@@ -7,8 +7,8 @@ import { Play, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 
 interface ImageCarouselProps {
-  roomName: string;
   photos: string[];
+  roomTitle: string;
   showVideo: boolean;
   videos: string | null;
   onToggleVideo: (e: React.MouseEvent) => void;
@@ -17,7 +17,7 @@ interface ImageCarouselProps {
 const ImageCarousel: React.FC<ImageCarouselProps> = ({
   photos,
   videos,
-  roomName,
+  roomTitle,
   showVideo,
   onToggleVideo,
 }) => {
@@ -52,7 +52,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
             loading="lazy"
             className="object-cover"
             src={photos[currentImageIndex]}
-            alt={`${roomName} - ${currentImageIndex + 1}`}
+            alt={`${roomTitle} - ${currentImageIndex + 1}`}
           />
 
           {/* Image indicators */}

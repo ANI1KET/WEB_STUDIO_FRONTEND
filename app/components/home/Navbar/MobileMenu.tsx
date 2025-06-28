@@ -1,11 +1,23 @@
 "use client";
 
+import {
+  X,
+  User,
+  Heart,
+  Rocket,
+  GitCompare,
+  CircleUserRound,
+  LayoutDashboard,
+} from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { User, LayoutDashboard, Heart, Rocket, X } from "lucide-react";
 
-import { canAccessDashboard, canPromote } from "./config/common";
+import {
+  canPromote,
+  canAccessDashboard,
+  canAccessInterested,
+} from "../../../common/config/authorization";
 // import { roomItems, propertyItems, vehicleItems } from "./config/MobileMenu";
 
 import { Button } from "@/app/components/ui/button";
@@ -131,6 +143,13 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               </h3>
             </div>
 
+            <MobileNavItem
+              label="Compare Listings"
+              description="Compare saved listings"
+              onClick={() => router.push("/compare")}
+              icon={<GitCompare size={18} className="text-orange-600" />}
+            />
+
             {session ? (
               <>
                 <MobileNavItem
@@ -140,23 +159,44 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   icon={<User size={18} className="text-blue-600" />}
                 />
 
+                <MobileNavItem
+                  label="Profile"
+                  description="Manage your account"
+                  onClick={() => router.push("/profile")}
+                  icon={
+                    <CircleUserRound size={18} className="text-amber-600" />
+                  }
+                />
+
                 {canAccessDashboard(session.user.role) && (
                   <MobileNavItem
                     label="Dashboard"
                     description="View your overview"
-                    onClick={() => {
-                      const hostname = window.location.hostname;
-                      const parts = hostname.split(".");
-                      const baseDomain = parts.slice(-3).join(".");
-
+                    onClick={() =>
                       window.open(
-                        `https://dashboard.${baseDomain}/${session.user.role?.toLowerCase()}`,
+                        `https://dashboard.${
+                          process.env.NEXT_PUBLIC_BASE_DOMAIN
+                        }/${session.user.role?.toLowerCase()}`,
                         "_blank"
-                      );
-                    }}
+                      )
+                    }
                     icon={
                       <LayoutDashboard size={18} className="text-purple-600" />
                     }
+                  />
+                )}
+
+                {canAccessInterested(session.user.role) && (
+                  <MobileNavItem
+                    label="Interested Listings"
+                    description="Your favorites"
+                    onClick={() =>
+                      window.open(
+                        `https://interested.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+                        "_blank"
+                      )
+                    }
+                    icon={<Heart size={18} className="text-red-600" />}
                   />
                 )}
 
@@ -164,13 +204,12 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   <MobileNavItem
                     label="Promote Listings"
                     description="Boost visibility"
-                    onClick={() => {
-                      const hostname = window.location.hostname;
-                      const parts = hostname.split(".");
-                      const baseDomain = parts.slice(-3).join(".");
-
-                      window.open(`https://promote.${baseDomain}`, "_blank");
-                    }}
+                    onClick={() =>
+                      window.open(
+                        `https://promote.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+                        "_blank"
+                      )
+                    }
                     icon={<Rocket size={18} className="text-green-600" />}
                   />
                 )}
@@ -183,14 +222,15 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   onClick={() => router.push("/auth/login")}
                   icon={<User size={18} className="text-blue-600" />}
                 />
+
+                <MobileNavItem
+                  label="Interested Listings"
+                  description="Your favorites"
+                  onClick={() => router.push("/auth/login")}
+                  icon={<Heart size={18} className="text-red-600" />}
+                />
               </>
             )}
-            <MobileNavItem
-              label="Saved Listings"
-              description="Your favorites"
-              onClick={() => router.push("/interested")}
-              icon={<Heart size={18} className="text-red-600" />}
-            />
           </div>
         </div>
       </div>

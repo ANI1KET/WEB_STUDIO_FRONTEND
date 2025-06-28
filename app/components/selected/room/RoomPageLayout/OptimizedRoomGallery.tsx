@@ -8,14 +8,14 @@ import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 
 interface OptimizedRoomGalleryProps {
-  name: string;
+  title: string;
   photos: string[];
   videos: string | null;
   onImageModalOpen: (index: number) => void;
 }
 
 const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
-  name,
+  title,
   photos,
   videos,
   onImageModalOpen,
@@ -56,7 +56,7 @@ const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
               fill
               loading="eager"
               src={photos[currentImageIndex]}
-              alt={`${name} - Image ${currentImageIndex + 1}`}
+              alt={`${title} - Image ${currentImageIndex + 1}`}
               priority={!showVideo && currentImageIndex === 0}
               onClick={() => onImageModalOpen(currentImageIndex)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
