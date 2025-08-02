@@ -1,11 +1,13 @@
 "use client";
 
-import { toast } from "sonner";
 import { useEffect, useState } from "react";
 
-import { RoomData } from "../types/types";
+import { RoomData } from "../../types/types";
+import { useToast } from "../../common/hooks/use-toast";
 
 export const useCompareItems = () => {
+  const { toast } = useToast();
+
   const [rooms, setRooms] = useState<RoomData[]>([]);
 
   useEffect(() => {
@@ -19,12 +21,18 @@ export const useCompareItems = () => {
     const updatedRooms = rooms.filter((room) => room.id !== id);
     localStorage.setItem("ComparisonRooms", JSON.stringify(updatedRooms));
     setRooms(updatedRooms);
-    toast.success("Room removed from the comparison list");
+    toast({
+      title: "Room",
+      description: "Room removed from the comparison list",
+    });
   };
   const clearRooms = () => {
     localStorage.removeItem("ComparisonRooms");
     setRooms([]);
-    toast.success("All rooms removed from the comparison list");
+    toast({
+      title: "Room",
+      description: "All rooms removed from the comparison list",
+    });
   };
 
   // const existingProperties = JSON.parse(

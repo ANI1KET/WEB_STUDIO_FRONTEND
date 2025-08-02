@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -6,9 +5,10 @@ import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   fetchRoom,
   updateNumber,
-  pushSavedRoom,
+  pushInterestedRoom,
 } from "../ServerAction/RoomPageLayout";
 import { RoomData } from "@/app/types/types";
+import { useToast } from "@/app/common/hooks/use-toast";
 import { useGetRoomSearchData } from "@/app/providers/reactqueryProvider";
 
 const findMatchingRoom = (
@@ -81,14 +81,22 @@ export function useImageModalControl(totalImages: number) {
 }
 
 export function useRoomActions(roomData: RoomData) {
+  const { toast } = useToast();
   const { data: session, update } = useSession();
 
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast.success("Room link copied to clipboard");
+      toast({
+        title: "Room",
+        description: "Room link copied to clipboard",
+      });
     } catch {
-      toast.error("Failed to copy link");
+      toast({
+        title: "Room",
+        variant: "destructive",
+        description: "Failed to copy link",
+      });
     }
   };
 
@@ -99,59 +107,59 @@ export function useRoomActions(roomData: RoomData) {
       ) as RoomData[];
 
       if (existingRooms.some((room) => room.id === roomData.id)) {
-        toast.success("Room Details already exist in comparison list.");
+        toast({
+          title: "Room",
+          description: "Room Details already exist in comparison list.",
+        });
         return;
       }
 
       existingRooms.push(roomData);
       localStorage.setItem("ComparisonRooms", JSON.stringify(existingRooms));
-      toast.success("Room Details added to comparison list.");
+      toast({
+        title: "Room",
+        description: "Room Details added to comparison list.",
+      });
     } catch (error) {
       console.error(error);
-      toast.error("Unable to add room details to comparison list.");
+      toast({
+        title: "Room",
+        variant: "destructive",
+        description: "Unable to add room details to comparison list.",
+      });
     }
   };
 
   const handleInterest = async () => {
     try {
-      const existingRooms = JSON.parse(
-        localStorage.getItem("InterestedRooms") || "[]"
-      ) as RoomData[];
-
-      if (existingRooms.some((room) => room.id === roomData.id)) {
-        toast.success("Lister has already been notified of your interest.");
-        return;
-      }
-
-      await pushSavedRoom({
+      const response = await pushInterestedRoom({
         roomId: roomData.id,
-        listerName: roomData.name,
         listerId: roomData.listerId,
-        listerContact: roomData.primaryContact,
+        listerNumber: roomData.primaryContact,
         userId: session?.user.userId as string,
-        userName: session?.user.name as string,
-        userEmail: session?.user.email as string,
-        userContact: session?.user.number as string,
       });
 
-      existingRooms.push(roomData);
-      localStorage.setItem("InterestedRooms", JSON.stringify(existingRooms));
-      toast.success(
-        "Lister has been notified of your interest. They will contact you soon."
-      );
+      toast({
+        description: response,
+        title: "Room Interest Notification",
+      });
     } catch (error) {
       console.error("Failed to save data.", error);
-      toast.error("Unable to notify lister.");
+      toast({
+        variant: "destructive",
+        title: "Room Interest Notification",
+        description: "Unable to notify lister.",
+      });
     }
   };
 
   const handleContactVerification = async (phoneNumber: string) => {
-    const response = await updateNumber({
-      number: phoneNumber,
-      userId: session?.user.userId as string,
-    });
+    try {
+      const response = await updateNumber({
+        number: phoneNumber,
+        userId: session?.user.userId as string,
+      });
 
-    if (response !== "Failed") {
       await update({
         ...session,
         user: {
@@ -159,9 +167,15 @@ export function useRoomActions(roomData: RoomData) {
           number: phoneNumber,
         },
       });
-      toast.success("Contact number is updated.");
-    } else {
-      toast.error("Contact couldn't be updated. Please try again.");
+
+      toast({ title: "Account", description: response });
+    } catch (error) {
+      toast({
+        title: "Account",
+        description: "Contact couldn't be updated. Please try again later.",
+      });
+
+      console.error(error);
     }
   };
 

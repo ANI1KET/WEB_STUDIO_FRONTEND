@@ -64,7 +64,7 @@ const addToRemoveQueue = (toastId: string) => {
       type: "REMOVE_TOAST",
       toastId: toastId,
     });
-  }, 3000);
+  }, 2000);
 
   toastTimeouts.set(toastId, timeout);
 };
@@ -160,8 +160,8 @@ function toast({ ...props }: Toast) {
 
   return {
     id: id,
-    dismiss,
     update,
+    dismiss,
   };
 }
 

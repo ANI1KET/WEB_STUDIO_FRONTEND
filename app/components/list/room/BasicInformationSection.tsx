@@ -5,11 +5,9 @@ import { Home } from "lucide-react";
 import { Control, Controller } from "react-hook-form";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 
-import {
-  roomTypeOptions,
-  nepalCityOptions,
-} from "./config/BasicInformationSection";
 import { RoomWithMedia } from "@/app/types/types";
+import { nepalCityOptions } from "@/app/common/config/nepal";
+import { roomTypeOptions } from "./config/BasicInformationSection";
 
 import {
   Card,
@@ -50,7 +48,7 @@ const BasicInformationSection: React.FC<BasicInformationSectionProps> = ({
             label="Title"
             errors={errors}
             register={register}
-            placeholder="e.g., Cozy 2BHK in Thamel"
+            placeholder="e.g., 2BHK in Thamel"
             validation={{
               required: "Title is required",
             }}

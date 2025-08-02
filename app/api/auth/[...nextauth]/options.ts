@@ -107,7 +107,16 @@ export const authOptions: NextAuthOptions = {
             throw new Error("Incoorect Email or Password");
           }
 
-          const { id, email, name, number, role, permission, promoting } = user;
+          const {
+            id,
+            name,
+            role,
+            email,
+            number,
+            promoting,
+            permission,
+            servicesOffered,
+          } = user;
 
           return {
             id,
@@ -116,6 +125,7 @@ export const authOptions: NextAuthOptions = {
             email,
             promoting,
             permission,
+            servicesOffered,
             number: number ?? undefined,
           };
         } catch (error: unknown) {
@@ -146,6 +156,7 @@ export const authOptions: NextAuthOptions = {
           user.promoting = userDetails.promoting;
           user.permission = userDetails.permission;
           user.number = userDetails.number as string;
+          user.servicesOffered = userDetails.servicesOffered;
 
           return true;
         } catch (error) {
@@ -177,6 +188,7 @@ export const authOptions: NextAuthOptions = {
         token.number = user.number;
         token.promoting = user.promoting;
         token.permission = user.permission;
+        token.servicesOffered = user.servicesOffered;
 
         // if (account?.provider === 'google') {
         //   token.refresh_token = account.refresh_token;
@@ -197,6 +209,7 @@ export const authOptions: NextAuthOptions = {
       session.user.userId = token.userId as string | undefined;
       session.user.promoting = token.promoting as Permission[] | [];
       session.user.permission = token.permission as Permission[] | [];
+      session.user.servicesOffered = token.servicesOffered as Permission[] | [];
       // session.user.refresh_token = token?.refresh_token;
       // session.user.access_token = token?.access_token;
 

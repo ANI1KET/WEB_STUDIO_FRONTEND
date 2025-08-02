@@ -19,10 +19,13 @@ export interface TableRowProps {
 }
 
 export interface ComparisonHeaderProps {
+  rooms: RoomData[];
   isExpanded: boolean;
+  selectedCity: string;
   sortBy: SortableField;
   sortOrder: "asc" | "desc";
   onToggleExpanded: () => void;
+  onCityChange: (value: string) => void;
   onSortChange: (value: SortableField) => void;
   onSortOrderChange: (value: "asc" | "desc") => void;
 }

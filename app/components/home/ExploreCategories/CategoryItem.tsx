@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  Bed,
-  Apartment,
-  ShoppingBag,
-  DirectionsCar,
-} from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { Package, HandHeart, Truck, Wrench } from "lucide-react";
 
 import { useIsMobile } from "@/app/common/hooks/use-mobile";
 
@@ -18,7 +13,7 @@ type CategoryItemProps = {
   route: string;
   bgImage: string;
   description: string;
-  iconType: "bed" | "apartment" | "car" | "shopping";
+  iconType: "package" | "hand-heart" | "truck" | "wrench";
 };
 
 const CategoryItem = ({
@@ -34,17 +29,23 @@ const CategoryItem = ({
 
   // Convert iconType to the actual React node
   const getIcon = (type: string, fontSize: number) => {
+    const iconProps = {
+      size: fontSize,
+      color: "white",
+      strokeWidth: 2,
+    };
+
     switch (type) {
-      case "bed":
-        return <Bed sx={{ fontSize, color: "white" }} />;
-      case "apartment":
-        return <Apartment sx={{ fontSize, color: "white" }} />;
-      case "car":
-        return <DirectionsCar sx={{ fontSize, color: "white" }} />;
-      case "shopping":
-        return <ShoppingBag sx={{ fontSize, color: "white" }} />;
+      case "package":
+        return <Package {...iconProps} />;
+      case "hand-heart":
+        return <HandHeart {...iconProps} />;
+      case "truck":
+        return <Truck {...iconProps} />;
+      case "wrench":
+        return <Wrench {...iconProps} />;
       default:
-        return <Bed sx={{ fontSize, color: "white" }} />;
+        return <Package {...iconProps} />;
     }
   };
 

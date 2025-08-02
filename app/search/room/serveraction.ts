@@ -6,6 +6,7 @@ import { PAGE_SIZE } from "@/app/lib/constant";
 import { ListedRoom } from "@/app/types/types";
 import { RoomFilters } from "@/app/types/filters";
 import axiosInstance from "@/app/lib/axiosInstance";
+import { getRoomFilteredDataUrl } from "@/app/common/endPoints/room";
 
 export const getRoomFilteredData = async ({
   city,
@@ -21,13 +22,13 @@ export const getRoomFilteredData = async ({
   "use server";
 
   try {
-    const response = await axiosInstance.get("room/filter", {
+    const response = await axiosInstance.get(getRoomFilteredDataUrl, {
       params: {
         city,
         offset,
-        filters,
-        locations,
         limit: PAGE_SIZE,
+        filters: JSON.stringify(filters),
+        locations: JSON.stringify(locations),
       },
       headers: { "Cache-Control": "no-cache" },
     });

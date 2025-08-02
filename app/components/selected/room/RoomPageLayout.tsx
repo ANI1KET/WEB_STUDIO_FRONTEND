@@ -18,7 +18,7 @@ import RoomCard from "@/app/common/ui/Room";
 import RoomImageModal from "./RoomPageLayout/RoomImageModal";
 import RoomDetailsMain from "./RoomPageLayout/RoomDetailsMain";
 import RoomAmenitiesLayout from "./RoomPageLayout/RoomAmenities";
-import RoomDetailsAction from "./RoomPageLayout/RoomDetailsHeader";
+import RoomDetailsAction from "./RoomPageLayout/RoomDetailsAction";
 import OptimizedRoomGallery from "./RoomPageLayout/OptimizedRoomGallery";
 
 interface RoomLayoutProps {
@@ -122,6 +122,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
         </div>
 
         <RoomDetailsAction
+          id={roomData.id}
           session={session}
           city={roomData.city}
           onShare={handleShare}
@@ -129,13 +130,16 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
           price={roomData.price}
           onCompare={handleCompare}
           ratings={roomData.ratings}
+          listerName={roomData.name}
           onInterest={handleInterest}
+          postedBy={roomData.postedBy}
+          listerId={roomData.listerId}
           location={roomData.location}
           verified={roomData.verified}
           available={roomData.available}
-          ownerContact={roomData.ownerContact}
           primaryContact={roomData.primaryContact}
           verifyContact={handleContactVerification}
+          secondaryContact={roomData.secondaryContact}
         />
 
         <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-100/50 overflow-hidden hover:shadow-green-200/40">
@@ -148,9 +152,9 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
             createdAt={roomData.createdAt}
             updatedAt={roomData.updatedAt}
             direction={roomData.direction}
-            description={roomData.description}
             minCapacity={roomData.minCapacity}
             maxCapacity={roomData.maxCapacity}
+            description={roomData.description}
             furnishingStatus={roomData.furnishingStatus}
           />
         </div>

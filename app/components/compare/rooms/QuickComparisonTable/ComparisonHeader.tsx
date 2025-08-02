@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Maximize2, Minimize2 } from "lucide-react";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 
@@ -10,18 +10,33 @@ import { ComparisonHeaderProps, SortingControlsProps } from "./types";
 import { Button } from "@/app/components/ui/button";
 
 const ComparisonHeader = ({
+  rooms,
   sortBy,
   sortOrder,
   isExpanded,
+  selectedCity,
+  onCityChange,
   onSortChange,
   onToggleExpanded,
   onSortOrderChange,
 }: ComparisonHeaderProps) => {
+  const roomsCities = useMemo(() => {
+    return [...new Set(rooms.map((room) => room.city))];
+  }, [rooms]);
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
-      <h3 className="text-lg sm:text-xl font-bold text-gray-900">
-        Quick Comparison
-      </h3>
+      <div className="flex flex-col w-full gap-2">
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+          Quick Comparison
+        </h3>
+
+        {selectedCity && (
+          <div className="text-sm text-gray-600">
+            Filtering by city: <strong>{selectedCity}</strong>
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
         <SortingControls
           sortBy={sortBy}
@@ -29,6 +44,27 @@ const ComparisonHeader = ({
           onSortChange={onSortChange}
           onSortOrderChange={onSortOrderChange}
         />
+
+        <FormControl
+          size="small"
+          sx={{ minWidth: 120, width: { xs: "100%", sm: "auto" } }}
+        >
+          <InputLabel>City</InputLabel>
+          <Select
+            value={selectedCity}
+            label="City"
+            onChange={(e) => onCityChange(e.target.value)}
+          >
+            <MenuItem value="">
+              <em>All Cities</em>
+            </MenuItem>
+            {roomsCities.map((city) => (
+              <MenuItem key={city} value={city}>
+                {city}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <Button
           size="sm"
@@ -93,8 +129,9 @@ const SortingControls = ({
           <MenuItem value="hall">Halls</MenuItem>
           <MenuItem value="kitchen">Kitchens</MenuItem>
           <MenuItem value="bathroom">Bathrooms</MenuItem>
+
+          <MenuItem value="city">City</MenuItem>
           {/* <MenuItem value="location">Location</MenuItem> */}
-          {/* <MenuItem value="city">City</MenuItem> */}
         </Select>
       </FormControl>
 

@@ -21,7 +21,7 @@ import { PAGE_SIZE } from "@/app/lib/constant";
 // };
 
 export async function getCategoryCitiesLocationDetails() {
-  const url = `${process.env.BASE_URL}/api/place/data?limit=${PAGE_SIZE}`;
+  const url = `${process.env.BASE_URL}/aggregator-service/data?limit=${PAGE_SIZE}`;
 
   const res = await fetch(url, {
     next: { revalidate: 300 },

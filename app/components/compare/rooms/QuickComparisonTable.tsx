@@ -16,13 +16,19 @@ interface QuickComparisonTableProps {
 const QuickComparisonTable = ({ rooms }: QuickComparisonTableProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [sortBy, setSortBy] = useState<SortableField>("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-  // Sorting logic
+  const filteredRoomsByCity = useMemo(() => {
+    if (!selectedCity) return rooms;
+    return rooms.filter(
+      (room) => room.city.toLowerCase() === selectedCity.toLowerCase()
+    );
+  }, [rooms, selectedCity]);
   const sortedRooms = useMemo(() => {
-    if (!sortBy) return rooms;
+    if (!sortBy) return filteredRoomsByCity;
 
-    return [...rooms].sort((a, b) => {
+    return [...filteredRoomsByCity].sort((a, b) => {
       let aValue: string | number = "";
       let bValue: string | number = "";
 
@@ -55,10 +61,10 @@ const QuickComparisonTable = ({ rooms }: QuickComparisonTableProps) => {
           aValue = a.maxCapacity;
           bValue = b.maxCapacity;
           break;
-        // case "city":
-        //   aValue = a.city.toLowerCase();
-        //   bValue = b.city.toLowerCase();
-        //   break;
+        case "city":
+          aValue = a.city.toLowerCase();
+          bValue = b.city.toLowerCase();
+          break;
         // case "location":
         //   aValue = a.location.toLowerCase();
         //   bValue = b.location.toLowerCase();
@@ -67,18 +73,19 @@ const QuickComparisonTable = ({ rooms }: QuickComparisonTableProps) => {
           return 0;
       }
 
-      // if (typeof aValue === "string" && typeof bValue === "string") {
-      //   return sortOrder === "asc"
-      //     ? aValue.localeCompare(bValue)
-      //     : bValue.localeCompare(aValue);
-      // }
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        return sortOrder === "asc"
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
 
       return sortOrder === "asc"
         ? (aValue as number) - (bValue as number)
         : (bValue as number) - (aValue as number);
     });
-  }, [rooms, sortBy, sortOrder]);
+  }, [filteredRoomsByCity, sortBy, sortOrder]);
 
+  const handleCityChange = (value: string) => setSelectedCity(value);
   const handleSortChange = (value: SortableField) => setSortBy(value);
   const handleSortOrderChange = (value: "asc" | "desc") => setSortOrder(value);
 
@@ -90,9 +97,12 @@ const QuickComparisonTable = ({ rooms }: QuickComparisonTableProps) => {
   return (
     <div className="bg-white p-3 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
       <ComparisonHeader
+        rooms={rooms}
         sortBy={sortBy}
         sortOrder={sortOrder}
         isExpanded={isExpanded}
+        selectedCity={selectedCity}
+        onCityChange={handleCityChange}
         onSortChange={handleSortChange}
         onSortOrderChange={handleSortOrderChange}
         onToggleExpanded={() => setIsExpanded(!isExpanded)}

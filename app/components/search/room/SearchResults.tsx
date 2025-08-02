@@ -38,7 +38,7 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
       {rooms.map((room) => (
         <Card
           key={room.id}
-          className="hover:shadow-2xl transition-all duration-300 transform border-0 overflow-hidden rounded-2xl bg-white flex flex-col"
+          className="h-fit shadow-xl hover:shadow-2xl transition-all duration-300 transform border-0 overflow-hidden rounded-2xl bg-white flex flex-col"
         >
           {/* Image/Video Section */}
           <div className="relative">

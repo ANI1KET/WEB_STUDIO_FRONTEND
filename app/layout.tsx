@@ -9,7 +9,6 @@ import ReactQueryProvider from "./providers/reactqueryProvider";
 
 import NavigationBar from "./navigationbar";
 import { Toaster } from "./components/ui/toaster";
-import { Toaster as Sonner } from "./components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Afno Sansaar",
@@ -43,7 +42,6 @@ export default function RootLayout({
           <AuthProvider>
             <TooltipProvider>
               <Toaster />
-              <Sonner />
               <NavigationBar>{children}</NavigationBar>
             </TooltipProvider>
           </AuthProvider>

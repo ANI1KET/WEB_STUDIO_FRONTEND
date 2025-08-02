@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { toast } from "sonner";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import { useToast } from "@/app/common/hooks/use-toast";
 
 import {
   Card,
@@ -27,6 +28,7 @@ const MainLoginForm = ({
   onCreatePassword,
 }: MainLoginFormProps) => {
   const navigate = useRouter();
+  const { toast } = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,7 +54,11 @@ const MainLoginForm = ({
     setLoading(false);
 
     if (result?.error) {
-      toast.error(result?.error);
+      toast({
+        title: "Account",
+        variant: "destructive",
+        description: result?.error,
+      });
     } else {
       navigate.push(redirectUrl);
     }

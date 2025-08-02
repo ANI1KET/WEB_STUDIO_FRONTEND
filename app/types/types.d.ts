@@ -5,7 +5,25 @@ export type CategoryCitiesLocations = Record<string, string[]>;
 
 // ROOM
 export type RoomType = "FLAT" | "1BHK" | "2BHK" | "3BHK" | "4BHK";
-export type RoomAmenities = "BIKE PARK" | "CAR PARK" | "WIFI" | "24/7 WATER";
+export type RoomAmenities =
+  | "AC"
+  | "WIFI"
+  | "POOL"
+  | "LIFT"
+  | "OVEN"
+  | "SOFA"
+  | "GARDEN"
+  | "GEYSER"
+  | "FRIDGE"
+  | "BALCONY"
+  | "TERRACE"
+  | "CHIMNEY"
+  | "CAR PARK"
+  | "BIKE PARK"
+  | "24/7 WATER"
+  | "FIRE SAFETY"
+  | "POWER BACKUP"
+  | "WASHING MANCHINE";
 
 export type Room = {
   hall: number;
@@ -21,8 +39,8 @@ export type Room = {
   minCapacity: number;
   maxCapacity: number;
   description: string;
-  ownerContact: string;
   primaryContact: string;
+  secondaryContact: string;
   direction: string | null;
   amenities: RoomAmenities[];
   furnishingStatus: FurnishingStatusEnum;

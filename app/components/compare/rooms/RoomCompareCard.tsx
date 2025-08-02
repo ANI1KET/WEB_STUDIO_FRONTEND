@@ -1,12 +1,10 @@
 "use client";
 
 import React from "react";
-import { Trash2 } from "lucide-react";
 
 import { RoomData } from "@/app/types/types";
 
 import { Badge } from "@/app/components/ui/badge";
-import { Button } from "@/app/components/ui/button";
 import RoomCardHeader from "./RoomCompareCard/RoomCardHeader";
 import RoomDetailsGrid from "./RoomCompareCard/RoomDetailsGrid";
 import RoomMediaSection from "./RoomCompareCard/RoomMediaSection";
@@ -41,19 +39,6 @@ const RoomCompareCard = ({ room, onRemove }: RoomCompareCardProps) => {
             city={room.city}
             location={room.location}
           />
-
-          {/* Delete Button - Always visible on card */}
-          <div className="absolute top-3 right-3">
-            <Button
-              size="icon"
-              variant="destructive"
-              onClick={handleRemove}
-              title="Remove from comparison"
-              className="w-8 h-8 bg-red-500 hover:bg-red-600 text-white shadow-lg"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          </div>
         </div>
       </CardHeader>
 

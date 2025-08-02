@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { toast } from "sonner";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -19,8 +18,10 @@ import {
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
+import { useToast } from "@/app/common/hooks/use-toast";
 
 const Signup = () => {
+  const { toast } = useToast();
   const navigate = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +42,11 @@ const Signup = () => {
       reset();
       navigate.push("/auth/login");
     } else {
-      toast.error(response);
+      toast({
+        title: "Account",
+        description: response,
+        variant: "destructive",
+      });
     }
   };
 

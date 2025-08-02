@@ -1,9 +1,10 @@
 "use client";
 
-import { toast } from "sonner";
 import { useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Eye, EyeOff, Lock, ArrowLeft } from "lucide-react";
+
+import { useToast } from "@/app/common/hooks/use-toast";
 
 import {
   Card,
@@ -31,6 +32,8 @@ interface FormData {
 }
 
 const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
+  const { toast } = useToast();
+
   const {
     watch,
     control,
@@ -51,13 +54,20 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
 
   const onSubmit = async (data: FormData) => {
     if (data.otp !== "123456") {
-      toast.error("Invalid OTP");
+      toast({
+        title: "OTP",
+        variant: "destructive",
+        description: "Invalid OTP",
+      });
       return;
     }
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log(data);
-    toast.success("Password created successfully!");
+    toast({
+      title: "Account",
+      description: "Password created successfully!",
+    });
     onBack();
   };
 

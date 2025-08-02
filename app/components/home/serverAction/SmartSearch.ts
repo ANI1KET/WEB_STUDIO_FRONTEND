@@ -12,7 +12,7 @@ export async function getCategoryCitiesLocations(
 
   try {
     const response = await axiosInstance.get(
-      `/place/cities-locations/${category}`,
+      `${category}-service/${category}/cities-locations`,
       {
         params: {
           city,
@@ -43,7 +43,7 @@ export async function getCategoryCityLocations({
 
   try {
     const response = await axiosInstance.get(
-      `/place/city-locations?category=${category}&city=${city}`,
+      `${category}-service/${category}/city-locations?city=${city}`,
       {
         headers: {
           "Cache-Control": "no-cache",

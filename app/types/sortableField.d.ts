@@ -1,6 +1,6 @@
 export type SortableField =
   | ""
-  // | "city"
+  | "city"
   | "hall"
   | "price"
   | "kitchen"

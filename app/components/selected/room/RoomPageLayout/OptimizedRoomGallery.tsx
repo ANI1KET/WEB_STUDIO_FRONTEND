@@ -56,8 +56,8 @@ const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
               fill
               loading="eager"
               src={photos[currentImageIndex]}
-              alt={`${title} - Image ${currentImageIndex + 1}`}
               priority={!showVideo && currentImageIndex === 0}
+              alt={`${title} - Image ${currentImageIndex + 1}`}
               onClick={() => onImageModalOpen(currentImageIndex)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
               className="w-full h-full object-cover transition-all duration-300 cursor-pointer"

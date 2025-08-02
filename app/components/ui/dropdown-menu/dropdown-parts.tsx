@@ -103,6 +103,26 @@ interface DropdownMenuContentProps {
   align?: "center" | "start" | "end";
 }
 
+function isFragmentElement(
+  element: React.ReactNode
+): element is React.ReactElement<{ children?: React.ReactNode }> {
+  return React.isValidElement(element) && element.type === React.Fragment;
+}
+
+function unwrapChildren(children: React.ReactNode): React.ReactNode[] {
+  const unwrapped: React.ReactNode[] = [];
+
+  React.Children.forEach(children, (child) => {
+    if (isFragmentElement(child)) {
+      unwrapped.push(...unwrapChildren(child.props.children));
+    } else {
+      unwrapped.push(child);
+    }
+  });
+
+  return unwrapped;
+}
+
 const DropdownMenuContent = React.forwardRef<
   HTMLDivElement,
   DropdownMenuContentProps
@@ -121,6 +141,8 @@ const DropdownMenuContent = React.forwardRef<
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref
   ) => {
+    const flattenedChildren = unwrapChildren(children);
+
     // Set anchor and transform origins based on align prop
     const anchorOrigin = {
       vertical: "bottom" as const,
@@ -163,14 +185,14 @@ const DropdownMenuContent = React.forwardRef<
               },
             },
           },
-        }}
-        MenuListProps={{
-          dense: true,
-          "aria-orientation": "vertical",
+          list: {
+            dense: true,
+            "aria-orientation": "vertical",
+          },
         }}
         {...props}
       >
-        {children}
+        {flattenedChildren}
       </Menu>
     );
   }

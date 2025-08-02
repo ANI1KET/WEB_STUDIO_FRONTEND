@@ -1,6 +1,5 @@
 "use client";
 
-import { toast } from "sonner";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Permission } from "@prisma/client";
@@ -11,6 +10,7 @@ import {
   FetchCategoryCitiesLocations,
 } from "./hooks/SmartSearch";
 import { PropertyType } from "@/app/types/types";
+import { useToast } from "@/app/common/hooks/use-toast";
 import { propertyTypes, categorySearchData } from "./config/SmartSearch";
 
 const CategorySelector = dynamic(
@@ -32,6 +32,7 @@ const SearchFilters = dynamic(() => import("./SmartSearch/SearchFilters"));
 
 const SmartSearch = () => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [category, setCategory] = useState<Permission | "">("");
 
@@ -115,17 +116,29 @@ const SmartSearch = () => {
 
   const handleSearch = () => {
     if (!category) {
-      toast.error("Select a category");
+      toast({
+        title: "Search",
+        variant: "destructive",
+        description: "Select a category",
+      });
       return;
     }
 
     if (!selectedCity) {
-      toast.error("Select a city");
+      toast({
+        title: "Search",
+        variant: "destructive",
+        description: "Select a city",
+      });
       return;
     }
 
     if (category === "property" && !propertyType) {
-      toast.error("Select a property type");
+      toast({
+        title: "Search",
+        variant: "destructive",
+        description: "Select a property type",
+      });
       return;
     }
 

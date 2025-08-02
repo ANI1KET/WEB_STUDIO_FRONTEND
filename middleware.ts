@@ -4,10 +4,10 @@ import type { NextRequest } from "next/server";
 import { Permission, Role } from "@prisma/client";
 
 import {
-  canPromote,
   hasPermission,
-  canUseDashboard,
-  canUseInterested,
+  canRoutePromote,
+  canRouteDashboard,
+  canRouteInterested,
 } from "./app/common/config/authorization";
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -36,18 +36,21 @@ export async function middleware(req: NextRequest) {
 
   if (
     req.nextUrl.pathname.startsWith("/interested") &&
-    !canUseInterested(token.role)
+    !canRouteInterested(token.role)
   ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (req.nextUrl.pathname.startsWith("/promote") && !canPromote(token.role)) {
+  if (
+    req.nextUrl.pathname.startsWith("/promote") &&
+    !canRoutePromote(token.role)
+  ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   if (
     req.nextUrl.pathname.startsWith("/dashboard") &&
-    !canUseDashboard(token.role, secondSegment)
+    !canRouteDashboard(token.role, secondSegment)
   ) {
     return NextResponse.redirect(new URL("/", req.url));
   }

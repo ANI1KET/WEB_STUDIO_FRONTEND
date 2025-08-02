@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Home, Building, Car } from "lucide-react";
 
-import { useCompareItems } from "./hooks";
+import { useCompareItems } from "./rooms/hooks";
 
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent } from "@/app/components/ui/card";

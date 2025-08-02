@@ -58,8 +58,8 @@ const ContactDescriptionSection: React.FC<ContactDescriptionSectionProps> = ({
             maxLength={10}
             errors={errors}
             register={register}
-            name="ownerContact"
-            label="Owner Contact"
+            name="secondaryContact"
+            label="Secondary Contact"
             placeholder="9812345678"
             validation={{
               pattern: {
@@ -74,8 +74,8 @@ const ContactDescriptionSection: React.FC<ContactDescriptionSectionProps> = ({
         <FormField
           required
           rows={2}
-          maxLength={500}
           errors={errors}
+          maxLength={500}
           type="textarea"
           name="description"
           register={register}

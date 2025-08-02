@@ -18,14 +18,17 @@ export const getCategoryDetails = async ({
   if (!category) throw new Error("Category is required.");
 
   try {
-    const response = await axiosInstance.get(`/${category}`, {
-      params: {
-        city,
-        offset,
-        limit: PAGE_SIZE,
-      },
-      headers: { "Cache-Control": "no-cache" },
-    });
+    const response = await axiosInstance.get(
+      `${category}-service/${category}`,
+      {
+        params: {
+          city,
+          offset,
+          limit: PAGE_SIZE,
+        },
+        headers: { "Cache-Control": "no-cache" },
+      }
+    );
 
     if (!response.data) {
       throw new Error("No data received from the server.");

@@ -3,7 +3,7 @@
 import React from "react";
 import { Home, ArrowLeftRight } from "lucide-react";
 
-import { useCompareItems as useRoomComparisonItems } from "../hooks";
+import { useCompareItems as useRoomComparisonItems } from "./hooks";
 
 import { Button } from "@/app/components/ui/button";
 import RoomCompareCard from "@/app/components/compare/rooms/RoomCompareCard";

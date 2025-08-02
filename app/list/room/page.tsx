@@ -1,6 +1,5 @@
 "use client";
 
-import { toast } from "sonner";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -17,17 +16,21 @@ import {
   upload_Images,
   SubmitRoomDetails,
 } from "../../components/list/room/ServerAction/utils";
+import { OwnerDetails } from "./type";
+import { useToast } from "@/app/common/hooks/use-toast";
 import { upload_Video } from "../../components/list/room/utils/uploadUtils";
 
 import { Button } from "@/app/components/ui/button";
 import MediaUploadSection from "@/app/components/list/room/MediaUploadSection";
 import RoomDetailsSection from "@/app/components/list/room/RoomDetailsSection";
+import OwnerDetailsSection from "@/app/components/list/room/OwnerDetailsSection";
 import BasicInformationSection from "@/app/components/list/room/BasicInformationSection";
 import ContactDescriptionSection from "@/app/components/list/room/ContactDescriptionSection";
 import AmenitiesFurnishingSection from "@/app/components/list/room/AmenitiesFurnishingSection";
 
 const Room = () => {
   const router = useRouter();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
@@ -47,10 +50,21 @@ const Room = () => {
     getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm<RoomWithMedia>();
+  } = useForm<RoomWithMedia & Partial<OwnerDetails>>({
+    shouldUnregister: true,
+  });
   const videoFiles = watch("videos");
   const direction = watch("direction");
   const video = videoFiles?.[0];
+
+  const removeImage = (index: number) => {
+    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    setSelectedImages((prev) => [...prev, ...files]);
+  };
 
   const handleAmenityChange = (amenity: RoomAmenities, checked: boolean) => {
     if (checked) {
@@ -60,17 +74,9 @@ const Room = () => {
     }
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setSelectedImages((prev) => [...prev, ...files]);
-  };
-
-  const removeImage = (index: number) => {
-    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const { mutate } = useMutation({
-    mutationFn: (data: RoomWithMediaUrl) => SubmitRoomDetails(data),
+    mutationFn: (data: RoomWithMediaUrl & Partial<OwnerDetails>) =>
+      SubmitRoomDetails(data),
     onSuccess: (response) => {
       queryClient.setQueryData(["CategoryDetails", "room"], response);
       setIsListing(false);
@@ -78,46 +84,47 @@ const Room = () => {
     },
     onError: (error) => {
       setIsListing(false);
-      toast.error(error.message);
+      toast({ title: "Room", description: error.message });
     },
   });
 
   const onSubmit = async (data: RoomWithMedia) => {
-    setIsListing(true);
+    // setIsListing(true);
+    console.log("!", data);
 
-    data.city =
-      data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
-    data.location =
-      data.location.charAt(0).toUpperCase() +
-      data.location.slice(1).toLowerCase();
+    // data.city =
+    //   data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
+    // data.location =
+    //   data.location.charAt(0).toUpperCase() +
+    //   data.location.slice(1).toLowerCase();
 
-    try {
-      const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
-        upload_Video(data.videos),
-        upload_Images("room", selectedImages),
-      ]);
+    // try {
+    //   const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
+    //     upload_Video(data.videos),
+    //     upload_Images("room", selectedImages),
+    //   ]);
 
-      const ImageUrls =
-        uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
-      const VideoUrl =
-        uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
-          ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
-          : null;
+    //   const ImageUrls =
+    //     uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
+    //   const VideoUrl =
+    //     uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
+    //       ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
+    //       : null;
 
-      mutate({
-        ...data,
-        furnishingStatus,
-        photos: ImageUrls,
-        videos: VideoUrl ?? null,
-        name: session?.user.name as string,
-        listerId: session?.user.id as string,
-        postedBy: session?.user.role as Role,
-      });
-    } catch (error) {
-      console.error(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      );
-    }
+    //   mutate({
+    //     ...data,
+    //     furnishingStatus,
+    //     photos: ImageUrls,
+    //     videos: VideoUrl ?? null,
+    //     name: session?.user.name as string,
+    //     listerId: session?.user.userId as string,
+    //     postedBy: session?.user.role as Role,
+    //   });
+    // } catch (error) {
+    //   console.error(
+    //     error instanceof Error ? error.message : "An unknown error occurred"
+    //   );
+    // }
   };
 
   return (
@@ -132,7 +139,7 @@ const Room = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <BasicInformationSection
+        {/* <BasicInformationSection
           errors={errors}
           control={control}
           register={register}
@@ -153,8 +160,15 @@ const Room = () => {
           onFurnishingStatusChange={setFurnishingStatus}
         />
 
-        <ContactDescriptionSection errors={errors} register={register} />
+        <ContactDescriptionSection errors={errors} register={register} /> */}
 
+        <OwnerDetailsSection
+          errors={errors}
+          register={register}
+          setValue={setValue}
+          id={session?.user.userId}
+        />
+        {/* 
         <MediaUploadSection
           errors={errors}
           register={register}
@@ -162,7 +176,7 @@ const Room = () => {
           onRemoveImage={removeImage}
           selectedImages={selectedImages}
           onImageUpload={handleImageUpload}
-        />
+        /> */}
 
         {/* Submit Button */}
         <div className="flex justify-center pb-6">

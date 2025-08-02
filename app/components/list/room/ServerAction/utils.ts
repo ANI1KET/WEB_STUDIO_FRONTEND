@@ -5,6 +5,7 @@ import { google } from "googleapis";
 import prisma from "@/prisma/prismaClient";
 import { v2 as cloudinary } from "cloudinary";
 
+import { OwnerDetails } from "@/app/list/room/type";
 import { RoomWithMediaUrl } from "../../../../types/types";
 
 // Configuration
@@ -302,13 +303,16 @@ export async function uploadChunkVideo({
   }
 }
 
-export async function SubmitRoomDetails(formData: RoomWithMediaUrl) {
+export async function SubmitRoomDetails(
+  formData: RoomWithMediaUrl & Partial<OwnerDetails>
+) {
   "use server";
 
+  const { ownerName, ownerNumber, ownerEmail, ...roomData } = formData;
   try {
     const newRoomDetails = await prisma.room.create({
       data: {
-        ...formData,
+        ...roomData,
       },
     });
 

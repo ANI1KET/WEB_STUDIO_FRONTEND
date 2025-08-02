@@ -20,45 +20,33 @@ enum Role {
 enum Permission {
   room
   hostel
-  promote
   vehicle
   property
   reMarketItem
 }
 
-model Subscription {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  permissions Json   @default("{}")
-
-  // RELATIONSHIP
-  userId String @unique @db.ObjectId
-  user   User   @relation(name: "Subscriber", fields: [userId], references: [id], onDelete: Cascade)
-
-  // TIMESTAMPS
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-
-  @@index([expiresAt])
-  @@map("Subscriptions")
-}
-
 model User {
   id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  name     String
   email    String  @unique
+  name     String
   image    String?
   number   String?
   password String?
 
   // ENUM
-  role       Role         @default(USER)
-  permission Permission[] @default([])
-  promoting  Permission[] @default([])
+  role            Role         @default(USER)
+  servicesOffered Permission[]
+  permission      Permission[] @default([])
+  promoting       Permission[] @default([])
 
   // RELATIONSHIP
   subscription              Subscription?                    @relation(name: "Subscriber")
   // RELATIONSHIP
   promoter                  Promoter?                        @relation("MyDetails")
+  // RELATIONSHIP
+  listerRoomService         ListerRoomService?               @relation("ListerRoomService")
+  listerVehicleService      ListerVehicleService?            @relation("ListerVehicleService")
+  listerPropertyService     ListerPropertyService?           @relation("ListerPropertyService")
   // RELATIONSHIP
   promotionDeals            RoomPromotionAgreement[]         @relation("ListerAgreements")
   // RELATIONSHIP
@@ -91,14 +79,112 @@ model User {
   @@map("Users")
 }
 
+// ************************************************************************************** //
+// LISTER SERVICES
+// ************************************************************************************** //
+model ListerRoomService {
+  virtualPrice       Int
+  physicalPrice      Int
+  supportedCities    String[]
+  supportedLanguages String[]
+
+  // RELATIONSHIP
+  lister   User   @relation(fields: [listerId], references: [id], name: "ListerRoomService", onDelete: Cascade)
+  listerId String @id @map("_id") @db.ObjectId
+}
+
+model ListerPropertyService {
+  virtualPrice       Int
+  physicalPrice      Int
+  supportedCities    String[]
+  supportedLanguages String[]
+
+  // RELATIONSHIP
+  lister   User   @relation(fields: [listerId], references: [id], name: "ListerPropertyService", onDelete: Cascade)
+  listerId String @id @map("_id") @db.ObjectId
+}
+
+model ListerVehicleService {
+  virtualPrice       Int
+  physicalPrice      Int
+  supportedCities    String[]
+  supportedLanguages String[]
+
+  // RELATIONSHIP
+  lister   User   @relation(fields: [listerId], references: [id], name: "ListerVehicleService", onDelete: Cascade)
+  listerId String @id @map("_id") @db.ObjectId
+}
+
+// ************************************************************************************** //
+// 
+// ************************************************************************************** //
 model Promoter {
+  // RELATIONSHIP
+  user           User                 @relation(fields: [userId], references: [id], name: "MyDetails", onDelete: Cascade)
+  userId         String               @id @map("_id") @db.ObjectId
+  // RELATIONSHIP
+  promotionDeals RoomPromotionDeals[] @relation("RoomPromotions")
+}
+
+// ************************************************************************************** //
+// SUBSCRIPTION
+// ************************************************************************************** //
+model Subscription {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  permissions Json   @default("{}")
+
+  // RELATIONSHIP
+  userId String @unique @db.ObjectId
+  user   User   @relation(name: "Subscriber", fields: [userId], references: [id], onDelete: Cascade)
+
+  // TIMESTAMPS
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("Subscriptions")
+}
+
+// ************************************************************************************** //
+
+// INTERESTED ROOM
+
+// ************************************************************************************** //
+model RoomLister {
+  listerId      String @id @map("_id") @db.ObjectId
+  listerName    String
+  listerContact String
+
+  interestedUsers ListerRoomsInterestedUsers[] @relation(name: "interestedUsers")
+}
+
+model RoomInterestedUser {
+  userId      String @id @map("_id") @db.ObjectId
+  userName    String
+  userEmail   String
+  userContact String
+
+  interestedRooms ListerRoomsInterestedUsers[] @relation(name: "interestedRooms")
+}
+
+model ListerRoomsInterestedUsers {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   // RELATIONSHIP
-  user           User                 @relation(fields: [userId], references: [id], name: "MyDetails", onDelete: Cascade)
-  userId         String               @unique @db.ObjectId
+  listerId String             @db.ObjectId
+  lister   RoomLister         @relation(name: "interestedUsers", fields: [listerId], references: [listerId], onDelete: Cascade)
   // RELATIONSHIP
-  promotionDeals RoomPromotionDeals[] @relation("RoomPromotions")
+  userId   String             @db.ObjectId
+  user     RoomInterestedUser @relation(name: "interestedRooms", fields: [userId], references: [userId], onDelete: Cascade)
+  // RELATIONSHIP
+  rooms    InterestedRooms[]  @relation("listerUser")
+
+  // TIMESTAMPS
+  createdAt DateTime @default(now())
+
+  @@unique([listerId, userId])
+  @@index([userId])
+  @@index([listerId])
 }
 
 model InterestedRooms {
@@ -108,44 +194,26 @@ model InterestedRooms {
   roomId       String                     @db.ObjectId
   room         Room                       @relation(fields: [roomId], references: [id], name: "RoomInterested", onDelete: Cascade)
   // RELATIONSHIP
-  listerUserId String                     @unique @db.ObjectId
+  listerUserId String                     @db.ObjectId
   listerUser   ListerRoomsInterestedUsers @relation(fields: [listerUserId], references: [id], name: "listerUser", onDelete: Cascade)
 
   // TIMESTAMPS
   createdAt DateTime @default(now())
 
-  @@unique([listerUserId, roomId])
+  @@index([listerUserId])
 }
 
-model ListerRoomsInterestedUsers {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+// ************************************************************************************** //
 
-  // RELATIONSHIP
-  listerId      String            @db.ObjectId
-  listerName    String
-  listerContact String
-  // RELATIONSHIP
-  userId        String            @db.ObjectId
-  userName      String
-  userEmail     String
-  userContact   String
-  // RELATIONSHIP
-  rooms         InterestedRooms[] @relation("listerUser")
+// 
 
-  // TIMESTAMPS
-  createdAt DateTime @default(now())
-
-  @@unique([listerId, userId])
-  @@index([userId])
-  @@index([createdAt])
-}
-
+// ************************************************************************************** //
 model RoomPromotionDeals {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
   totalEarned Float  @default(0)
 
   // RELATIONSHIP
-  promoter    Promoter               @relation(name: "RoomPromotions", fields: [promoterId], references: [id], onDelete: Cascade)
+  promoter    Promoter               @relation(name: "RoomPromotions", fields: [promoterId], references: [userId], onDelete: Cascade)
   promoterId  String                 @db.ObjectId
   // RELATIONSHIP
   agreement   RoomPromotionAgreement @relation(name: "AgreementDeals", fields: [agreementId], references: [id], onDelete: Cascade)
@@ -158,9 +226,9 @@ model RoomPromotionDeals {
 
 model RoomPromotionAgreement {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  pricePerClick Float
-  totalEarned   Float   @default(0)
   canPromote    Boolean @default(true)
+  totalEarned   Float   @default(0)
+  pricePerClick Float
 
   // RELATIONSHIP
   lister     User                 @relation("ListerAgreements", fields: [listerId], references: [id], onDelete: Cascade)
@@ -223,6 +291,11 @@ model UserClick {
   @@map("ClickEvents")
 }
 
+// ************************************************************************************** //
+
+// 
+
+// ************************************************************************************** //
 enum FurnishingStatusEnum {
   FURNISHED
   UNFURNISHED
@@ -230,32 +303,31 @@ enum FurnishingStatusEnum {
 }
 
 model Room {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  hall           Int
-  kitchen        Int
-  bedroom        Int
-  bathroom       Int
-  minCapacity    Int
-  maxCapacity    Int
-  price          Float
-  ratings        Float    @default(0)
-  name           String
-  city           String
-  title          String
-  location       String
-  roomType       String
-  description    String
-  primaryContact String
-  available      Boolean  @default(true)
-  isActive       Boolean  @default(true)
-  direction      String?
-  videos         String?
-  photos         String[]
-  amenities      String[] @default([])
-  // ONLY LISTER CAN VIEW
-  ownerContact   String
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  hall             Int
+  kitchen          Int
+  bedroom          Int
+  bathroom         Int
+  minCapacity      Int
+  maxCapacity      Int
+  price            Float
+  ratings          Float    @default(0)
+  name             String
+  city             String
+  title            String
+  location         String
+  roomType         String
+  description      String
+  primaryContact   String
+  secondaryContact String
+  available        Boolean  @default(true)
+  isActive         Boolean  @default(true)
+  direction        String?
+  videos           String?
+  photos           String[]
+  amenities        String[] @default([])
   // ADMIN WORK
-  verified       Boolean  @default(false)
+  verified         Boolean  @default(false)
 
   // ENUM
   postedBy         Role                 @default(ADMIN)

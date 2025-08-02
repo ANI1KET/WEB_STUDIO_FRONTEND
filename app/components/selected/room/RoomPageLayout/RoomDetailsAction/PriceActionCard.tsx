@@ -1,11 +1,11 @@
 "use client";
 
-import { toast } from "sonner";
 import { Session } from "next-auth";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heart, Share2, GitCompare } from "lucide-react";
 
+import { useToast } from "@/app/common/hooks/use-toast";
 import { canShowInterest } from "@/app/common/config/authorization";
 
 import { Button } from "@/app/components/ui/button";
@@ -28,6 +28,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   onShowInterest,
 }) => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
@@ -41,7 +42,8 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   };
 
   const handlePhoneSubmit = async () => {
-    if (phoneNumber.length !== 10) return toast.error("Enter correct number");
+    if (phoneNumber.length !== 10)
+      return toast({ title: "Account", description: "Enter correct number" });
     setIsPhoneDialogOpen(false);
 
     await verifyContact(phoneNumber);
@@ -50,9 +52,9 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   };
 
   return (
-    <div className="lg:min-w-[340px] bg-gradient-to-br from-white via-green-50/30 to-white group">
+    <div className="lg:min-w-[340px] bg-gradient-to-br from-white via-green-50/30 to-white">
       {/* Price Display */}
-      <div className="text-center mb-6 p-4 bg-white/50 rounded-2xl border border-green-100 shadow-sm backdrop-blur-xl hover:shadow-2xl transition-all duration-500">
+      <div className="text-center mb-6 p-2 bg-white/50 rounded-2xl border border-green-100 shadow-sm backdrop-blur-xl hover:shadow-2xl transition-all duration-500">
         <div className="text-5xl font-extrabold bg-gradient-to-r from-green-600 via-emerald-500 to-green-500 bg-clip-text text-transparent my-1 tracking-tighter">
           ₹ {price.toLocaleString()}
         </div>
@@ -69,7 +71,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
                 onClick={handleInterestClick}
                 className="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] active:scale-100 font-bold"
               >
-                <div className="p-2 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
+                <div className="p-2 bg-white/20 rounded-2xl hover:bg-white/30 transition-colors">
                   <Heart className="h-5 w-5 text-white" />
                 </div>
                 <span className="ml-2 relative">I&apos;m Interested</span>
@@ -80,9 +82,9 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
           <Button
             size="lg"
             onClick={() => router.push("/auth/login")}
-            className="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] active:scale-100 font-bold"
+            className="w-full bg-gradient-to-r from-green-300 to-emerald-400 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] active:scale-100 font-bold group"
           >
-            <div className="p-2 bg-white/20 rounded-2xl group-hover:bg-white/30 transition-colors">
+            <div className="p-2 bg-white/20 rounded-2xl hover:bg-white/30 transition-colors">
               <Heart className="h-5 w-5 text-white" />
             </div>
             <span className="ml-2 relative">
@@ -97,11 +99,10 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
         <div className="grid grid-cols-2 gap-3">
           <Button
             size="lg"
-            variant="ghost"
             onClick={onShare}
             className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
           >
-            <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
+            <div className="p-2 bg-green-100 rounded-2xl hover:bg-green-200 transition-colors">
               <Share2 className="h-4 w-4 text-green-600" />
             </div>
             Share
@@ -109,11 +110,10 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
 
           <Button
             size="lg"
-            variant="ghost"
             onClick={onCompare}
             className="w-full bg-gradient-to-r from-green-300 to-emerald-400 hover:shadow-xl transition-all duration-300 hover:scale-[1.03] active:scale-100 font-semibold"
           >
-            <div className="p-2 bg-green-100 rounded-2xl group-hover:bg-green-200 transition-colors">
+            <div className="p-2 bg-green-100 rounded-2xl hover:bg-green-200 transition-colors">
               <GitCompare className="h-4 w-4 text-green-600" />
             </div>
             Compare
@@ -138,7 +138,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
               type="tel"
               maxLength={10}
               value={phoneNumber}
-              placeholder="e.g. 9876543210"
+              placeholder="e.g. 9812345678"
               onChange={(e) => {
                 const onlyDigits = e.target.value.replace(/\D/g, "");
                 setPhoneNumber(onlyDigits);

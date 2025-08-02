@@ -27,6 +27,7 @@ const RoomSearch = () => {
 
   const { data, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage } =
     useInfiniteRoomQuery();
+
   const memoizedPages = useMemo(() => data?.pages ?? [], [data?.pages]);
 
   const observerRef = useRef<HTMLDivElement | null>(null);
@@ -58,6 +59,7 @@ const RoomSearch = () => {
       if (target) observer.unobserve(target);
     };
   }, [handleLoadMore]);
+
   return (
     <div className="bg-gradient-to-br from-green-50 via-white to-emerald-50 h-[calc(100vh-4rem)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-4">
@@ -149,8 +151,10 @@ const RoomCardSkeleton = () => {
     <Card className="animate-pulse">
       <div className="h-48 bg-gray-200 rounded-t-lg"></div>
       <CardContent className="p-4 space-y-3">
-        <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
+        <div className="h-5 bg-gray-200 rounded"></div>
+        <div className="h-3 bg-gray-200 rounded"></div>
+        <div className="h-4 bg-gray-200 rounded"></div>
         <div className="h-8 bg-gray-200 rounded"></div>
       </CardContent>
     </Card>

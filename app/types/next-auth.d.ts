@@ -1,8 +1,8 @@
-import 'next-auth';
-import { DefaultSession } from 'next-auth';
-import { Permission, Role } from '@prisma/client';
+import "next-auth";
+import { DefaultSession } from "next-auth";
+import { Permission, Role } from "@prisma/client";
 
-declare module 'next-auth' {
+declare module "next-auth" {
   interface User {
     // _id?: string;
     role?: string;
@@ -10,6 +10,7 @@ declare module 'next-auth' {
     number?: string;
     promoting?: Permission[];
     permission?: Permission[];
+    servicesOffered?: Permission[];
   }
   interface Session {
     user: {
@@ -21,11 +22,12 @@ declare module 'next-auth' {
       refresh_token?: string;
       promoting?: Permission[];
       permission?: Permission[];
-    } & DefaultSession['user'];
+      servicesOffered?: Permission[];
+    } & DefaultSession["user"];
   }
 }
 
-declare module 'next-auth/jwt' {
+declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
     userId?: string;

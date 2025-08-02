@@ -9,9 +9,10 @@ import {
   Image as ImageIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { toast } from "sonner";
 import React, { useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+
+import { useToast } from "@/app/common/hooks/use-toast";
 
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
@@ -33,6 +34,8 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
   verified,
   onRemove,
 }) => {
+  const { toast } = useToast();
+
   const [emblaRef, emblaApi] = useEmblaCarousel();
   const [showVideo, setShowVideo] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -166,7 +169,7 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
           navigator.clipboard
             .writeText(`${window.location.origin}/room/${btoa(id)}`)
             .then(() => {
-              toast.success("URL copied");
+              toast({ title: "URL", description: "URL copied" });
               console.log("URL copied to clipboard!");
             })
             .catch((err) => {
