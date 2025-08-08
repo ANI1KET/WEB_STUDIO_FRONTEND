@@ -2,12 +2,12 @@ import React from "react";
 import { getServerSession } from "next-auth";
 
 import {
-  canAccessPromotion,
+  // canAccessPromotion,
   canAccessListingService,
 } from "../common/config/authorization";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 
-import PromotionCard from "../components/profile/PromotionCard";
+// import PromotionCard from "../components/profile/PromotionCard";
 import PermissionsCard from "../components/profile/PermissionsCard";
 import ListingServiceCard from "../components/profile/ListingServiceCard";
 import PersonalInfoSection from "../components/profile/PersonalInfoSection";
@@ -33,9 +33,9 @@ const ProfileLayout = async () => {
           <PersonalInfoSection session={session} />
           <PermissionsCard userPermissions={permissions} />
 
-          {canAccessPromotion(session?.user.role) && (
+          {/* {canAccessPromotion(session?.user.role) && (
             <PromotionCard userPermissions={permissions} />
-          )}
+          )} */}
 
           {canAccessListingService(session?.user.role) && (
             <ListingServiceCard userPermissions={permissions} />

@@ -1,6 +1,11 @@
+type CityLocations = {
+  city: string;
+  locations: string[];
+};
+
 export interface ServiceData {
   virtualPrice: number;
   physicalPrice: number;
-  supportedCities: string[];
   supportedLanguages: string[];
+  supportedCities: CityLocations[];
 }

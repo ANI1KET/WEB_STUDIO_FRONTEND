@@ -12,10 +12,10 @@ import { Button } from "@/app/components/ui/button";
 import { Combobox } from "@/app/components/ui/combobox";
 
 interface CitiesSectionProps {
-  cities: string[];
   editingField: string | null;
   onEditStart: (field: string) => void;
   setValue: UseFormSetValue<ServiceData>;
+  cities: { city: string; locations: string[] }[];
 }
 
 const CitiesSection = ({
@@ -28,8 +28,13 @@ const CitiesSection = ({
 
   const handleAdd = () => {
     const trimmedCity = selectedCity.trim();
-    if (trimmedCity && !cities.includes(trimmedCity)) {
-      setValue("supportedCities", [...cities, trimmedCity]);
+    const alreadyExists = cities.some((c) => c.city === trimmedCity);
+
+    if (trimmedCity && !alreadyExists) {
+      setValue("supportedCities", [
+        ...cities,
+        { city: trimmedCity, locations: [] },
+      ]);
       setSelectedCity("");
       onEditStart("");
     }
@@ -38,7 +43,7 @@ const CitiesSection = ({
   const handleCityRemove = (city: string) => {
     setValue(
       "supportedCities",
-      cities.filter((c) => c !== city)
+      cities.filter((c) => c.city !== city)
     );
   };
 
@@ -104,15 +109,15 @@ const CitiesSection = ({
 
       <div className="flex flex-wrap gap-2">
         {cities.length > 0 ? (
-          cities.map((city, index) => (
+          cities.map((cityData, index) => (
             <Badge
               key={index}
               variant="secondary"
               className="flex items-center gap-1 py-1 px-3 bg-green-100 text-green-800 hover:bg-green-200"
             >
-              {city}
+              {cityData.city}
               <button
-                onClick={() => handleCityRemove(city)}
+                onClick={() => handleCityRemove(cityData.city)}
                 className="ml-1 hover:text-red-600 transition-colors"
               >
                 <X className="w-3 h-3" />

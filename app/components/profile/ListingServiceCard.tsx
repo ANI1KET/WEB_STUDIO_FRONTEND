@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { Permission } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { Home, Building, Car, LucideProps } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -15,58 +14,19 @@ import {
 } from "./ServerAction/ListingServiceCard";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { ServiceData } from "./types/ListingServiceCard";
+import { serviceItems } from "@/app/common/config/listings";
 
 import CitiesSection from "./ListingServiceCard/CitiesSection";
 import PricingSection from "./ListingServiceCard/PricingSection";
 import LanguagesSection from "./ListingServiceCard/LanguagesSection";
+import LocationsSection from "./ListingServiceCard/LocationsSection";
 import ListingServiceItem from "./ListingServiceCard/ListingServiceItem";
 import ListingServiceCardHeader from "./ListingServiceCard/ListingServiceCardHeader";
 
-interface ListingServiceCardProps {
+interface PromotionCardProps {
   userPermissions: Permission[];
 }
-
-const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
-  const services: Record<
-    Permission,
-    {
-      name: string;
-      id: Permission;
-      icon: React.ForwardRefExoticComponent<
-        Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-      >;
-    }
-  > = {
-    room: {
-      icon: Home,
-      id: "room",
-      name: "Room Listing Service",
-    },
-    property: {
-      icon: Building,
-      id: "property",
-      name: "Property Listing Service",
-    },
-    vehicle: {
-      icon: Car,
-      id: "vehicle",
-      name: "Vehicle Listing Service",
-    },
-
-    //----------//
-
-    hostel: {
-      icon: Car,
-      id: "hostel",
-      name: "Hostel Listings",
-    },
-    reMarketItem: {
-      icon: Car,
-      id: "vehicle",
-      name: "Vehicle Listings",
-    },
-  };
-
+const ListingServiceCard = ({ userPermissions }: PromotionCardProps) => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: session, update } = useSession();
@@ -85,7 +45,7 @@ const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
     enabled: isServiceExist,
   });
 
-  const { setValue, getValues, handleSubmit, reset } = useForm<ServiceData>({
+  const { setValue, watch, handleSubmit, reset } = useForm<ServiceData>({
     defaultValues: {
       virtualPrice: 0,
       physicalPrice: 0,
@@ -105,6 +65,14 @@ const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
     enabled: boolean
   ) => {
     if (enabled) {
+      if (!session?.user.number) {
+        return toast({
+          variant: "destructive",
+          title: "❌ Missing Contact",
+          description: "Please set your number to activate services.",
+        });
+      }
+
       setEditingService(serviceId);
     } else {
       try {
@@ -145,19 +113,33 @@ const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
   };
 
   const onSubmit = async (formData: ServiceData) => {
-    if (!formData.supportedCities?.length) {
-      return toast({
-        variant: "destructive",
-        title: "Missing Cities",
-        description: "Select at least one city.",
-      });
-    }
-
     if (!formData.supportedLanguages?.length) {
       return toast({
         variant: "destructive",
         title: "Missing Languages",
         description: "Select at least one supported language.",
+      });
+    }
+
+    if (!formData.supportedCities || formData.supportedCities.length === 0) {
+      return toast({
+        variant: "destructive",
+        title: "Missing City",
+        description: "Select at least one city.",
+      });
+    }
+
+    const missing = formData.supportedCities.filter(
+      (city) => city.locations.length === 0
+    );
+
+    if (missing.length > 0) {
+      return toast({
+        variant: "destructive",
+        title: "Missing Locations",
+        description: `Add at least one location in: ${missing
+          .map((c) => c.city)
+          .join(", ")}`,
       });
     }
 
@@ -218,15 +200,16 @@ const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
       <div className="space-y-6">
         {/* Service Items */}
         <div className="space-y-4">
-          {userPermissions.map((service) => {
-            const id = services[service].id;
-            const name = services[service].name;
+          {serviceItems.map((service) => {
+            const { id, name } = service;
+            const canProvide = userPermissions.includes(service.id);
             const isServiceOffered =
-              session?.user.servicesOffered?.includes(service) || false;
+              session?.user.servicesOffered?.includes(service.id) || false;
             return (
               <div key={id}>
                 <ListingServiceItem
-                  service={services[service]}
+                  service={service}
+                  canProvide={canProvide}
                   isProviding={isServiceOffered}
                   onEditService={handleEditService}
                   onServiceToggle={handleServiceToggle}
@@ -257,22 +240,29 @@ const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
                       setValue={setValue}
                       editingField={editingField}
                       onEditStart={setEditingField}
-                      virtualPrice={getValues("virtualPrice")}
-                      physicalPrice={getValues("physicalPrice")}
+                      virtualPrice={watch("virtualPrice")}
+                      physicalPrice={watch("physicalPrice")}
                     />
 
                     <LanguagesSection
                       setValue={setValue}
                       editingField={editingField}
                       onEditStart={setEditingField}
-                      languages={getValues("supportedLanguages")}
+                      languages={watch("supportedLanguages")}
                     />
 
                     <CitiesSection
                       setValue={setValue}
                       editingField={editingField}
                       onEditStart={setEditingField}
-                      cities={getValues("supportedCities")}
+                      cities={watch("supportedCities")}
+                    />
+
+                    <LocationsSection
+                      setValue={setValue}
+                      editingField={editingField}
+                      onEditStart={setEditingField}
+                      supportedCities={watch("supportedCities")}
                     />
 
                     <div className="flex justify-end">
@@ -282,7 +272,7 @@ const ListingServiceCard = ({ userPermissions }: ListingServiceCardProps) => {
                       >
                         {isServiceOffered
                           ? "Update Changes"
-                          : `Activate ${service} listing service`}
+                          : `Activate ${service.id} listing service`}
                       </button>
                     </div>
                   </form>

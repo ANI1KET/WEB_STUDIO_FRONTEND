@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { Permission } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { Home, Building, Car, LucideProps } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -14,6 +13,7 @@ import {
 } from "./ServerAction/PromotionCard";
 import { PromotionData } from "./types/PromotionCard";
 import { useToast } from "@/app/common/hooks/use-toast";
+import { promotionItems } from "@/app/common/config/listings";
 
 import PromotionItem from "./PromotionCard/PromotionItem";
 import PromotionPricing from "./PromotionCard/PromotionPricing";
@@ -24,46 +24,6 @@ interface PromotionCardProps {
 }
 
 const PromotionCard = ({ userPermissions }: PromotionCardProps) => {
-  const promotion: Record<
-    Permission,
-    {
-      name: string;
-      id: Permission;
-      icon: React.ForwardRefExoticComponent<
-        Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-      >;
-    }
-  > = {
-    room: {
-      icon: Home,
-      id: "room",
-      name: "Room Listings",
-    },
-    property: {
-      icon: Building,
-      id: "property",
-      name: "Property Listings",
-    },
-    vehicle: {
-      icon: Car,
-      id: "vehicle",
-      name: "Vehicle Listings",
-    },
-
-    //----------//
-
-    hostel: {
-      icon: Car,
-      id: "hostel",
-      name: "Hostel Listings",
-    },
-    reMarketItem: {
-      icon: Car,
-      id: "reMarketItem",
-      name: "ReMarket Item Listings",
-    },
-  };
-
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: session, update } = useSession();
@@ -88,6 +48,14 @@ const PromotionCard = ({ userPermissions }: PromotionCardProps) => {
     enabled: boolean
   ) => {
     if (enabled) {
+      if (!session?.user.number) {
+        return toast({
+          variant: "destructive",
+          title: "❌ Missing Contact",
+          description: "Please set your number to activate promotion.",
+        });
+      }
+
       setEditingPromotion(permissionId);
     } else {
       try {
@@ -177,18 +145,17 @@ const PromotionCard = ({ userPermissions }: PromotionCardProps) => {
       <PromotionCardHeader />
 
       <div className="space-y-4">
-        {userPermissions.map((permission) => {
-          const id = promotion[permission].id;
-          const name = promotion[permission].name;
+        {promotionItems.map((promotion) => {
+          const id = promotion.id;
+          const name = promotion.name;
           return (
             <div key={id}>
               <PromotionItem
-                promotion={promotion[permission]}
+                promotion={promotion}
                 onEditPromotion={handleEditPromotion}
+                canPromote={userPermissions.includes(id)}
                 onPromotionToggle={handlePromotionToggle}
-                isPromoting={
-                  session?.user.promoting?.includes(permission) || false
-                }
+                isPromoting={session?.user.promoting?.includes(id) || false}
               />
 
               {editingPromotion === id && (

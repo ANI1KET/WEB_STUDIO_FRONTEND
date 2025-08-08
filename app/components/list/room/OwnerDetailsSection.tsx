@@ -11,10 +11,11 @@ import {
   ToggleRight,
 } from "lucide-react";
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
-import { RoomWithMedia } from "@/app/types/types";
-import { OwnerDetails } from "@/app/list/room/type";
+import { OwnerDetails, RoomWithMedia } from "@/app/types/types";
+import { getOwnerDetails } from "./ServerAction/OwnerDetailsSection";
 
 import {
   Card,
@@ -42,30 +43,17 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
   const [useOwnerId, setUseOwnerId] = useState<boolean>(true);
   const [selectedOwnerId, setSelectedOwnerId] = useState<string>("");
 
-  // const sampleOwnerDetails: OwnerDetails[] = [];
-  const sampleOwnerDetails = [
-    {
-      id: "1",
-      number: "144444444",
-      name: "Rajesh Kumar",
-      email: "rajesh.kumar@gmail.com",
-    },
-    {
-      id: "2",
-      number: "144444444",
-      name: "Priya Sharma",
-      email: "priya.sharma@yahoo.com",
-    },
-    {
-      id: "3",
-      name: "Amit Patel",
-      number: "144444444",
-      email: "amit.patel@gmail.com",
-    },
-  ];
+  const { data } = useQuery<
+    { id: string; name: string; email: string; number: string }[]
+  >({
+    queryKey: ["owner_details"],
+    queryFn: async () => getOwnerDetails(),
+    enabled: !!id,
+    refetchOnWindowFocus: false,
+  });
 
   const selectOwnerDetail = (ownerId: string) => {
-    setValue("id", ownerId);
+    setValue("id", btoa(ownerId));
     setSelectedOwnerId(ownerId);
   };
 
@@ -75,8 +63,15 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
   };
 
   const toggleInputMode = () => {
-    setUseOwnerId(!useOwnerId);
+    if (useOwnerId) {
+      setValue("id", "");
+    } else {
+      setValue("name", "");
+      setValue("email", "");
+      setValue("number", "");
+    }
     setSelectedOwnerId("");
+    setUseOwnerId(!useOwnerId);
   };
 
   return (
@@ -89,7 +84,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
       </CardHeader>
 
       <CardContent className="p-4 space-y-2">
-        {useOwnerId && sampleOwnerDetails.length > 0 && (
+        {useOwnerId && (data?.length ?? 0) > 0 && (
           <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 rounded-xl border border-blue-200 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
@@ -103,7 +98,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
                   </h3>
 
                   <p className="text-sm text-blue-600">
-                    {sampleOwnerDetails.length} saved contacts
+                    {data?.length} saved contacts
                   </p>
                 </div>
               </div>
@@ -122,7 +117,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
             </div>
 
             <div className="flex gap-4 overflow-x-auto p-2">
-              {sampleOwnerDetails.map((detail) => (
+              {data?.map((detail) => (
                 <div
                   key={detail.id}
                   className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg group min-w-[220px] flex-shrink-0 ${
@@ -219,9 +214,9 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
             </div>
 
             <Button
+              size="sm"
               type="button"
               variant="outline"
-              size="sm"
               onClick={toggleInputMode}
               className="flex items-center gap-2"
             >
@@ -247,7 +242,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
                   checked={selectedOwnerId ? selectedOwnerId === id : false}
                   onCheckedChange={(enabled: boolean) => {
                     if (enabled) {
-                      setValue("id", id);
+                      setValue("id", id ?? "");
                       setSelectedOwnerId(id ?? "");
                     } else {
                       setValue("id", "");
@@ -259,11 +254,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
               </div>
             </div>
 
-            {/* Owner ID Input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Owner ID
-              </label>
               <FormField
                 required
                 name="id"
@@ -275,7 +266,6 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
                 validation={{
                   required: "Owner ID is required",
                 }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>

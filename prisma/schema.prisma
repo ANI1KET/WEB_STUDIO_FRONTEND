@@ -146,9 +146,7 @@ model Subscription {
 }
 
 // ************************************************************************************** //
-
 // INTERESTED ROOM
-
 // ************************************************************************************** //
 model RoomLister {
   listerId      String @id @map("_id") @db.ObjectId
@@ -312,16 +310,15 @@ model Room {
   maxCapacity      Int
   price            Float
   ratings          Float    @default(0)
-  name             String
   city             String
   title            String
   location         String
   roomType         String
+  listerName       String
   description      String
   primaryContact   String
   secondaryContact String
   available        Boolean  @default(true)
-  isActive         Boolean  @default(true)
   direction        String?
   videos           String?
   photos           String[]
@@ -349,7 +346,6 @@ model Room {
 
   @@index([city])
   @@index([listerId])
-  @@index([isActive])
   @@index([updatedAt])
   @@index([city, location])
   @@map("Rooms")

@@ -8,6 +8,7 @@ import { FurnishingStatusEnum, Role } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
+  OwnerDetails,
   RoomAmenities,
   RoomWithMedia,
   RoomWithMediaUrl,
@@ -16,7 +17,6 @@ import {
   upload_Images,
   SubmitRoomDetails,
 } from "../../components/list/room/ServerAction/utils";
-import { OwnerDetails } from "./type";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { upload_Video } from "../../components/list/room/utils/uploadUtils";
 
@@ -50,9 +50,7 @@ const Room = () => {
     getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm<RoomWithMedia & Partial<OwnerDetails>>({
-    shouldUnregister: true,
-  });
+  } = useForm<RoomWithMedia & Partial<OwnerDetails>>();
   const videoFiles = watch("videos");
   const direction = watch("direction");
   const video = videoFiles?.[0];
@@ -116,9 +114,9 @@ const Room = () => {
     //     furnishingStatus,
     //     photos: ImageUrls,
     //     videos: VideoUrl ?? null,
-    //     name: session?.user.name as string,
-    //     listerId: session?.user.userId as string,
     //     postedBy: session?.user.role as Role,
+    //     listerId: session?.user.userId as string,
+    //     listerName: session?.user.name as string,
     //   });
     // } catch (error) {
     //   console.error(

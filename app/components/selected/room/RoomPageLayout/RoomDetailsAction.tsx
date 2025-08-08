@@ -83,15 +83,18 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
                   <p className="text-xs text-gray-500 font-medium">
                     Schedule Visit
                   </p>
+
                   <p className="w-full flex gap-4">
                     <span className="font-semibold text-gray-800 text-xs bg-green-500/30 px-2 py-1 rounded-full">
                       Physical
                     </span>
+
                     <span className="font-semibold text-gray-800 text-xs bg-green-500/30 px-2 py-1 rounded-full">
                       Virtual
                     </span>
                   </p>
                 </div>
+
                 <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">
                   <Calendar
                     onClick={() => setIsScheduleDialogOpen(true)}

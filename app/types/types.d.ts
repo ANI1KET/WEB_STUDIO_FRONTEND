@@ -27,7 +27,6 @@ export type RoomAmenities =
 
 export type Room = {
   hall: number;
-  name: string;
   city: string;
   title: string;
   price: number;
@@ -35,6 +34,7 @@ export type Room = {
   bedroom: number;
   location: string;
   bathroom: number;
+  listerName: string;
   roomType: RoomType;
   minCapacity: number;
   maxCapacity: number;
@@ -181,7 +181,6 @@ export type PropertyWithMediaUrl = Property & {
 
 export type ListedProperty = PropertyWithMediaUrl & {
   id: string;
-  // isActive: boolean;
   verified: boolean;
   available: boolean;
   // DATE
@@ -197,6 +196,14 @@ export type PropertyData = ListedProperty & {
     email: string;
     number: string;
   };
+};
+
+// OWNER DETAILS
+export type OwnerDetails = {
+  id: string;
+  name: string;
+  email: string;
+  number: string;
 };
 
 // FUNCTIONS

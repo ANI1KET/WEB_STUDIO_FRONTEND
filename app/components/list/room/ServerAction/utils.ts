@@ -5,8 +5,7 @@ import { google } from "googleapis";
 import prisma from "@/prisma/prismaClient";
 import { v2 as cloudinary } from "cloudinary";
 
-import { OwnerDetails } from "@/app/list/room/type";
-import { RoomWithMediaUrl } from "../../../../types/types";
+import { OwnerDetails, RoomWithMediaUrl } from "../../../../types/types";
 
 // Configuration
 cloudinary.config({
@@ -308,7 +307,7 @@ export async function SubmitRoomDetails(
 ) {
   "use server";
 
-  const { ownerName, ownerNumber, ownerEmail, ...roomData } = formData;
+  const { id, name, email, number, ...roomData } = formData;
   try {
     const newRoomDetails = await prisma.room.create({
       data: {

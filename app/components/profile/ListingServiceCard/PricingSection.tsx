@@ -25,8 +25,8 @@ const PricingSection = ({
   virtualPrice,
   physicalPrice,
 }: PricingSectionProps) => {
-  const [tempVirtualPrice, setTempVirtualPrice] = useState(virtualPrice);
-  const [tempPhysicalPrice, setTempPhysicalPrice] = useState(physicalPrice);
+  const [tempVirtualPrice, setTempVirtualPrice] = useState(0);
+  const [tempPhysicalPrice, setTempPhysicalPrice] = useState(0);
 
   useEffect(() => {
     setTempVirtualPrice(virtualPrice);

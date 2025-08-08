@@ -164,10 +164,12 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
                   <Heart size={16} className="text-red-600" />
                 </div>
+
                 <div className="flex-1">
                   <span className="font-medium text-gray-800">
                     Interested Listings
                   </span>
+
                   <p className="text-xs text-gray-500">Your favorites</p>
                 </div>
               </DropdownMenuItem>

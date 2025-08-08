@@ -5,7 +5,7 @@ import { Permission } from "@prisma/client";
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Plus, Lock } from "lucide-react";
 
-import { listingItems } from "./config/ListingsDropdown";
+import { listingItems } from "@/app/common/config/listings";
 
 import { Button } from "@/app/components/ui/button";
 
