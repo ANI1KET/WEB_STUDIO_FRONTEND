@@ -45,6 +45,7 @@ export const getServiceBenefits = (service: Permission) => {
       "Audience targeting and segmentation",
       "Performance tracking and analytics",
     ],
+    promote: [],
   };
 
   return specificBenefits[service];

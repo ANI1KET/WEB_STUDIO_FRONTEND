@@ -28,11 +28,11 @@ import {
 import { Button } from "@/app/components/ui/button";
 import { Avatar, AvatarImage } from "@/app/components/ui/avatar";
 
-interface ProfileDropdownProps {
+interface AccountDropdownProps {
   scrolled?: boolean;
 }
 
-const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
+const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
   const router = useRouter();
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -115,14 +115,14 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
             </DropdownMenuItem>
 
             <DropdownMenuItem
-              onClick={() => router.push("/profile")}
+              onClick={() => router.push("/account")}
               className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-amber-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
             >
               <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-amber-100 to-amber-200 rounded-lg group-hover:from-amber-200 group-hover:to-amber-300 transition-all duration-200 shadow-sm">
                 <CircleUserRound size={16} className="text-amber-600" />
               </div>
               <div className="flex-1">
-                <span className="font-medium text-gray-800">Profile</span>
+                <span className="font-medium text-gray-800">Account</span>
                 <p className="text-xs text-gray-500">Manage your account</p>
               </div>
             </DropdownMenuItem>
@@ -233,4 +233,4 @@ const ProfileDropdown = ({ scrolled = false }: ProfileDropdownProps) => {
   );
 };
 
-export default ProfileDropdown;
+export default AccountDropdown;

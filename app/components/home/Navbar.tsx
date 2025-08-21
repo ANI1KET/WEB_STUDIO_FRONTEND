@@ -11,7 +11,7 @@ import { useIsMobile } from "@/app/common/hooks/use-mobile";
 
 const MobileMenu = dynamic(() => import("./Navbar/MobileMenu"));
 const NavbarDropdown = dynamic(() => import("./Navbar/NavbarDropdown"));
-const ProfileDropdown = dynamic(() => import("./Navbar/ProfileDropdown"));
+const AccountDropdown = dynamic(() => import("./Navbar/AccountDropdown"));
 const MobileMenuButton = dynamic(() => import("./Navbar/MobileMenuButton"));
 const ListingsDropdown = dynamic(() => import("./Navbar/ListingsDropdown"));
 
@@ -41,7 +41,6 @@ const Navbar = () => {
 
   useMotionValueEvent(scrollYProgress, "change", updateVisibility);
 
-  // Close mobile menu when switching to desktop view
   useEffect(() => {
     if (!isMobile && mobileMenuOpen) {
       setMobileMenuOpen(false);
@@ -70,7 +69,6 @@ const Navbar = () => {
     >
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo - Enhanced with gradient */}
           <Link href={"/"} className="flex-shrink-0 flex items-center group">
             <h1 className="text-xl lg:text-2xl font-bold flex items-center cursor-pointer transition-all duration-300 hover:scale-105">
               <span
@@ -90,7 +88,6 @@ const Navbar = () => {
             </h1>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
             <NavbarDropdown
               // items={roomItems}
@@ -114,7 +111,6 @@ const Navbar = () => {
             />
           </div>
 
-          {/* Desktop Actions */}
           <div className="hidden md:flex items-center ">
             <ListingsDropdown
               scrolled={scrolled}
@@ -122,10 +118,9 @@ const Navbar = () => {
               userSubscriptions={data?.user.permission}
             />
 
-            <ProfileDropdown scrolled={scrolled} />
+            <AccountDropdown scrolled={scrolled} />
           </div>
 
-          {/* Mobile menu button - Enhanced for small screens */}
           <div className="md:hidden flex items-center">
             <ListingsDropdown
               scrolled={scrolled}
@@ -142,7 +137,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu - Enhanced responsiveness */}
       <MobileMenu isOpen={mobileMenuOpen} onClose={closeMobileMenu} />
     </motion.nav>
   );

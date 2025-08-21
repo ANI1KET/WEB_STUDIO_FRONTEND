@@ -4,6 +4,7 @@ import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   fetchRoom,
+  generateOtp,
   updateNumber,
   pushInterestedRoom,
 } from "../ServerAction/RoomPageLayout";
@@ -130,36 +131,33 @@ export function useRoomActions(roomData: RoomData) {
     }
   };
 
-  const handleInterest = async () => {
-    try {
-      const response = await pushInterestedRoom({
-        roomId: roomData.id,
-        listerId: roomData.listerId,
-        listerNumber: roomData.primaryContact,
-        userId: session?.user.userId as string,
-      });
+  const handleInterest = async (): Promise<boolean> => {
+    const { success, message } = await pushInterestedRoom({
+      roomId: roomData.id,
+      listerId: roomData.listerId,
+      userId: session?.user.userId as string,
+    });
 
-      toast({
-        description: response,
-        title: "Room Interest Notification",
-      });
-    } catch (error) {
-      console.error("Failed to save data.", error);
-      toast({
-        variant: "destructive",
-        title: "Room Interest Notification",
-        description: "Unable to notify lister.",
-      });
-    }
+    toast({
+      description: message,
+      title: "Room Interest Notification",
+      variant: success ? "default" : "destructive",
+    });
+
+    return success;
   };
 
-  const handleContactVerification = async (phoneNumber: string) => {
-    try {
-      const response = await updateNumber({
-        number: phoneNumber,
-        userId: session?.user.userId as string,
-      });
+  const handleContactVerification = async (
+    phoneNumber: string,
+    otp: string
+  ): Promise<boolean> => {
+    const { message, success } = await updateNumber({
+      otp,
+      number: phoneNumber,
+      userId: session?.user.userId as string,
+    });
 
+    if (success) {
       await update({
         ...session,
         user: {
@@ -167,22 +165,34 @@ export function useRoomActions(roomData: RoomData) {
           number: phoneNumber,
         },
       });
-
-      toast({ title: "Account", description: response });
-    } catch (error) {
-      toast({
-        title: "Account",
-        description: "Contact couldn't be updated. Please try again later.",
-      });
-
-      console.error(error);
     }
+
+    toast({
+      title: "Account",
+      description: message,
+      variant: success ? "default" : "destructive",
+    });
+
+    return success;
+  };
+
+  const handleGenerateOtp = async (phoneNumber: string) => {
+    const { message, success } = await generateOtp({
+      number: phoneNumber,
+    });
+
+    toast({
+      title: "Account",
+      description: message,
+      variant: success ? "default" : "destructive",
+    });
   };
 
   return {
     handleShare,
     handleCompare,
     handleInterest,
+    handleGenerateOtp,
     handleContactVerification,
   };
 }

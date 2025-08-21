@@ -2,7 +2,7 @@
 
 import axios from "axios";
 
-import { PAGE_SIZE } from "@/app/lib/constant";
+import { PAGE_SIZE } from "@/app/lib/constants";
 import { ListedRoom } from "@/app/types/types";
 import { RoomFilters } from "@/app/types/filters";
 import axiosInstance from "@/app/lib/axiosInstance";

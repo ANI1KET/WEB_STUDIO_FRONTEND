@@ -69,7 +69,7 @@ const ListingServiceCard = ({ userPermissions }: PromotionCardProps) => {
         return toast({
           variant: "destructive",
           title: "❌ Missing Contact",
-          description: "Please set your number to activate services.",
+          description: `Please set your number to activate ${serviceId} services.`,
         });
       }
 
@@ -198,7 +198,6 @@ const ListingServiceCard = ({ userPermissions }: PromotionCardProps) => {
       <ListingServiceCardHeader />
 
       <div className="space-y-6">
-        {/* Service Items */}
         <div className="space-y-4">
           {serviceItems.map((service) => {
             const { id, name } = service;

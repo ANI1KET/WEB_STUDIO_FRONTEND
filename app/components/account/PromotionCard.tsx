@@ -52,7 +52,7 @@ const PromotionCard = ({ userPermissions }: PromotionCardProps) => {
         return toast({
           variant: "destructive",
           title: "❌ Missing Contact",
-          description: "Please set your number to activate promotion.",
+          description: `Please set your number to activate ${permissionId} promotion.`,
         });
       }
 

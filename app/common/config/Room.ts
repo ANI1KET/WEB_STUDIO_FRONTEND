@@ -1,6 +1,6 @@
-import { FurnishingStatusEnum, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 
-import { RoomAmenities, RoomType } from "@/app/types/types";
+import { FurnishingStatus, RoomAmenities, RoomType } from "@/app/types/types";
 
 export const postedBy: Role[] = ["OWNER", "BROKER"];
 
@@ -11,7 +11,7 @@ export const roomAmenities: RoomAmenities[] = [
   "BIKE PARK",
   "24/7 WATER",
 ];
-export const furnishingStatus: FurnishingStatusEnum[] = [
+export const furnishingStatus: FurnishingStatus[] = [
   "FURNISHED",
   "UNFURNISHED",
   "SEMIFURNISHED",

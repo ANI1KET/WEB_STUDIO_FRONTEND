@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "@/app/common/hooks/use-toast";
 
 import { RoomData } from "@/app/types/types";
-import { PAGE_SIZE } from "@/app/lib/constant";
+import { PAGE_SIZE } from "@/app/lib/constants";
 import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
 const RoomCitySelector = dynamic(

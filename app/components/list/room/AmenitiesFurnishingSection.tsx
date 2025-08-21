@@ -2,9 +2,8 @@
 
 import React from "react";
 import { Wifi } from "lucide-react";
-import { FurnishingStatusEnum } from "@prisma/client";
 
-import { RoomAmenities } from "@/app/types/types";
+import { FurnishingStatus, RoomAmenities } from "@/app/types/types";
 import { amenitiesList } from "./config/AmenitiesFurnishingSection";
 
 import {
@@ -18,9 +17,9 @@ import { Checkbox } from "@/app/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
 
 interface AmenitiesFurnishingSectionProps {
+  furnishingStatus: FurnishingStatus;
   selectedAmenities: RoomAmenities[];
-  furnishingStatus: FurnishingStatusEnum;
-  onFurnishingStatusChange: (status: FurnishingStatusEnum) => void;
+  onFurnishingStatusChange: (status: FurnishingStatus) => void;
   onAmenityChange: (amenity: RoomAmenities, checked: boolean) => void;
 }
 
@@ -79,7 +78,7 @@ const AmenitiesFurnishingSection: React.FC<AmenitiesFurnishingSectionProps> = ({
           <RadioGroup
             value={furnishingStatus}
             onValueChange={(value) =>
-              onFurnishingStatusChange(value as FurnishingStatusEnum)
+              onFurnishingStatusChange(value as FurnishingStatus)
             }
             className="flex flex-col space-y-3"
           >

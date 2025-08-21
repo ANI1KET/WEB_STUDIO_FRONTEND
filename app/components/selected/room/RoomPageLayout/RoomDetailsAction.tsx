@@ -29,10 +29,11 @@ interface RoomDetailsActionrProps {
   onShare: () => void;
   onCompare: () => void;
   primaryContact: string;
-  onInterest: () => void;
   session: Session | null;
   secondaryContact: string;
-  verifyContact: (phoneNumber: string) => Promise<void>;
+  onInterest: () => Promise<boolean>;
+  generateOtp: (phoneNumber: string) => Promise<void>;
+  verifyContact: (phoneNumber: string, otp: string) => Promise<boolean>;
 }
 
 const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
@@ -50,6 +51,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
   onCompare,
   listerName,
   onInterest,
+  generateOtp,
   verifyContact,
   primaryContact,
   // secondaryContact,
@@ -59,7 +61,6 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
   return (
     <Card className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden hover:shadow-xl transition-all duration-300">
       <CardContent className="p-6 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
-        {/* Main Content */}
         <div className="flex-1 space-y-6">
           <div className="space-y-4">
             <RoomTitleSection title={title} location={location} city={city} />
@@ -71,7 +72,6 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
             />
           </div>
 
-          {/* Contact Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <ContactCard title="Contact" contactNumber={primaryContact} />
 
@@ -106,12 +106,12 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
           </div>
         </div>
 
-        {/* Price Action Card */}
         <PriceActionCard
           price={price}
           session={session}
           onShare={onShare}
           onCompare={onCompare}
+          generateOtp={generateOtp}
           onShowInterest={onInterest}
           verifyContact={verifyContact}
         />

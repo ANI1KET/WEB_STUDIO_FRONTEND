@@ -55,6 +55,7 @@ export const getPromotionBenefits = (permissionId: Permission) => {
       "Price drop and clearance sale promotions",
       "Audience retargeting for previous visitors",
     ],
+    promote: [],
   };
 
   return specificBenefits[permissionId];

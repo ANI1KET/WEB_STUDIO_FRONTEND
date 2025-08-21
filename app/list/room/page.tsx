@@ -1,17 +1,19 @@
 "use client";
 
+import { Role } from "@prisma/client";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { FurnishingStatusEnum, Role } from "@prisma/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
+  ListedRoom,
   OwnerDetails,
   RoomAmenities,
   RoomWithMedia,
   RoomWithMediaUrl,
+  FurnishingStatus,
 } from "@/app/types/types";
 import {
   upload_Images,
@@ -34,9 +36,12 @@ const Room = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
+  const userId = session?.user.userId;
+  const isOwner = session?.user.role === "OWNER";
+
   const [isListing, setIsListing] = useState(false);
   const [furnishingStatus, setFurnishingStatus] =
-    useState<FurnishingStatusEnum>("SEMIFURNISHED");
+    useState<FurnishingStatus>("SEMIFURNISHED");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectedAmenities, setSelectedAmenities] = useState<RoomAmenities[]>(
     []
@@ -75,7 +80,7 @@ const Room = () => {
   const { mutate } = useMutation({
     mutationFn: (data: RoomWithMediaUrl & Partial<OwnerDetails>) =>
       SubmitRoomDetails(data),
-    onSuccess: (response) => {
+    onSuccess: (response: ListedRoom) => {
       queryClient.setQueryData(["CategoryDetails", "room"], response);
       setIsListing(false);
       router.push(`/listed/room/${btoa(response.id)}`);
@@ -86,43 +91,46 @@ const Room = () => {
     },
   });
 
-  const onSubmit = async (data: RoomWithMedia) => {
-    // setIsListing(true);
-    console.log("!", data);
+  const onSubmit = async (data: RoomWithMedia & Partial<OwnerDetails>) => {
+    setIsListing(true);
 
-    // data.city =
-    //   data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
-    // data.location =
-    //   data.location.charAt(0).toUpperCase() +
-    //   data.location.slice(1).toLowerCase();
+    data.city =
+      data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
+    data.location =
+      data.location.charAt(0).toUpperCase() +
+      data.location.slice(1).toLowerCase();
 
-    // try {
-    //   const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
-    //     upload_Video(data.videos),
-    //     upload_Images("room", selectedImages),
-    //   ]);
+    if (isOwner) {
+      data.ownerId = userId;
+    }
 
-    //   const ImageUrls =
-    //     uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
-    //   const VideoUrl =
-    //     uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
-    //       ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
-    //       : null;
+    try {
+      const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
+        upload_Video(data.videos),
+        upload_Images("room", selectedImages),
+      ]);
 
-    //   mutate({
-    //     ...data,
-    //     furnishingStatus,
-    //     photos: ImageUrls,
-    //     videos: VideoUrl ?? null,
-    //     postedBy: session?.user.role as Role,
-    //     listerId: session?.user.userId as string,
-    //     listerName: session?.user.name as string,
-    //   });
-    // } catch (error) {
-    //   console.error(
-    //     error instanceof Error ? error.message : "An unknown error occurred"
-    //   );
-    // }
+      const ImageUrls =
+        uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
+      const VideoUrl =
+        uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
+          ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
+          : null;
+
+      mutate({
+        ...data,
+        furnishingStatus,
+        photos: ImageUrls,
+        videos: VideoUrl ?? null,
+        listerId: userId as string,
+        postedBy: session?.user.role as Role,
+        listerName: session?.user.name as string,
+      });
+    } catch (error) {
+      console.error(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      );
+    }
   };
 
   return (
@@ -137,7 +145,7 @@ const Room = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* <BasicInformationSection
+        <BasicInformationSection
           errors={errors}
           control={control}
           register={register}
@@ -158,15 +166,17 @@ const Room = () => {
           onFurnishingStatusChange={setFurnishingStatus}
         />
 
-        <ContactDescriptionSection errors={errors} register={register} /> */}
+        <ContactDescriptionSection errors={errors} register={register} />
 
-        <OwnerDetailsSection
-          errors={errors}
-          register={register}
-          setValue={setValue}
-          id={session?.user.userId}
-        />
-        {/* 
+        {!isOwner && (
+          <OwnerDetailsSection
+            id={userId}
+            errors={errors}
+            register={register}
+            setValue={setValue}
+          />
+        )}
+
         <MediaUploadSection
           errors={errors}
           register={register}
@@ -174,9 +184,8 @@ const Room = () => {
           onRemoveImage={removeImage}
           selectedImages={selectedImages}
           onImageUpload={handleImageUpload}
-        /> */}
+        />
 
-        {/* Submit Button */}
         <div className="flex justify-center pb-6">
           <Button
             size="lg"

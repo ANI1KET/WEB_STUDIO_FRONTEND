@@ -22,7 +22,7 @@ const PersonalInfoHeader = ({
   const handleCopyId = async () => {
     if (!id) return;
     try {
-      await navigator.clipboard.writeText(btoa(id));
+      await navigator.clipboard.writeText(id);
       toast({ title: "Copy ID", description: "ID copied to clipboard" });
     } catch (error) {
       toast({

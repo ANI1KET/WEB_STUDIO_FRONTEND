@@ -27,7 +27,6 @@ const RoomCompareCard = ({ room, onRemove }: RoomCompareCardProps) => {
         <div className="relative">
           <RoomMediaSection
             id={room.id}
-            name={room.name}
             photos={room.photos}
             videos={room.videos}
             onRemove={handleRemove}
@@ -35,15 +34,14 @@ const RoomCompareCard = ({ room, onRemove }: RoomCompareCardProps) => {
           />
 
           <RoomCardHeader
-            name={room.name}
             city={room.city}
+            name={room.title}
             location={room.location}
           />
         </div>
       </CardHeader>
 
       <CardContent className="p-4 pt-0">
-        {/* Price Display with Green Theme */}
         <div className="text-center mb-4 p-3 bg-gradient-to-r from-green-50 to-green-100 rounded-lg border border-green-200">
           <div className="text-3xl font-bold text-green-600">
             ₹{room.price.toLocaleString()}
@@ -63,7 +61,6 @@ const RoomCompareCard = ({ room, onRemove }: RoomCompareCardProps) => {
           maxCapacity={room.maxCapacity}
         />
 
-        {/* Furnishing Status with Green Theme */}
         <div className="mb-4">
           <div className="flex items-center justify-between p-2 bg-green-50 rounded-lg border border-green-200">
             <span className="text-sm font-medium text-gray-700">

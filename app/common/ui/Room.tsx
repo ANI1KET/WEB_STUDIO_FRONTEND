@@ -71,7 +71,7 @@ const RoomCard = memo(({ room, showVideo, setShowVideo }: RoomCardProps) => {
                     src={photo}
                     sizes="100%"
                     loading="lazy"
-                    alt={`${room.name} - image ${index + 1}`}
+                    alt={`${room.title} - image ${index + 1}`}
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                 </CarouselItem>

@@ -21,6 +21,7 @@ interface FormFieldProps<T extends FieldValues> {
   max?: number;
   rows?: number;
   label: string;
+  disabled?: boolean;
   className?: string;
   maxLength?: number;
   required?: boolean;
@@ -49,6 +50,7 @@ export function FormField<T extends FieldValues>({
   validation,
   placeholder,
   type = "text",
+  disabled = false,
   required = false,
 }: FormFieldProps<T>) {
   const error = errors[name];
@@ -75,6 +77,7 @@ export function FormField<T extends FieldValues>({
         <Textarea
           id={name}
           rows={rows}
+          disabled={disabled}
           maxLength={maxLength}
           placeholder={placeholder}
           {...register(name, validation)}
@@ -88,6 +91,7 @@ export function FormField<T extends FieldValues>({
           min={min}
           max={max}
           type={type}
+          disabled={disabled}
           maxLength={maxLength}
           placeholder={placeholder}
           {...register(name, validation)}

@@ -1,6 +1,6 @@
 "use server";
 
-import { PAGE_SIZE } from "@/app/lib/constant";
+import { PAGE_SIZE } from "@/app/lib/constants";
 import axiosInstance from "@/app/lib/axiosInstance";
 import { PropertyData, RoomData } from "@/app/types/types";
 

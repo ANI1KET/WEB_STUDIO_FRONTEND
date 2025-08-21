@@ -32,7 +32,7 @@ const ComparisonTable = ({
                       Room {index + 1}
                     </Badge>
                     <span className="text-xs text-gray-500 line-clamp-1 max-w-[100px] sm:max-w-none">
-                      {room.name}
+                      {room.title}
                     </span>
                   </div>
                 </th>

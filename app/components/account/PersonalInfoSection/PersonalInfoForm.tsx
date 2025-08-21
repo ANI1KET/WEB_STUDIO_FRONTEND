@@ -11,7 +11,7 @@ interface PersonalInfoFormProps {
   phoneNumber: string | undefined;
   name: string | null | undefined;
   email: string | null | undefined;
-  onFormChange: (field: "email" | "phoneNumber", value: string) => void;
+  onFormChange: (value: string) => void;
 }
 
 const PersonalInfoForm = ({
@@ -35,6 +35,7 @@ const PersonalInfoForm = ({
 
           <Input
             id="name"
+            type="text"
             disabled={true}
             value={name ?? ""}
             className="bg-green-50 border-green-200 h-10"
@@ -53,10 +54,11 @@ const PersonalInfoForm = ({
           <Input
             id="email"
             type="email"
+            disabled={true}
             value={email ?? ""}
-            disabled={!isEditing}
-            onChange={(e) => onFormChange("email", e.target.value)}
-            className="h-10 border-green-200 focus:border-green-500 focus:ring-green-500"
+            // disabled={!isEditing}
+            className="bg-green-50 border-green-200 h-10"
+            // className="h-10 border-green-200 focus:border-green-500 focus:ring-green-500"
           />
         </div>
       </div>
@@ -81,7 +83,7 @@ const PersonalInfoForm = ({
           onChange={(e) => {
             const value = e.target.value.replace(/\D/g, "");
             if (value.length <= 10) {
-              onFormChange("phoneNumber", value);
+              onFormChange(value);
             }
           }}
           className="h-10 border-green-200 focus:border-green-500 focus:ring-green-500"

@@ -5,7 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useToast } from "@/app/common/hooks/use-toast";
-import { ServiceData } from "@/app/components/profile/types/ListingServiceCard";
+import { ServiceData } from "@/app/components/account/types/ListingServiceCard";
 
 import {
   Dialog,
@@ -13,11 +13,11 @@ import {
   DialogHeader,
   DialogContent,
 } from "@/app/components/ui/dialog";
-import { PaymentInfo } from "./config/ScheduleVisitDialog";
+import { PaymentInfo } from "./types/ScheduleVisitDialog";
 import { BookingForm } from "./ScheduleVisitDialog/BookingForm";
 import { ConfirmationScreen } from "./ScheduleVisitDialog/ConfirmationScreen";
 import { ScheduleVisitHeader } from "./ScheduleVisitDialog/ScheduleVisitHeader";
-import { serviceData } from "@/app/components/profile/ServerAction/ListingServiceCard";
+import { serviceData } from "@/app/components/account/ServerAction/ListingServiceCard";
 
 interface ScheduleVisitDialogProps {
   id: string;

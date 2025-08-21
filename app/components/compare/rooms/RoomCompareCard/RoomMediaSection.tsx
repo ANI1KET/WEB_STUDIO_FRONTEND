@@ -19,7 +19,6 @@ import { Button } from "@/app/components/ui/button";
 
 interface RoomMediaSectionProps {
   id: string;
-  name: string;
   photos: string[];
   verified: boolean;
   onRemove: () => void;
@@ -28,7 +27,6 @@ interface RoomMediaSectionProps {
 
 const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
   id,
-  name,
   photos,
   videos,
   verified,
@@ -63,7 +61,6 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
 
   return (
     <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 group">
-      {/* Media Display */}
       {showVideo && videos ? (
         <iframe
           allow="autoplay; encrypted-media"
@@ -88,7 +85,7 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
                     src={photo}
                     sizes="100%"
                     loading="lazy"
-                    alt={`${name} - ${index + 1}`}
+                    alt={`Image - ${index + 1}`}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -96,25 +93,23 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
             </div>
           </div>
 
-          {/* Enhanced Navigation Buttons with Better Visibility */}
           {photos.length > 1 && (
             <>
               <button
                 onClick={() => emblaApi?.scrollPrev()}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-80 hover:opacity-100 transition-all duration-200 z-20"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-0 hover:opacity-100 transition-all duration-200 z-20"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => emblaApi?.scrollNext()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-80 hover:opacity-100 transition-all duration-200 z-20"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-0 hover:opacity-100 transition-all duration-200 z-20"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>
             </>
           )}
 
-          {/* Enhanced Image indicators - Now clickable and more visible */}
           {photos.length > 1 && (
             <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex gap-2 z-20 bg-black/20 rounded-full px-3 py-1">
               {photos.map((_, index) => (
@@ -133,7 +128,6 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
         </div>
       )}
 
-      {/* Media Controls */}
       <div className="absolute top-3 left-3 flex gap-2 z-20">
         {videos && (
           <Button
@@ -156,14 +150,12 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
         )}
       </div>
 
-      {/* Verified Badge */}
       {!verified === true && (
         <div className="absolute top-2 right-2 z-20">
           <Badge className="bg-green-500 text-white">✓ Verified</Badge>
         </div>
       )}
 
-      {/* Share Button */}
       <button
         onClick={() =>
           navigator.clipboard
@@ -181,7 +173,6 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
         <Share2 className="w-5 h-5" />
       </button>
 
-      {/* Remove Button */}
       <button
         onClick={onRemove}
         className="absolute bottom-2 right-2 flex items-center justify-center text-red-600 hover:text-red-700 backdrop-blur-sm rounded-lg h-7 w-10 z-20"

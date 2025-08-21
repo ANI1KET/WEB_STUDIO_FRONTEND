@@ -79,7 +79,6 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
   return (
     <>
-      {/* Backdrop overlay */}
       <div
         onClick={onClose}
         aria-hidden="true"
@@ -88,7 +87,6 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         }`}
       />
 
-      {/* Mobile menu panel */}
       <div
         ref={menuRef}
         role="dialog"
@@ -99,9 +97,9 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
         <div className="sticky top-0 z-50 bg-emerald-400 px-4 py-4 flex items-center justify-between shadow-lg">
           <h2 className="text-xl font-semibold drop-shadow-sm">Menu</h2>
+
           <Button
             size="icon"
             variant="ghost"
@@ -112,9 +110,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
           </Button>
         </div>
 
-        {/* Content */}
         <div className="px-4 py-6 space-y-4 min-h-[calc(100vh-80px)] bg-gradient-to-br from-green-50 to-white">
-          {/* Navigation Dropdowns */}
           <div className="space-y-3">
             <MobileNavDropdown
               label="Explore Rooms"
@@ -135,7 +131,6 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
 
           <hr className="my-6 border-green-200" />
 
-          {/* User Actions */}
           <div className="space-y-3">
             <div className="px-2 py-2">
               <h3 className="text-sm font-semibold text-green-700 uppercase tracking-wide">
@@ -160,9 +155,9 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 />
 
                 <MobileNavItem
-                  label="Profile"
+                  label="Account"
                   description="Manage your account"
-                  onClick={() => router.push("/profile")}
+                  onClick={() => router.push("/account")}
                   icon={
                     <CircleUserRound size={18} className="text-amber-600" />
                   }

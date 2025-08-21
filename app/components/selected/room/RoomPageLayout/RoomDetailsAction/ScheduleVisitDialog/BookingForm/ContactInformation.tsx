@@ -3,7 +3,7 @@
 import React from "react";
 import { User } from "lucide-react";
 
-import { PaymentInfo } from "../../config/ScheduleVisitDialog";
+import { PaymentInfo } from "../../types/ScheduleVisitDialog";
 
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";

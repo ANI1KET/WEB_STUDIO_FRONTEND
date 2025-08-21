@@ -14,16 +14,17 @@ const Room = () => {
 
   return (
     <div className="space-y-8">
-      {/* Enhanced Header */}
       <div className="text-center bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-xl border border-green-200">
         <div className="flex items-center justify-center gap-3 mb-4">
           <Home className="w-10 h-10 text-green-600" />
           <div>
             <h2 className="text-3xl font-bold text-gray-900">Compare Rooms</h2>
+
             <p className="text-gray-600 text-lg mt-1">
               {rooms.length} room{rooms.length !== 1 ? "s" : ""} selected for
               detailed comparison
             </p>
+
             {rooms.length > 1 && (
               <div className="flex items-center justify-center gap-2 mt-3">
                 <ArrowLeftRight className="w-4 h-4 text-green-600" />
@@ -46,15 +47,14 @@ const Room = () => {
         )}
       </div>
 
-      {/* Quick Comparison Table - Enhanced and at the top */}
       <QuickComparisonTable rooms={rooms} />
 
-      {/* Comparison Grid */}
       {rooms.length > 0 ? (
         <div className="space-y-4">
           <h3 className="text-2xl font-bold text-gray-900 text-center">
             Detailed Room Cards
           </h3>
+
           <div className="grid gap-6 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 grid-cols-1">
             {rooms.map((room, index) => (
               <div key={room.id} className="relative">
@@ -70,9 +70,11 @@ const Room = () => {
       ) : (
         <div className="text-center bg-green-50 p-12 rounded-xl border border-green-200">
           <Home className="w-16 h-16 text-green-300 mx-auto mb-4" />
+
           <h3 className="text-lg font-semibold text-gray-900 mb-2">
             No Rooms to Compare
           </h3>
+
           <p className="text-gray-600">
             Add rooms to your comparison list to see them here
           </p>

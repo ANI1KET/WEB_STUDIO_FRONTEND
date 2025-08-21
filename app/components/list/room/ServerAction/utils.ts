@@ -2,10 +2,16 @@
 
 import { Readable } from "stream";
 import { google } from "googleapis";
-import prisma from "@/prisma/prismaClient";
 import { v2 as cloudinary } from "cloudinary";
 
-import { OwnerDetails, RoomWithMediaUrl } from "../../../../types/types";
+import {
+  ListedRoom,
+  OwnerDetails,
+  RoomWithMediaUrl,
+} from "../../../../types/types";
+import axiosInstance from "@/app/lib/axiosInstance";
+import { createRoomUrl } from "@/app/common/endPoints/room";
+import { getAutheticationHeader } from "@/app/common/serverAction/header";
 
 // Configuration
 cloudinary.config({
@@ -304,18 +310,17 @@ export async function uploadChunkVideo({
 
 export async function SubmitRoomDetails(
   formData: RoomWithMediaUrl & Partial<OwnerDetails>
-) {
+): Promise<ListedRoom> {
   "use server";
 
-  const { id, name, email, number, ...roomData } = formData;
   try {
-    const newRoomDetails = await prisma.room.create({
-      data: {
-        ...roomData,
-      },
-    });
+    const { data } = await axiosInstance.post<ListedRoom>(
+      createRoomUrl,
+      { formData },
+      await getAutheticationHeader()
+    );
 
-    return newRoomDetails;
+    return data;
   } catch (error) {
     throw new Error(error?.toString() || "An unknown error occurred");
   }

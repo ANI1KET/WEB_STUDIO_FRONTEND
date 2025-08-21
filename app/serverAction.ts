@@ -2,7 +2,8 @@
 
 // import { cookies } from "next/headers";
 
-import { PAGE_SIZE } from "@/app/lib/constant";
+import { PAGE_SIZE } from "@/app/lib/constants";
+import { CategoryCitiesLocations, RoomData } from "./types/types";
 
 // export const getAutheticationHeader = async (): Promise<
 //   { headers: { Cookie: string; "Cache-Control": string } } | undefined
@@ -20,16 +21,28 @@ import { PAGE_SIZE } from "@/app/lib/constant";
 //   };
 // };
 
-export async function getCategoryCitiesLocationDetails() {
-  const url = `${process.env.BASE_URL}/aggregator-service/data?limit=${PAGE_SIZE}`;
+export async function getRoomCitiesLocationDetails(city: string): Promise<{
+  roomCityDetails: RoomData[];
+  roomCitiesLocations: CategoryCitiesLocations;
+}> {
+  const url = `${process.env.BASE_URL}/room-service/aggregator?city=${city}&limit=${PAGE_SIZE}`;
 
-  const res = await fetch(url, {
-    next: { revalidate: 300 },
-  });
+  try {
+    const res = await fetch(url, {
+      next: { revalidate: 300 },
+    });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(error);
+
+    return {
+      roomCityDetails: [],
+      roomCitiesLocations: {},
+    };
   }
-
-  return res.json();
 }

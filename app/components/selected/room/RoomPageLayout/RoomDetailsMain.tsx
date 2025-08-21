@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { format } from "date-fns";
-import { FurnishingStatusEnum } from "@prisma/client";
+import { FurnishingStatus } from "@/app/types/types";
 
 import {
   Card,
@@ -31,7 +31,7 @@ interface RoomDetailsMainProps {
   minCapacity: number;
   maxCapacity: number;
   direction: string | null;
-  furnishingStatus: FurnishingStatusEnum;
+  furnishingStatus: FurnishingStatus;
 }
 
 const RoomDetailsMain: React.FC<RoomDetailsMainProps> = ({

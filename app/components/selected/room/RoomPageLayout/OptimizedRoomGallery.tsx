@@ -71,6 +71,7 @@ const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
               >
                 <ChevronLeft className="h-5 w-5" />
               </Button>
+
               <Button
                 size="sm"
                 onClick={nextImage}

@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { PAGE_SIZE } from "@/app/lib/constant";
+import { PAGE_SIZE } from "@/app/lib/constants";
 import { getRoomFilteredData } from "./serveraction";
 import { useGetRoomSearchData } from "@/app/providers/reactqueryProvider";
 

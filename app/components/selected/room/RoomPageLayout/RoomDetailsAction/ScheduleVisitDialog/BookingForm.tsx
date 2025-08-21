@@ -3,7 +3,7 @@
 import React from "react";
 import { CreditCard } from "lucide-react";
 
-import { PaymentInfo } from "../config/ScheduleVisitDialog";
+import { PaymentInfo } from "../types/ScheduleVisitDialog";
 
 import { Button } from "@/app/components/ui/button";
 import { StatusAlert } from "./BookingForm/StatusAlert";

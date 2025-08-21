@@ -10,7 +10,7 @@ import {
   useImageModalControl,
 } from "./hooks/RoomPageLayout";
 import { RoomData } from "@/app/types/types";
-import { PAGE_SIZE } from "@/app/lib/constant";
+import { PAGE_SIZE } from "@/app/lib/constants";
 import { amenityIcons } from "./icons/RoomPageLayout";
 import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
@@ -37,6 +37,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     handleShare,
     handleCompare,
     handleInterest,
+    handleGenerateOtp,
     handleContactVerification,
   } = useRoomActions(roomData);
 
@@ -130,13 +131,14 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
           price={roomData.price}
           onCompare={handleCompare}
           ratings={roomData.ratings}
-          listerName={roomData.name}
           onInterest={handleInterest}
           postedBy={roomData.postedBy}
           listerId={roomData.listerId}
           location={roomData.location}
           verified={roomData.verified}
           available={roomData.available}
+          generateOtp={handleGenerateOtp}
+          listerName={roomData.listerName}
           primaryContact={roomData.primaryContact}
           verifyContact={handleContactVerification}
           secondaryContact={roomData.secondaryContact}
@@ -171,6 +173,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Explore More Rooms in {city}
             </h2>
+
             <p className="text-gray-600 text-lg max-w-2xl mx-auto">
               Still looking? There&apos;s more to see in {city}.
             </p>
@@ -220,10 +223,10 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
       <RoomImageModal
         onNext={next}
         onPrev={prev}
-        onClose={close}
         isOpen={isOpen}
-        photos={roomData.photos}
+        onClose={close}
         title={roomData.title}
+        photos={roomData.photos}
         currentImageIndex={currentIndex}
       />
     </div>
@@ -266,9 +269,7 @@ const LoadingSkeletop = () => (
     <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-200/50 overflow-hidden hover:shadow-xl transition-all duration-300">
       <div className="p-6 animate-pulse">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
-          {/* Left Section */}
           <div className="flex-1 space-y-6">
-            {/* Title + Location */}
             <div className="space-y-4">
               <div className="h-6 w-3/4 rounded-md bg-gray-200 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-[gradient-x_1.2s_ease-in-out_infinite]"></div>
@@ -278,7 +279,6 @@ const LoadingSkeletop = () => (
               </div>
             </div>
 
-            {/* Rating / Status */}
             <div className="flex gap-4">
               {Array.from({ length: 3 }).map((_, i) => (
                 <div
@@ -290,7 +290,6 @@ const LoadingSkeletop = () => (
               ))}
             </div>
 
-            {/* Contact Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {Array.from({ length: 2 }).map((_, i) => (
                 <div
@@ -303,7 +302,6 @@ const LoadingSkeletop = () => (
             </div>
           </div>
 
-          {/* Right Section: Price / Buttons */}
           <div className="w-full lg:w-72 space-y-4">
             <div className="h-10 w-full rounded-md bg-gray-200 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-[gradient-x_1.2s_ease-in-out_infinite]"></div>

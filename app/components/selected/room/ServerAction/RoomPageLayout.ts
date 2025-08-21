@@ -1,7 +1,10 @@
 "use server";
 
+import axios from "axios";
+
 import {
   updateNumberUrl,
+  generateUserOtpUrl,
   pushInterestedRoomUrl,
 } from "@/app/common/endPoints/user";
 import { RoomData } from "@/app/types/types";
@@ -21,47 +24,88 @@ export const fetchRoom = async (roomId: string): Promise<RoomData> => {
 };
 
 export const updateNumber = async ({
+  otp,
   userId,
   number,
 }: {
+  otp: string;
   userId: string;
   number: string;
-}): Promise<string> => {
+}): Promise<{ success: boolean; message: string }> => {
   "use server";
-  const response = await axiosInstance.post(
-    `${updateNumberUrl}`,
-    { userId, number },
-    await getAutheticationHeader()
-    // { ...(await getAutheticationHeader()) }
-  );
 
-  return response.data;
+  try {
+    const { data } = await axiosInstance.post(
+      updateNumberUrl,
+      { userId, number, otp },
+      await getAutheticationHeader()
+    );
+
+    return data;
+  } catch (error) {
+    let errorMessage = "Unable to generate OTP. Try again later.";
+
+    if (axios.isAxiosError(error)) {
+      errorMessage = error.response?.data?.message || errorMessage;
+    }
+
+    return { success: false, message: errorMessage };
+  }
 };
 
 export const pushInterestedRoom = async ({
   roomId,
   userId,
   listerId,
-  listerNumber,
 }: {
   roomId: string;
   userId: string;
   listerId: string;
-  listerNumber: string;
-}) => {
+}): Promise<{ success: boolean; message: string }> => {
   "use server";
 
-  const { data } = await axiosInstance.post(
-    pushInterestedRoomUrl,
-    {
-      userId,
-      roomId,
-      listerId,
-      listerNumber,
-    },
-    await getAutheticationHeader()
-    // { ...(await getAutheticationHeader()) }
-  );
+  try {
+    const { data } = await axiosInstance.post(
+      pushInterestedRoomUrl,
+      {
+        userId,
+        roomId,
+        listerId,
+      },
+      await getAutheticationHeader()
+      // { ...(await getAutheticationHeader()) }
+    );
 
-  return data;
+    return data;
+  } catch (error) {
+    let errorMessage = "Unable to notify lister.";
+
+    if (axios.isAxiosError(error)) {
+      errorMessage = error.response?.data?.message || errorMessage;
+    }
+
+    return { success: false, message: errorMessage };
+  }
+};
+
+export const generateOtp = async ({ number }: { number: string }) => {
+  "use server";
+
+  try {
+    const { data } = await axiosInstance.post(
+      generateUserOtpUrl,
+      { number },
+      await getAutheticationHeader()
+    );
+
+    return data;
+  } catch (error) {
+    let errorMessage = "Unable to generate OTP. Try again later.";
+
+    if (axios.isAxiosError(error)) {
+      errorMessage = error.response?.data?.message || errorMessage;
+    }
+
+    return { success: false, message: errorMessage };
+  }
 };

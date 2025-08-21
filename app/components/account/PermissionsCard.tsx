@@ -42,6 +42,11 @@ const PermissionsCard = ({ userPermissions }: PermissionsCardProps) => {
       id: "hostel",
       name: "Hostel Listings",
     },
+    promote: {
+      icon: Car,
+      id: "hostel",
+      name: "Hostel Listings",
+    },
     reMarketItem: {
       icon: Car,
       id: "vehicle",

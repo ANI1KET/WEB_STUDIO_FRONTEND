@@ -1,17 +1,8 @@
 "use client";
 
-import {
-  User,
-  Mail,
-  Phone,
-  Check,
-  Settings,
-  UserCheck,
-  ToggleLeft,
-  ToggleRight,
-} from "lucide-react";
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { User, Mail, Phone, Check, UserCheck } from "lucide-react";
 import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 
 import { OwnerDetails, RoomWithMedia } from "@/app/types/types";
@@ -40,38 +31,25 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
   register,
   setValue,
 }) => {
-  const [useOwnerId, setUseOwnerId] = useState<boolean>(true);
   const [selectedOwnerId, setSelectedOwnerId] = useState<string>("");
 
-  const { data } = useQuery<
-    { id: string; name: string; email: string; number: string }[]
-  >({
+  const { data } = useQuery<OwnerDetails[]>({
     queryKey: ["owner_details"],
     queryFn: async () => getOwnerDetails(),
     enabled: !!id,
     refetchOnWindowFocus: false,
   });
 
-  const selectOwnerDetail = (ownerId: string) => {
-    setValue("id", btoa(ownerId));
+  const selectOwnerDetail = (ownerId: string, listerOwnerId: string) => {
+    setValue("ownerId", ownerId);
+    setValue("listerOwnerId", listerOwnerId);
     setSelectedOwnerId(ownerId);
   };
 
   const clearOwnerDetails = () => {
-    setValue("id", "");
+    setValue("ownerId", "");
+    setValue("listerOwnerId", "");
     setSelectedOwnerId("");
-  };
-
-  const toggleInputMode = () => {
-    if (useOwnerId) {
-      setValue("id", "");
-    } else {
-      setValue("name", "");
-      setValue("email", "");
-      setValue("number", "");
-    }
-    setSelectedOwnerId("");
-    setUseOwnerId(!useOwnerId);
   };
 
   return (
@@ -84,8 +62,8 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
       </CardHeader>
 
       <CardContent className="p-4 space-y-2">
-        {useOwnerId && (data?.length ?? 0) > 0 && (
-          <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 rounded-xl border border-blue-200 shadow-sm">
+        {(data?.length ?? 0) > 0 && (
+          <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-2 rounded-xl border border-blue-200 shadow-sm">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
@@ -116,35 +94,37 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
               )}
             </div>
 
-            <div className="flex gap-4 overflow-x-auto p-2">
+            <div className="flex gap-4 overflow-x-auto">
               {data?.map((detail) => (
                 <div
-                  key={detail.id}
+                  key={detail.ownerId}
                   className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 hover:shadow-lg group min-w-[220px] flex-shrink-0 ${
-                    selectedOwnerId === detail.id
+                    selectedOwnerId === detail.ownerId
                       ? "border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 shadow-lg ring-2 ring-green-200"
                       : "border-gray-200 bg-gradient-to-br from-white to-gray-50 hover:border-blue-300 hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50"
                   }`}
-                  onClick={() => selectOwnerDetail(detail.id)}
+                  onClick={() =>
+                    selectOwnerDetail(detail.ownerId, detail.listerOwnerId)
+                  }
                 >
-                  {selectedOwnerId === detail.id && (
+                  {selectedOwnerId === detail.ownerId && (
                     <div className="absolute -top-2 -right-2 bg-green-500 rounded-full p-1.5 shadow-lg">
                       <Check className="h-3 w-3 text-white" />
                     </div>
                   )}
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <div
                         className={`p-2 rounded-lg ${
-                          selectedOwnerId === detail.id
+                          selectedOwnerId === detail.ownerId
                             ? "bg-green-100"
                             : "bg-blue-100 group-hover:bg-blue-200"
                         }`}
                       >
                         <User
                           className={`h-4 w-4 ${
-                            selectedOwnerId === detail.id
+                            selectedOwnerId === detail.ownerId
                               ? "text-green-600"
                               : "text-blue-600"
                           }`}
@@ -156,7 +136,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
                           {detail.name}
                         </h4>
 
-                        <p className="text-xs text-gray-500">Owner</p>
+                        {/* <p className="text-xs text-gray-500">Owner</p> */}
                       </div>
                     </div>
 
@@ -182,7 +162,7 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
                     </div>
                   </div>
 
-                  {selectedOwnerId === detail.id && (
+                  {selectedOwnerId === detail.ownerId && (
                     <div className="absolute inset-0 rounded-xl bg-green-500/5 pointer-events-none"></div>
                   )}
                 </div>
@@ -197,123 +177,51 @@ const OwnerDetailsSection: React.FC<OwnerDetailsSectionProps> = ({
           </div>
         )}
 
-        <div className="bg-gray-50 p-4 rounded-lg border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Settings className="h-4 w-4 text-blue-600" />
-              </div>
+        <div className="space-y-4 bg-blue-50 p-2 rounded-lg border border-blue-200">
+          <div className="bg-white p-4 rounded-lg border border-blue-300">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-gray-900">
+                Are you the owner?
+              </span>
 
-              <div>
-                <h4 className="font-medium text-gray-900">Entry Mode</h4>
-
-                <p className="text-sm text-gray-600">
-                  {useOwnerId ? "Using Owner ID" : "Manual Entry"}
-                </p>
-              </div>
-            </div>
-
-            <Button
-              size="sm"
-              type="button"
-              variant="outline"
-              onClick={toggleInputMode}
-              className="flex items-center gap-2"
-            >
-              {useOwnerId ? (
-                <ToggleRight className="h-4 w-4" />
-              ) : (
-                <ToggleLeft className="h-4 w-4" />
-              )}
-              {useOwnerId ? "Manual Entry" : "Owner ID"}
-            </Button>
-          </div>
-        </div>
-
-        {useOwnerId ? (
-          <div className="space-y-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
-            {/* Owner confirmation switch */}
-            <div className="bg-white p-4 rounded-lg border border-blue-300">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-900">
-                  Are you the owner?
-                </span>
-                <Switch
-                  checked={selectedOwnerId ? selectedOwnerId === id : false}
-                  onCheckedChange={(enabled: boolean) => {
-                    if (enabled) {
-                      setValue("id", id ?? "");
-                      setSelectedOwnerId(id ?? "");
-                    } else {
-                      setValue("id", "");
-                      setSelectedOwnerId("");
-                    }
-                  }}
-                  className="data-[state=checked]:bg-green-600"
-                />
-              </div>
-            </div>
-
-            <div>
-              <FormField
-                required
-                name="id"
-                type="text"
-                errors={errors}
-                label="Owner ID"
-                register={register}
-                placeholder="Enter owner's ID"
-                validation={{
-                  required: "Owner ID is required",
+              <Switch
+                checked={selectedOwnerId ? selectedOwnerId === id : false}
+                onCheckedChange={(enabled: boolean) => {
+                  if (enabled) {
+                    setValue("ownerId", id ?? "");
+                    setValue("listerOwnerId", "");
+                    setSelectedOwnerId(id ?? "");
+                  } else {
+                    setValue("ownerId", "");
+                    setSelectedOwnerId("");
+                  }
                 }}
+                className="data-[state=checked]:bg-green-600"
               />
             </div>
           </div>
-        ) : (
-          <div className="space-y-4">
+
+          <div>
             <FormField
               required
               type="text"
+              name="ownerId"
               errors={errors}
-              name="ownerName"
-              label="Owner Name"
+              label="Owner ID"
               register={register}
-              placeholder="Enter owner's full name"
+              disabled={!!selectedOwnerId}
+              placeholder="Enter owner's ID"
               validation={{
-                required: "Owner Name is required",
+                required: "Owner ID is required",
+                pattern: {
+                  // value: /^[a-f\d]{24}$/i,
+                  value: /^[0-9a-fA-F]{24}$/,
+                  message: "Enter valid Owner ID",
+                },
               }}
             />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                required
-                type="tel"
-                name="number"
-                maxLength={10}
-                errors={errors}
-                register={register}
-                label="Owner Contact"
-                placeholder="9812345678"
-                validation={{
-                  pattern: {
-                    value: /^[0-9]{10}$/,
-                    message: "Contact must be exactly 10 digits",
-                  },
-                  required: "Owner Contact is required",
-                }}
-              />
-
-              <FormField
-                name="email"
-                type="email"
-                errors={errors}
-                register={register}
-                label="Owner Email"
-                placeholder="afnosansaar24.7@gmail.com"
-              />
-            </div>
           </div>
-        )}
+        </div>
       </CardContent>
     </Card>
   );

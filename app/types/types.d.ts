@@ -1,10 +1,10 @@
-import { FurnishingStatusEnum, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 
 export type PropertyType = "House" | "Land";
 export type CategoryCitiesLocations = Record<string, string[]>;
 
+// --------------------------------------------------------------------------------
 // ROOM
-export type RoomType = "FLAT" | "1BHK" | "2BHK" | "3BHK" | "4BHK";
 export type RoomAmenities =
   | "AC"
   | "WIFI"
@@ -24,6 +24,8 @@ export type RoomAmenities =
   | "FIRE SAFETY"
   | "POWER BACKUP"
   | "WASHING MANCHINE";
+export type RoomType = "FLAT" | "1BHK" | "2BHK" | "3BHK" | "4BHK";
+export type FurnishingStatus = "FURNISHED" | "SEMIFURNISHED" | "UNFURNISHED";
 
 export type Room = {
   hall: number;
@@ -43,7 +45,7 @@ export type Room = {
   secondaryContact: string;
   direction: string | null;
   amenities: RoomAmenities[];
-  furnishingStatus: FurnishingStatusEnum;
+  furnishingStatus: FurnishingStatus;
   // ENUM
   postedBy: Role;
   // RELATION
@@ -87,6 +89,7 @@ export type RoomData = ListedRoom & {
   }[];
 };
 
+// --------------------------------------------------------------------------------
 // PROPERTY
 export type PropertyAreaUnits =
   | "sqm"
@@ -198,12 +201,14 @@ export type PropertyData = ListedProperty & {
   };
 };
 
+// --------------------------------------------------------------------------------
 // OWNER DETAILS
 export type OwnerDetails = {
-  id: string;
   name: string;
   email: string;
   number: string;
+  ownerId: string;
+  listerOwnerId: string;
 };
 
 // FUNCTIONS

@@ -6,8 +6,10 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, User, Mail, Phone, Lock } from "lucide-react";
 
+import { createOtp } from "../SeverAction";
 import { SignUpFormData } from "../Schema";
-import { createUser } from "../SeverAction";
+import { useToast } from "@/app/common/hooks/use-toast";
+import { OTP_EXPIRATION_TIME } from "@/app/lib/constants";
 
 import {
   Card,
@@ -18,36 +20,66 @@ import {
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
-import { useToast } from "@/app/common/hooks/use-toast";
+import SignupOTPDialog from "@/app/components/auth/signup/SignupOTPDialog";
 
 const Signup = () => {
   const { toast } = useToast();
   const navigate = useRouter();
 
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isOtpSet, setIsOtpSet] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showOTPDialog, setShowOTPDialog] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     watch,
     reset,
     register,
+    getValues,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormData>();
   const password = watch("password");
 
-  const onSubmit = async (data: SignUpFormData) => {
-    const response = await createUser(data);
-    if (response === "Account Sucessfully Created") {
-      reset();
-      navigate.push("/auth/login");
-    } else {
-      toast({
-        title: "Account",
-        description: response,
-        variant: "destructive",
+  const handleOTPVerified = async () => {
+    reset();
+    navigate.push("/auth/login");
+  };
+
+  const startOtpCountdown = () => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setIsOtpSet(false);
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
       });
+    }, 1000);
+  };
+
+  const onSubmit = async (data: SignUpFormData) => {
+    if (isOtpSet) {
+      setShowOTPDialog(true);
+      return;
     }
+
+    const { message, success } = await createOtp(data.number);
+
+    if (success) {
+      setTimeLeft(OTP_EXPIRATION_TIME);
+      setIsOtpSet(true);
+      setShowOTPDialog(true);
+      startOtpCountdown();
+    }
+
+    toast({
+      title: "OTP",
+      description: message,
+      variant: success ? "default" : "destructive",
+    });
   };
 
   return (
@@ -122,10 +154,7 @@ const Signup = () => {
               <Input
                 id="phone"
                 type="tel"
-                onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  target.value = target.value.replace(/\D/g, "").slice(0, 10);
-                }}
+                disabled={isOtpSet}
                 placeholder="Enter your phone number"
                 {...register("number", {
                   required: "Phone number is required",
@@ -134,6 +163,10 @@ const Signup = () => {
                     message: "Phone number must be exactly 10 digits",
                   },
                 })}
+                onInput={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  target.value = target.value.replace(/\D/g, "").slice(0, 10);
+                }}
                 className="mt-1 h-12 bg-gray-50 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
               />
               {errors.number && (
@@ -263,6 +296,15 @@ const Signup = () => {
           </div>
         </CardContent>
       </Card>
+
+      <SignupOTPDialog
+        isOtpSet={isOtpSet}
+        timeLeft={timeLeft}
+        isOpen={showOTPDialog}
+        signUpData={getValues()}
+        onVerified={handleOTPVerified}
+        onClose={() => setShowOTPDialog(false)}
+      />
     </div>
   );
 };

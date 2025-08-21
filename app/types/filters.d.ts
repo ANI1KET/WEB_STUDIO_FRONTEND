@@ -1,6 +1,11 @@
-import { FurnishingStatusEnum, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 
-import { RoomType, RoomAmenities, PropertyAmenities } from "./types";
+import {
+  RoomType,
+  RoomAmenities,
+  FurnishingStatus,
+  PropertyAmenities,
+} from "./types";
 
 // ROOM FILTERS
 type NumberOrRange = number | number[];
@@ -13,7 +18,7 @@ export type RoomFilters = Partial<{
   rating: NumberOrRange;
   capacity: NumberOrRange;
   amenities: RoomAmenities[];
-  furnishingStatus: FurnishingStatusEnum[];
+  furnishingStatus: FurnishingStatus[];
 }>;
 
 export interface RoomSearchQueries extends RoomFilters {

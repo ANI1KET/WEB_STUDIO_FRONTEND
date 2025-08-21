@@ -6,6 +6,10 @@ import { signIn } from "next-auth/react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import {
+  EMAIL_VALIDATION,
+  NEPALI_NUMBERS_VALIDATION,
+} from "@/app/lib/constants";
 import { useToast } from "@/app/common/hooks/use-toast";
 
 import {
@@ -30,13 +34,34 @@ const MainLoginForm = ({
   const navigate = useRouter();
   const { toast } = useToast();
 
-  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [identifier, setIdentifier] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const isEmail = EMAIL_VALIDATION.test(identifier);
+    const isNumber = NEPALI_NUMBERS_VALIDATION.test(identifier);
+
+    if (!isEmail && !isNumber) {
+      return toast({
+        title: "Account",
+        variant: "destructive",
+        description: "Enter a valid email or number",
+      });
+    }
+
+    if (isNumber && identifier.length !== 10) {
+      return toast({
+        title: "Account",
+        variant: "destructive",
+        description: "Enter valid number",
+      });
+    }
+
     setLoading(true);
 
     const callbackUrl = new URLSearchParams(window.location.search).get(
@@ -45,8 +70,8 @@ const MainLoginForm = ({
     const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : "/";
 
     const result = await signIn("credentials", {
-      email,
       password,
+      identifier,
       redirect: false,
       // callbackUrl: redirectUrl,
     });
@@ -54,6 +79,7 @@ const MainLoginForm = ({
     setLoading(false);
 
     if (result?.error) {
+      setError(result?.error);
       toast({
         title: "Account",
         variant: "destructive",
@@ -103,16 +129,15 @@ const MainLoginForm = ({
                 htmlFor="email"
                 className="text-sm font-medium text-gray-700"
               >
-                Email Address
+                Email / Number
               </Label>
 
               <Input
                 required
-                id="email"
-                type="email"
-                value={email}
-                placeholder="Enter your email"
-                onChange={(e) => setEmail(e.target.value)}
+                id="identifier"
+                value={identifier}
+                placeholder="Enter your email or number"
+                onChange={(e) => setIdentifier(e.target.value)}
                 className="mt-1 h-12 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500"
               />
             </div>
@@ -159,13 +184,15 @@ const MainLoginForm = ({
                 Forgot password?
               </button>
 
-              <button
-                type="button"
-                onClick={onCreatePassword}
-                className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
-              >
-                Create password?
-              </button>
+              {error === "Password not set. Please set it to log in." && (
+                <button
+                  type="button"
+                  onClick={onCreatePassword}
+                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
+                >
+                  Create password?
+                </button>
+              )}
             </div>
 
             <Button
