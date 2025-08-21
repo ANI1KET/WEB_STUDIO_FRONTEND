@@ -16,7 +16,7 @@ interface PriceActionCardProps {
   onShare: () => void;
   onCompare: () => void;
   session: Session | null;
-  onShowInterest: () => Promise<boolean>;
+  onShowInterest: () => Promise<void>;
   generateOtp: (phoneNumber: string) => Promise<void>;
   verifyContact: (phoneNumber: string, otp: string) => Promise<boolean>;
 }
@@ -36,11 +36,11 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
   const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
 
-  const handleInterestClick = () => {
+  const handleInterestClick = async () => {
     if (!session?.user.number) {
       setIsPhoneDialogOpen(true);
     } else {
-      onShowInterest();
+      await onShowInterest();
     }
   };
 
@@ -60,11 +60,9 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
     phoneNumber: string,
     otp: string
   ): Promise<boolean> => {
-    let response = await verifyContact(phoneNumber, otp);
+    const response = await verifyContact(phoneNumber, otp);
 
     if (response) {
-      response = await onShowInterest();
-
       setPhoneNumber("");
     }
 
@@ -156,6 +154,7 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
           phoneNumber={phoneNumber}
           generateOtp={generateOtp}
           onClose={handleCloseOTPDialog}
+          onShowInterest={onShowInterest}
           onVerified={handlePhoneVerified}
         />
       )}

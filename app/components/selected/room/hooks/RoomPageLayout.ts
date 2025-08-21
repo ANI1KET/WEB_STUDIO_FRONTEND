@@ -131,7 +131,7 @@ export function useRoomActions(roomData: RoomData) {
     }
   };
 
-  const handleInterest = async (): Promise<boolean> => {
+  const handleInterest = async (): Promise<void> => {
     const { success, message } = await pushInterestedRoom({
       roomId: roomData.id,
       listerId: roomData.listerId,
@@ -143,8 +143,6 @@ export function useRoomActions(roomData: RoomData) {
       title: "Room Interest Notification",
       variant: success ? "default" : "destructive",
     });
-
-    return success;
   };
 
   const handleContactVerification = async (

@@ -1,7 +1,7 @@
 "use client";
 
+import { Shield, X, Phone } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import { Shield, X, Phone, ArrowLeft } from "lucide-react";
 
 import {
   InputOTP,
@@ -13,6 +13,7 @@ import { Button } from "@/app/components/ui/button";
 interface InterestOTPDialogProps {
   onClose: () => void;
   phoneNumber: string;
+  onShowInterest: () => Promise<void>;
   generateOtp: (phoneNumber: string) => Promise<void>;
   onVerified: (phoneNumber: string, otp: string) => Promise<boolean>;
 }
@@ -22,6 +23,7 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
   onVerified,
   generateOtp,
   phoneNumber,
+  onShowInterest,
 }) => {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(300);
@@ -55,6 +57,7 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
 
     if (response) {
       handleClose();
+      onShowInterest();
     }
 
     setIsLoading(false);
@@ -76,8 +79,8 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
+        // onClick={handleClose}
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={handleClose}
       />
 
       <div className="relative z-50 w-full max-w-md mx-4">
@@ -176,17 +179,9 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
                   disabled={isLoading || !isExpired}
                   className="w-full h-10 border-gray-200 text-gray-700 hover:bg-gray-50 disabled:opacity-50"
                 >
-                  {isExpired ? "Resend Code" : `Resend in ${timeLeft}s`}
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  onClick={handleClose}
-                  disabled={isLoading}
-                  className="w-full h-10 text-gray-500 hover:text-gray-700"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Cancel
+                  {isExpired
+                    ? "Resend Code"
+                    : `Resend in ${formatTime(timeLeft)}s`}
                 </Button>
               </div>
             </div>

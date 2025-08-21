@@ -31,7 +31,7 @@ interface RoomDetailsActionrProps {
   primaryContact: string;
   session: Session | null;
   secondaryContact: string;
-  onInterest: () => Promise<boolean>;
+  onInterest: () => Promise<void>;
   generateOtp: (phoneNumber: string) => Promise<void>;
   verifyContact: (phoneNumber: string, otp: string) => Promise<boolean>;
 }

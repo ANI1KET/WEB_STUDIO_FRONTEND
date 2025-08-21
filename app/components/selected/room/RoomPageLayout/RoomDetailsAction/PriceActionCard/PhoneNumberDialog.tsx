@@ -44,7 +44,8 @@ const PhoneNumberDialog: React.FC<PhoneNumberDialogProps> = ({
     const { message, success } = await createOtp(phoneNumber);
 
     if (success) {
-      handleClose();
+      setIsLoading(false);
+      onClose();
       onPhoneSubmitted();
     }
 
@@ -66,8 +67,8 @@ const PhoneNumberDialog: React.FC<PhoneNumberDialogProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
+        // onClick={handleClose}
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={handleClose}
       />
 
       <div className="relative z-50 w-full max-w-md mx-4">
