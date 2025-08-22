@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 
+import PasswordForm from "@/app/common/ui/PasswordForm";
 import MainLoginForm from "@/app/components/auth/login/MainLoginForm";
-import CreatePasswordForm from "@/app/components/auth/login/CreatePasswordForm";
-import ForgotPasswordForm from "@/app/components/auth/login/ForgotPasswordForm";
 
 const Login = () => {
   const [currentView, setCurrentView] = useState<"login" | "forgot" | "create">(
@@ -16,11 +15,23 @@ const Login = () => {
   const handleForgotPassword = () => setCurrentView("forgot");
 
   if (currentView === "forgot") {
-    return <ForgotPasswordForm onBack={handleBackToLogin} />;
+    return (
+      <PasswordForm
+        onBack={handleBackToLogin}
+        firstTitle="Forgot Password"
+        secondTitle="Reset Password"
+      />
+    );
   }
 
   if (currentView === "create") {
-    return <CreatePasswordForm onBack={handleBackToLogin} />;
+    return (
+      <PasswordForm
+        onBack={handleBackToLogin}
+        firstTitle="Set Password"
+        secondTitle="Create Password"
+      />
+    );
   }
 
   return (

@@ -3,21 +3,23 @@
 import React, { useState } from "react";
 import { Phone, X, ArrowRight } from "lucide-react";
 
-import { createOtp } from "@/app/auth/SeverAction";
 import { useToast } from "@/app/common/hooks/use-toast";
+import { createOtp } from "../serverAction/account/otp";
 import { NEPALI_NUMBERS_VALIDATION } from "@/app/lib/constants";
 
 import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 
-interface PhoneNumberDialogProps {
-  phoneNumber: string;
+interface NumberDialogProps {
+  title: string;
   onClose: () => void;
+  phoneNumber: string;
   onPhoneSubmitted: () => void;
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const PhoneNumberDialog: React.FC<PhoneNumberDialogProps> = ({
+const NumberDialog: React.FC<NumberDialogProps> = ({
+  title,
   onClose,
   phoneNumber,
   setPhoneNumber,
@@ -88,9 +90,7 @@ const PhoneNumberDialog: React.FC<PhoneNumberDialogProps> = ({
 
               <h2 className="text-xl font-bold">Add Phone Number</h2>
 
-              <p className="text-sm text-blue-100 mt-1">
-                Required to show interest in this room
-              </p>
+              <p className="text-sm text-blue-100 mt-1">{title}</p>
             </div>
           </div>
 
@@ -110,7 +110,6 @@ const PhoneNumberDialog: React.FC<PhoneNumberDialogProps> = ({
 
                   <Input
                     type="tel"
-                    maxLength={10}
                     value={phoneNumber}
                     disabled={isLoading}
                     placeholder="Enter 10-digit mobile number"
@@ -165,4 +164,4 @@ const PhoneNumberDialog: React.FC<PhoneNumberDialogProps> = ({
   );
 };
 
-export default PhoneNumberDialog;
+export default NumberDialog;

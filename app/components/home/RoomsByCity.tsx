@@ -22,14 +22,6 @@ const RoomsByCity: React.FC<{
   const { toast } = useToast();
 
   const [activeCity, setActiveCity] = useState(city);
-  const [activeVideoRoomId, setActiveVideoRoomId] = useState<string | null>(
-    null
-  );
-
-  // Toggle video for a specific room
-  const handleToggleVideo = (roomId: string, show: boolean) => {
-    setActiveVideoRoomId(show ? roomId : null);
-  };
 
   const handleCityChange = (city: string) => {
     setActiveCity(city);
@@ -113,12 +105,7 @@ const RoomsByCity: React.FC<{
             <>
               {data?.pages.map((page) =>
                 page.map((room) => (
-                  <RoomCard
-                    key={room.id}
-                    room={room as RoomData}
-                    setShowVideo={handleToggleVideo}
-                    showVideo={activeVideoRoomId === room.id}
-                  />
+                  <RoomCard key={room.id} room={room as RoomData} />
                 ))
               )}
 

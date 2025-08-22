@@ -60,7 +60,7 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
   };
 
   return (
-    <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 group">
+    <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100">
       {showVideo && videos ? (
         <iframe
           allow="autoplay; encrypted-media"
@@ -72,7 +72,7 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
           className="w-full h-full object-cover"
         ></iframe>
       ) : (
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full group">
           <div className="overflow-hidden h-full" ref={emblaRef}>
             <div className="flex h-full">
               {photos.map((photo, index) => (
@@ -86,7 +86,7 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
                     sizes="100%"
                     loading="lazy"
                     alt={`Image - ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               ))}
@@ -97,13 +97,13 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
             <>
               <button
                 onClick={() => emblaApi?.scrollPrev()}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-0 hover:opacity-100 transition-all duration-200 z-20"
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 z-20"
               >
                 <ChevronLeft className="h-4 w-4" />
               </button>
               <button
                 onClick={() => emblaApi?.scrollNext()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-0 hover:opacity-100 transition-all duration-200 z-20"
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 hover:text-gray-900 rounded-full h-8 w-8 flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-all duration-200 z-20"
               >
                 <ChevronRight className="h-4 w-4" />
               </button>

@@ -1,8 +1,8 @@
 "use client";
 
+import React, { memo } from "react";
 import { MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { memo, useState } from "react";
 
 import { ListedRoom } from "@/app/types/types";
 
@@ -19,13 +19,6 @@ interface SearchResultsProps {
 const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
   const router = useRouter();
 
-  const [showVideo, setShowVideo] = useState(false);
-
-  const handleToggleVideo = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowVideo(!showVideo);
-  };
-
   const handleViewDetails = (roomId: string) => {
     router.push(`/room/${btoa(roomId)}`);
   };
@@ -40,19 +33,15 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
           key={room.id}
           className="h-fit shadow-xl hover:shadow-2xl transition-all duration-300 transform border-0 overflow-hidden rounded-2xl bg-white flex flex-col"
         >
-          {/* Image/Video Section */}
           <div className="relative">
             <ImageCarousel
               photos={room.photos}
               videos={room.videos}
               roomTitle={room.title}
-              showVideo={showVideo}
-              onToggleVideo={handleToggleVideo}
             />
             <RoomStatus verified={room.verified} available={room.available} />
           </div>
 
-          {/* Content */}
           <CardContent className="flex-grow flex flex-col p-0">
             <RoomInfo
               city={room.city}
@@ -67,7 +56,6 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
               furnishingStatus={room.furnishingStatus}
             />
 
-            {/* View Details Button */}
             <div className="px-4 pb-2">
               <Button
                 size="sm"

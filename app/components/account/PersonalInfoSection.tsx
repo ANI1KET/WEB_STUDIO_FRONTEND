@@ -4,9 +4,9 @@ import { Session } from "next-auth";
 import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 
-import { createOtp } from "@/app/auth/SeverAction";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { NEPALI_NUMBERS_VALIDATION } from "@/app/lib/constants";
+import { createOtp } from "@/app/common/serverAction/account/otp";
 import { updateEmailAndPhone } from "./ServerAction/PersonalInfoSection";
 
 import ProfileAvatar from "./PersonalInfoSection/ProfileAvatar";

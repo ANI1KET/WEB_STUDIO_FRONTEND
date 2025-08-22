@@ -16,7 +16,7 @@ const ContactCard: React.FC<ContactCardProps> = ({ title, contactNumber }) => {
   return (
     <div className="flex items-start justify-between bg-white rounded-xl p-4 border border-gray-200/80 transition-all duration-300 hover:shadow-lg hover:border-green-200 hover:-translate-y-1">
       <div>
-        <p className="text-xs text-gray-500 font-medium">{title}</p>
+        <p className="text-gray-500 font-medium">{title}</p>
         <p className="font-semibold text-gray-800 text-base">{contactNumber}</p>
       </div>
       <div className="flex items-center justify-center w-8 h-8 bg-green-100 rounded-full">

@@ -10,20 +10,20 @@ import {
 } from "@/app/components/ui/input-otp";
 import { Button } from "@/app/components/ui/button";
 
-interface InterestOTPDialogProps {
+interface OTPDialogProps {
+  title: string;
   onClose: () => void;
   phoneNumber: string;
-  onShowInterest: () => Promise<void>;
-  generateOtp: (phoneNumber: string) => Promise<void>;
+  reGenerateOtp: (phoneNumber: string) => Promise<void>;
   onVerified: (phoneNumber: string, otp: string) => Promise<boolean>;
 }
 
-const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
+const OTPDialog: React.FC<OTPDialogProps> = ({
+  title,
   onClose,
   onVerified,
-  generateOtp,
   phoneNumber,
-  onShowInterest,
+  reGenerateOtp,
 }) => {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(300);
@@ -57,14 +57,13 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
 
     if (response) {
       handleClose();
-      onShowInterest();
     }
 
     setIsLoading(false);
   };
 
   const handleResendOTP = async () => {
-    await generateOtp(phoneNumber);
+    await reGenerateOtp(phoneNumber);
 
     setTimeLeft(300);
     setIsExpired(false);
@@ -104,9 +103,7 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
                 Code sent to {phoneNumber}
               </p>
 
-              <p className="text-xs text-blue-100/80 mt-1">
-                Complete verification to show interest
-              </p>
+              <p className="text-xs text-blue-100/80 mt-1">{title} </p>
             </div>
           </div>
 
@@ -192,4 +189,4 @@ const InterestOTPDialog: React.FC<InterestOTPDialogProps> = ({
   );
 };
 
-export default InterestOTPDialog;
+export default OTPDialog;

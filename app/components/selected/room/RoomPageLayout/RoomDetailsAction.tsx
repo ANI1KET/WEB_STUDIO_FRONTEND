@@ -31,9 +31,7 @@ interface RoomDetailsActionrProps {
   primaryContact: string;
   session: Session | null;
   secondaryContact: string;
-  onInterest: () => Promise<void>;
-  generateOtp: (phoneNumber: string) => Promise<void>;
-  verifyContact: (phoneNumber: string, otp: string) => Promise<boolean>;
+  onInterest: (userId: string) => Promise<void>;
 }
 
 const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
@@ -51,8 +49,6 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
   onCompare,
   listerName,
   onInterest,
-  generateOtp,
-  verifyContact,
   primaryContact,
   // secondaryContact,
 }) => {
@@ -73,9 +69,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ContactCard title="Contact" contactNumber={primaryContact} />
-
-            {/* <ContactCard title="Owner Contact" contactNumber={ownerContact} /> */}
+            <ContactCard title={listerName} contactNumber={primaryContact} />
 
             {canAcessScheduleVisit(postedBy, available) && (
               <div className="flex items-start justify-between bg-white rounded-xl p-4 border border-gray-200/80 transition-all duration-300 hover:shadow-lg hover:border-green-200 hover:-translate-y-1">
@@ -111,9 +105,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
           session={session}
           onShare={onShare}
           onCompare={onCompare}
-          generateOtp={generateOtp}
           onShowInterest={onInterest}
-          verifyContact={verifyContact}
         />
       </CardContent>
 

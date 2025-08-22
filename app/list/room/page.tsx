@@ -1,19 +1,23 @@
 "use client";
 
+import React from "react";
 import { Role } from "@prisma/client";
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
+  useMediaFlow,
+  useListingFlow,
+  useAmenitiesFlow,
+  useFurnishingFlow,
+} from "./hooks";
+import {
   ListedRoom,
   OwnerDetails,
-  RoomAmenities,
   RoomWithMedia,
   RoomWithMediaUrl,
-  FurnishingStatus,
 } from "@/app/types/types";
 import {
   upload_Images,
@@ -21,8 +25,11 @@ import {
 } from "../../components/list/room/ServerAction/utils";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { upload_Video } from "../../components/list/room/utils/uploadUtils";
+import { useSettingNumberVerificationFlow } from "@/app/common/hooks/account/account";
 
 import { Button } from "@/app/components/ui/button";
+import PhoneNumberDialog from "@/app/common/ui/NumberDialog";
+import InterestOTPDialog from "@/app/common/ui/OTPDialog";
 import MediaUploadSection from "@/app/components/list/room/MediaUploadSection";
 import RoomDetailsSection from "@/app/components/list/room/RoomDetailsSection";
 import OwnerDetailsSection from "@/app/components/list/room/OwnerDetailsSection";
@@ -36,16 +43,26 @@ const Room = () => {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
 
+  const number = session?.user.number;
   const userId = session?.user.userId;
   const isOwner = session?.user.role === "OWNER";
 
-  const [isListing, setIsListing] = useState(false);
-  const [furnishingStatus, setFurnishingStatus] =
-    useState<FurnishingStatus>("SEMIFURNISHED");
-  const [selectedImages, setSelectedImages] = useState<File[]>([]);
-  const [selectedAmenities, setSelectedAmenities] = useState<RoomAmenities[]>(
-    []
-  );
+  const {
+    phoneNumber,
+    setPhoneNumber,
+    isOTPDialogOpen,
+    isPhoneDialogOpen,
+    handleReGenerateOtp,
+    handlePhoneVerified,
+    setIsPhoneDialogOpen,
+    handlePhoneSubmitted,
+    handleCloseOTPDialog,
+    handleClosePhoneDialog,
+  } = useSettingNumberVerificationFlow();
+  const { isListing, setIsListing } = useListingFlow();
+  const { furnishingStatus, setFurnishingStatus } = useFurnishingFlow();
+  const { selectedAmenities, handleAmenityChange } = useAmenitiesFlow();
+  const { selectedImages, handleImageUpload, removeImage } = useMediaFlow();
 
   const {
     watch,
@@ -59,23 +76,6 @@ const Room = () => {
   const videoFiles = watch("videos");
   const direction = watch("direction");
   const video = videoFiles?.[0];
-
-  const removeImage = (index: number) => {
-    setSelectedImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    setSelectedImages((prev) => [...prev, ...files]);
-  };
-
-  const handleAmenityChange = (amenity: RoomAmenities, checked: boolean) => {
-    if (checked) {
-      setSelectedAmenities((prev) => [...prev, amenity]);
-    } else {
-      setSelectedAmenities((prev) => prev.filter((a) => a !== amenity));
-    }
-  };
 
   const { mutate } = useMutation({
     mutationFn: (data: RoomWithMediaUrl & Partial<OwnerDetails>) =>
@@ -92,44 +92,48 @@ const Room = () => {
   });
 
   const onSubmit = async (data: RoomWithMedia & Partial<OwnerDetails>) => {
-    setIsListing(true);
+    if (number) {
+      setIsListing(true);
 
-    data.city =
-      data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
-    data.location =
-      data.location.charAt(0).toUpperCase() +
-      data.location.slice(1).toLowerCase();
+      data.city =
+        data.city.charAt(0).toUpperCase() + data.city.slice(1).toLowerCase();
+      data.location =
+        data.location.charAt(0).toUpperCase() +
+        data.location.slice(1).toLowerCase();
 
-    if (isOwner) {
-      data.ownerId = userId;
-    }
+      if (isOwner) {
+        data.ownerId = userId;
+      }
 
-    try {
-      const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
-        upload_Video(data.videos),
-        upload_Images("room", selectedImages),
-      ]);
+      try {
+        const [uploadVideoUrl, uploadImageUrls] = await Promise.allSettled([
+          upload_Video(data.videos),
+          upload_Images("room", selectedImages),
+        ]);
 
-      const ImageUrls =
-        uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
-      const VideoUrl =
-        uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
-          ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
-          : null;
+        const ImageUrls =
+          uploadImageUrls.status === "fulfilled" ? uploadImageUrls.value : [];
+        const VideoUrl =
+          uploadVideoUrl.status === "fulfilled" && uploadVideoUrl.value
+            ? `https://www.youtube.com/embed/${uploadVideoUrl.value}`
+            : null;
 
-      mutate({
-        ...data,
-        furnishingStatus,
-        photos: ImageUrls,
-        videos: VideoUrl ?? null,
-        listerId: userId as string,
-        postedBy: session?.user.role as Role,
-        listerName: session?.user.name as string,
-      });
-    } catch (error) {
-      console.error(
-        error instanceof Error ? error.message : "An unknown error occurred"
-      );
+        mutate({
+          ...data,
+          furnishingStatus,
+          photos: ImageUrls,
+          videos: VideoUrl ?? null,
+          listerId: userId as string,
+          postedBy: session?.user.role as Role,
+          listerName: session?.user.name as string,
+        });
+      } catch (error) {
+        console.error(
+          error instanceof Error ? error.message : "An unknown error occurred"
+        );
+      }
+    } else {
+      setIsPhoneDialogOpen(true);
     }
   };
 
@@ -198,6 +202,26 @@ const Room = () => {
           </Button>
         </div>
       </form>
+
+      {isPhoneDialogOpen && (
+        <PhoneNumberDialog
+          phoneNumber={phoneNumber}
+          title="Required to list room"
+          setPhoneNumber={setPhoneNumber}
+          onClose={handleClosePhoneDialog}
+          onPhoneSubmitted={handlePhoneSubmitted}
+        />
+      )}
+
+      {isOTPDialogOpen && (
+        <InterestOTPDialog
+          phoneNumber={phoneNumber}
+          onClose={handleCloseOTPDialog}
+          onVerified={handlePhoneVerified}
+          reGenerateOtp={handleReGenerateOtp}
+          title="Complete verification to list room"
+        />
+      )}
     </div>
   );
 };

@@ -4,9 +4,9 @@ import React from "react";
 import Image from "next/image";
 
 interface RoomImageModalProps {
+  title: string;
   isOpen: boolean;
   photos: string[];
-  title: string;
   onNext: () => void;
   onPrev: () => void;
   onClose: () => void;

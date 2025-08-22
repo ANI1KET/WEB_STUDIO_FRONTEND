@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 import {
   useRoomActions,
@@ -30,23 +30,10 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
   const { data: session } = useSession();
 
   const { roomData, isLoading, isError } = useRoomDetails(city, roomId);
-
+  const { handleShare, handleCompare, handleInterest } =
+    useRoomActions(roomData);
   const { open, next, prev, close, isOpen, currentIndex } =
     useImageModalControl(roomData?.photos.length);
-  const {
-    handleShare,
-    handleCompare,
-    handleInterest,
-    handleGenerateOtp,
-    handleContactVerification,
-  } = useRoomActions(roomData);
-
-  const [activeVideoRoomId, setActiveVideoRoomId] = useState<string | null>(
-    null
-  );
-  const handleToggleVideo = (roomId: string, show: boolean) => {
-    setActiveVideoRoomId(show ? roomId : null);
-  };
 
   const {
     data,
@@ -137,10 +124,8 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
           location={roomData.location}
           verified={roomData.verified}
           available={roomData.available}
-          generateOtp={handleGenerateOtp}
           listerName={roomData.listerName}
           primaryContact={roomData.primaryContact}
-          verifyContact={handleContactVerification}
           secondaryContact={roomData.secondaryContact}
         />
 
@@ -195,12 +180,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
               <>
                 {data?.pages.map((page) =>
                   page.map((room) => (
-                    <RoomCard
-                      key={room.id}
-                      room={room as RoomData}
-                      setShowVideo={handleToggleVideo}
-                      showVideo={activeVideoRoomId === room.id}
-                    />
+                    <RoomCard key={room.id} room={room as RoomData} />
                   ))
                 )}
 

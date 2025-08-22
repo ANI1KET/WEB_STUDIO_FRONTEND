@@ -1,10 +1,11 @@
 import bcrypt from "bcryptjs";
 import { NextAuthOptions } from "next-auth";
+import { Permission, Role } from "@prisma/client";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import prisma from "@/prisma/prismaClient";
-import { Permission, Role } from "@prisma/client";
+import { NEPALI_NUMBERS_VALIDATION } from "@/app/lib/constants";
 
 const isProd = process.env.NODE_ENV === "production";
 export const authOptions: NextAuthOptions = {
@@ -73,8 +74,8 @@ export const authOptions: NextAuthOptions = {
       name: "credentials",
       credentials: {
         identifier: {
-          label: "Email or Number",
           type: "text",
+          label: "Email or Number",
           placeholder: "Email or Number",
         },
         password: {
@@ -91,11 +92,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Please enter email/number and password");
         }
 
-        const isEmail = /\S+@\S+\.\S+/.test(identifier);
+        const isNumber = NEPALI_NUMBERS_VALIDATION.test(identifier);
 
         try {
-          const user = await prisma.user.findUnique({
-            where: isEmail ? { email: identifier } : { number: identifier },
+          const user = await prisma.user.findFirst({
+            where: isNumber ? { number: identifier } : { email: identifier },
           });
 
           if (!user) {

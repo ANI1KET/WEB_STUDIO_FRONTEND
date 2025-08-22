@@ -54,14 +54,6 @@ const MainLoginForm = ({
       });
     }
 
-    if (isNumber && identifier.length !== 10) {
-      return toast({
-        title: "Account",
-        variant: "destructive",
-        description: "Enter valid number",
-      });
-    }
-
     setLoading(true);
 
     const callbackUrl = new URLSearchParams(window.location.search).get(
@@ -126,7 +118,7 @@ const MainLoginForm = ({
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <Label
-                htmlFor="email"
+                htmlFor="identifier"
                 className="text-sm font-medium text-gray-700"
               >
                 Email / Number

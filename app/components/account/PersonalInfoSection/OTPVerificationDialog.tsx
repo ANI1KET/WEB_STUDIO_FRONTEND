@@ -3,7 +3,7 @@
 import { X, Phone, Shield } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
-import { generateOtp } from "../../selected/room/ServerAction/RoomPageLayout";
+import { reGenerateOtp } from "@/app/common/serverAction/account/otp";
 
 import {
   InputOTP,
@@ -64,7 +64,7 @@ const OTPVerificationDialog: React.FC<OTPVerificationDialogProps> = ({
   };
 
   const handleResendOTP = async () => {
-    const { success } = await generateOtp({ number: phoneNumber });
+    const { success } = await reGenerateOtp({ number: phoneNumber });
 
     if (success) {
       setTimeLeft(300);

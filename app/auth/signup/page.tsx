@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, User, Mail, Phone, Lock } from "lucide-react";
 
-import { createOtp } from "../SeverAction";
 import { SignUpFormData } from "../Schema";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { OTP_EXPIRATION_TIME } from "@/app/lib/constants";
+import { createOtp } from "@/app/common/serverAction/account/otp";
 
 import {
   Card,

@@ -1,24 +1,23 @@
 "use client";
 
+import React from "react";
 import { Session } from "next-auth";
-import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Heart, Share2, GitCompare } from "lucide-react";
 
 import { canShowInterest } from "@/app/common/config/authorization";
+import { useSettingNumberVerificationFlow } from "@/app/common/hooks/account/account";
 
 import { Button } from "@/app/components/ui/button";
-import PhoneNumberDialog from "./PriceActionCard/PhoneNumberDialog";
-import InterestOTPDialog from "./PriceActionCard/InterestOTPDialog";
+import PhoneNumberDialog from "@/app/common/ui/NumberDialog";
+import InterestOTPDialog from "@/app/common/ui/OTPDialog";
 
 interface PriceActionCardProps {
   price: number;
   onShare: () => void;
   onCompare: () => void;
   session: Session | null;
-  onShowInterest: () => Promise<void>;
-  generateOtp: (phoneNumber: string) => Promise<void>;
-  verifyContact: (phoneNumber: string, otp: string) => Promise<boolean>;
+  onShowInterest: (userId: string) => Promise<void>;
 }
 
 const PriceActionCard: React.FC<PriceActionCardProps> = ({
@@ -26,47 +25,30 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
   session,
   onShare,
   onCompare,
-  generateOtp,
-  verifyContact,
   onShowInterest,
 }) => {
   const router = useRouter();
+  const userId = session?.user.userId as string;
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
-  const [isPhoneDialogOpen, setIsPhoneDialogOpen] = useState(false);
+  const {
+    phoneNumber,
+    setPhoneNumber,
+    isOTPDialogOpen,
+    isPhoneDialogOpen,
+    handlePhoneVerified,
+    handleReGenerateOtp,
+    setIsPhoneDialogOpen,
+    handlePhoneSubmitted,
+    handleCloseOTPDialog,
+    handleClosePhoneDialog,
+  } = useSettingNumberVerificationFlow();
 
   const handleInterestClick = async () => {
     if (!session?.user.number) {
       setIsPhoneDialogOpen(true);
     } else {
-      await onShowInterest();
+      await onShowInterest(userId);
     }
-  };
-
-  const handlePhoneSubmitted = () => {
-    setIsOTPDialogOpen(true);
-  };
-
-  const handleClosePhoneDialog = () => {
-    setIsPhoneDialogOpen(false);
-  };
-
-  const handleCloseOTPDialog = () => {
-    setIsOTPDialogOpen(false);
-  };
-
-  const handlePhoneVerified = async (
-    phoneNumber: string,
-    otp: string
-  ): Promise<boolean> => {
-    const response = await verifyContact(phoneNumber, otp);
-
-    if (response) {
-      setPhoneNumber("");
-    }
-
-    return response;
   };
 
   return (
@@ -146,16 +128,17 @@ const PriceActionCard: React.FC<PriceActionCardProps> = ({
           setPhoneNumber={setPhoneNumber}
           onClose={handleClosePhoneDialog}
           onPhoneSubmitted={handlePhoneSubmitted}
+          title="Required to show interest in this room"
         />
       )}
 
       {isOTPDialogOpen && (
         <InterestOTPDialog
           phoneNumber={phoneNumber}
-          generateOtp={generateOtp}
           onClose={handleCloseOTPDialog}
-          onShowInterest={onShowInterest}
           onVerified={handlePhoneVerified}
+          reGenerateOtp={handleReGenerateOtp}
+          title="Complete verification to show interest"
         />
       )}
     </div>

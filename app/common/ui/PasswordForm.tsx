@@ -10,7 +10,8 @@ import {
   NEPALI_NUMBERS_VALIDATION,
 } from "@/app/lib/constants";
 import { useToast } from "@/app/common/hooks/use-toast";
-import { generateOtp, updatePassword } from "./ServerAction/ForgotPasswordForm";
+import { createEmailOrNumberOtp } from "../serverAction/account/otp";
+import { updateOrSetPassword } from "../serverAction/account/password";
 
 import {
   Card,
@@ -27,8 +28,10 @@ import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 
-interface CreatePasswordFormProps {
+interface PasswordFormProps {
   onBack: () => void;
+  firstTitle: string;
+  secondTitle: string;
 }
 
 interface FormData {
@@ -37,7 +40,11 @@ interface FormData {
   confirmPassword: string;
 }
 
-const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
+const PasswordForm = ({
+  onBack,
+  firstTitle,
+  secondTitle,
+}: PasswordFormProps) => {
   const { toast } = useToast();
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -50,9 +57,9 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
   const [contactMethod, setContactMethod] = useState<"email" | "phone">(
     "email"
   );
-  const [currentStep, setCurrentStep] = useState<"email" | "verification">(
-    "email"
-  );
+  const [currentStep, setCurrentStep] = useState<
+    "email/number" | "verification"
+  >("email/number");
 
   const {
     watch,
@@ -71,6 +78,11 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (loading) {
+      setCurrentStep("verification");
+      return;
+    }
 
     const isValid =
       contactMethod === "phone"
@@ -91,11 +103,17 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
 
     setLoading(true);
 
-    const { userId, message } = await generateOtp(emailOrPhone);
+    const { userId, message } = await createEmailOrNumberOtp(emailOrPhone);
 
     if (userId) {
       setUserId(userId);
       setCurrentStep("verification");
+      timeoutRef.current = setTimeout(
+        () => setLoading(false),
+        OTP_EXPIRATION_TIME * 1000
+      );
+    } else {
+      setLoading(false);
     }
 
     toast({
@@ -103,15 +121,10 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
       description: message,
       variant: userId ? "default" : "destructive",
     });
-
-    timeoutRef.current = setTimeout(
-      () => setLoading(false),
-      OTP_EXPIRATION_TIME * 1000
-    );
   };
 
   const onSubmit = async (data: FormData) => {
-    const { message, success } = await updatePassword({ userId, ...data });
+    const { message, success } = await updateOrSetPassword({ userId, ...data });
 
     toast({
       description: message,
@@ -137,18 +150,18 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
           </div>
 
           <CardTitle className="text-2xl font-bold text-gray-900">
-            {currentStep === "email" ? "Set Password" : "Create Password"}
+            {currentStep === "email/number" ? firstTitle : secondTitle}
           </CardTitle>
 
           <p className="text-gray-600 mt-2">
-            {currentStep === "email"
-              ? "Enter your email or phone number to receive a verification code"
-              : "Verify your account and set a new password"}
+            {currentStep === "email/number"
+              ? "Enter your email or phone number to reset your password"
+              : "Enter the verification code and choose a new password"}
           </p>
         </CardHeader>
 
         <CardContent>
-          {currentStep === "email" ? (
+          {currentStep === "email/number" ? (
             <form onSubmit={handleSendOTP} className="space-y-6">
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-4 block">
@@ -180,6 +193,7 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                     }`}
                   >
                     <Phone className="w-5 h-5 mx-auto mb-1" />
+
                     <div className="text-sm font-medium">Phone</div>
                   </button>
                 </div>
@@ -196,6 +210,7 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                 <Input
                   required
                   id="emailOrPhone"
+                  disabled={loading}
                   value={emailOrPhone}
                   placeholder={
                     contactMethod === "email"
@@ -219,10 +234,10 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
 
               <Button
                 type="submit"
-                disabled={loading || !emailOrPhone}
-                className="w-full h-12 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
+                className="w-full h-12 bg-gradient-to-r from-emerald-200 to-green-200 hover:from-emerald-300 hover:to-green-300 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
+                disabled={!emailOrPhone}
               >
-                {loading ? "Resend in 5 min" : "Send Verification Code"}
+                {loading ? "Resend code in 5 min" : "Send Verification Code"}
               </Button>
 
               <Button
@@ -248,7 +263,7 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
 
                   <button
                     type="button"
-                    onClick={() => setCurrentStep("email")}
+                    onClick={() => setCurrentStep("email/number")}
                     className="text-sm text-green-600 hover:text-green-700 mt-1"
                   >
                     Change {contactMethod}
@@ -298,6 +313,7 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                 <div className="relative mt-1">
                   <Input
                     id="newPassword"
+                    type={showNewPassword ? "text" : "password"}
                     placeholder="Enter new password"
                     {...register("newPassword", {
                       required: "New password is required",
@@ -306,7 +322,6 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                         message: "Password must be at least 8 characters",
                       },
                     })}
-                    type={showNewPassword ? "text" : "password"}
                     className="h-12 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500 pr-12"
                   />
 
@@ -341,7 +356,6 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                 <div className="relative mt-1">
                   <Input
                     id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm new password"
                     {...register("confirmPassword", {
                       required: "Please confirm your password",
@@ -349,9 +363,9 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                         value === watch("newPassword") ||
                         "Passwords do not match",
                     })}
+                    type={showConfirmPassword ? "text" : "password"}
                     className="h-12 bg-gray-50 border-gray-200 focus:border-green-500 focus:ring-green-500 pr-12"
                   />
-
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -377,13 +391,13 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
                 disabled={isSubmitting}
                 className="w-full h-12 bg-gradient-to-r from-emerald-400 to-green-400 hover:from-emerald-500 hover:to-green-500 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-105"
               >
-                {isSubmitting ? "Creating..." : "Create Password"}
+                {isSubmitting ? "Resetting..." : "Reset Password"}
               </Button>
 
               <Button
                 type="button"
                 variant="ghost"
-                onClick={() => setCurrentStep("email")}
+                onClick={() => setCurrentStep("email/number")}
                 className="w-full text-gray-600 hover:text-gray-800"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" /> Back
@@ -396,4 +410,4 @@ const CreatePasswordForm = ({ onBack }: CreatePasswordFormProps) => {
   );
 };
 
-export default CreatePasswordForm;
+export default PasswordForm;

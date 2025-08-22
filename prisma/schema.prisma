@@ -38,7 +38,7 @@ model User {
   name       String
   image      String?
   email      String  @unique
-  number     String? @unique
+  number     String?
   address    String?
   password   String?
   documentId String?
@@ -159,7 +159,7 @@ model ListerRoomsInterestedUsers {
 }
 
 // ************************************************************************************** //
-// PROMOTION AGREEMENT
+// ROOM AGREEMENT
 // ************************************************************************************** //
 model RoomPromotionAgreement {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId

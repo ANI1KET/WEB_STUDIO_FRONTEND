@@ -1,16 +1,10 @@
-import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import {
-  fetchRoom,
-  generateOtp,
-  updateNumber,
-  pushInterestedRoom,
-} from "../ServerAction/RoomPageLayout";
 import { RoomData } from "@/app/types/types";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { useGetRoomSearchData } from "@/app/providers/reactqueryProvider";
+import { fetchRoom, pushInterestedRoom } from "../ServerAction/RoomPageLayout";
 
 const findMatchingRoom = (
   roomId: string,
@@ -83,7 +77,6 @@ export function useImageModalControl(totalImages: number) {
 
 export function useRoomActions(roomData: RoomData) {
   const { toast } = useToast();
-  const { data: session, update } = useSession();
 
   const handleShare = async () => {
     try {
@@ -131,11 +124,11 @@ export function useRoomActions(roomData: RoomData) {
     }
   };
 
-  const handleInterest = async (): Promise<void> => {
+  const handleInterest = async (userId: string): Promise<void> => {
     const { success, message } = await pushInterestedRoom({
+      userId,
       roomId: roomData.id,
       listerId: roomData.listerId,
-      userId: session?.user.userId as string,
     });
 
     toast({
@@ -145,52 +138,9 @@ export function useRoomActions(roomData: RoomData) {
     });
   };
 
-  const handleContactVerification = async (
-    phoneNumber: string,
-    otp: string
-  ): Promise<boolean> => {
-    const { message, success } = await updateNumber({
-      otp,
-      number: phoneNumber,
-      userId: session?.user.userId as string,
-    });
-
-    if (success) {
-      await update({
-        ...session,
-        user: {
-          ...session?.user,
-          number: phoneNumber,
-        },
-      });
-    }
-
-    toast({
-      title: "Account",
-      description: message,
-      variant: success ? "default" : "destructive",
-    });
-
-    return success;
-  };
-
-  const handleGenerateOtp = async (phoneNumber: string) => {
-    const { message, success } = await generateOtp({
-      number: phoneNumber,
-    });
-
-    toast({
-      title: "Account",
-      description: message,
-      variant: success ? "default" : "destructive",
-    });
-  };
-
   return {
     handleShare,
     handleCompare,
     handleInterest,
-    handleGenerateOtp,
-    handleContactVerification,
   };
 }
