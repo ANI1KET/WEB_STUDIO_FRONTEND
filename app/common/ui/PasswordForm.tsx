@@ -1,17 +1,9 @@
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
-import { useState, useMemo, useEffect, useRef } from "react";
 import { Eye, EyeOff, Lock, ArrowLeft, Mail, Phone } from "lucide-react";
 
-import {
-  EMAIL_VALIDATION,
-  OTP_EXPIRATION_TIME,
-  NEPALI_NUMBERS_VALIDATION,
-} from "@/app/lib/constants";
-import { useToast } from "@/app/common/hooks/use-toast";
-import { createEmailOrNumberOtp } from "../serverAction/account/otp";
-import { updateOrSetPassword } from "../serverAction/account/password";
+import { useSetOrUpdateNumberVerificationFlow } from "../hooks/account/account";
 
 import {
   Card,
@@ -45,21 +37,22 @@ const PasswordForm = ({
   firstTitle,
   secondTitle,
 }: PasswordFormProps) => {
-  const { toast } = useToast();
-
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const [userId, setUserId] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [emailOrPhone, setEmailOrPhone] = useState("");
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [contactMethod, setContactMethod] = useState<"email" | "phone">(
-    "email"
-  );
-  const [currentStep, setCurrentStep] = useState<
-    "email/number" | "verification"
-  >("email/number");
+  const {
+    userId,
+    loading,
+    currentStep,
+    emailOrPhone,
+    contactMethod,
+    showNewPassword,
+    showConfirmPassword,
+    handleSendOTP,
+    setCurrentStep,
+    setEmailOrPhone,
+    setContactMethod,
+    setShowNewPassword,
+    setShowConfirmPassword,
+    handleUpdateOrSetPassword,
+  } = useSetOrUpdateNumberVerificationFlow();
 
   const {
     watch,
@@ -71,75 +64,11 @@ const PasswordForm = ({
     defaultValues: { otp: "", newPassword: "", confirmPassword: "" },
   });
 
-  const otpSlots = useMemo(
-    () => [...Array(6)].map((_, i) => <InputOTPSlot key={i} index={i} />),
-    []
-  );
-
-  const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (loading) {
-      setCurrentStep("verification");
-      return;
-    }
-
-    const isValid =
-      contactMethod === "phone"
-        ? NEPALI_NUMBERS_VALIDATION.test(emailOrPhone)
-        : EMAIL_VALIDATION.test(emailOrPhone);
-
-    if (!isValid) {
-      toast({
-        variant: "destructive",
-        description:
-          contactMethod === "phone"
-            ? "Enter a valid phone number"
-            : "Enter a valid email address",
-        title: contactMethod === "phone" ? "Invalid Number" : "Invalid Email",
-      });
-      return;
-    }
-
-    setLoading(true);
-
-    const { userId, message } = await createEmailOrNumberOtp(emailOrPhone);
-
-    if (userId) {
-      setUserId(userId);
-      setCurrentStep("verification");
-      timeoutRef.current = setTimeout(
-        () => setLoading(false),
-        OTP_EXPIRATION_TIME * 1000
-      );
-    } else {
-      setLoading(false);
-    }
-
-    toast({
-      title: "OTP",
-      description: message,
-      variant: userId ? "default" : "destructive",
-    });
-  };
-
   const onSubmit = async (data: FormData) => {
-    const { message, success } = await updateOrSetPassword({ userId, ...data });
+    const response = await handleUpdateOrSetPassword({ userId, ...data });
 
-    toast({
-      description: message,
-      title: success ? "Account" : "OTP",
-      variant: success ? "default" : "destructive",
-    });
-
-    if (success) onBack();
+    if (response) onBack();
   };
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
@@ -289,7 +218,14 @@ const PasswordForm = ({
                         value={field.value}
                         onChange={field.onChange}
                       >
-                        <InputOTPGroup>{otpSlots}</InputOTPGroup>
+                        <InputOTPGroup>
+                          <InputOTPSlot key={0} index={0} />
+                          <InputOTPSlot key={1} index={1} />
+                          <InputOTPSlot key={2} index={2} />
+                          <InputOTPSlot key={3} index={3} />
+                          <InputOTPSlot key={4} index={4} />
+                          <InputOTPSlot key={5} index={5} />
+                        </InputOTPGroup>
                       </InputOTP>
                     )}
                   />

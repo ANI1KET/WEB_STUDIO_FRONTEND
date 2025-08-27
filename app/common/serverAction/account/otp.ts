@@ -3,8 +3,8 @@
 import axios from "axios";
 
 import {
-  createOtpUrl,
-  reGenerateOtpUrl,
+  createNumberOtpUrl,
+  reGenerateNumberOtpUrl,
   createEmailOrNumberOtpUrl,
 } from "../../endPoints/user";
 import { getAutheticationHeader } from "../header";
@@ -18,13 +18,13 @@ import axiosInstance from "@/app/lib/axiosInstance";
  * 2) VERIFYING A NUMBER WHILE SIGNING UP
  * 3) ADDING A NUMBER WHILE SHOWING INTEREST IN A LISTING
  */
-export const createOtp = async (
+export const createNumberOtp = async (
   number: string
 ): Promise<{ success: boolean; message: string }> => {
   "use server";
 
   try {
-    const { data } = await axiosInstance.post(createOtpUrl, { number });
+    const { data } = await axiosInstance.post(createNumberOtpUrl, { number });
     return data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -45,12 +45,12 @@ export const createOtp = async (
  * 2) UPDATING A NUMBER THROUGH PROFILE
  * 3) ADDING A NUMBER WHILE SHOWING INTEREST IN A LISTING
  */
-export const reGenerateOtp = async ({ number }: { number: string }) => {
+export const reGenerateNumberOtp = async ({ number }: { number: string }) => {
   "use server";
 
   try {
     const { data } = await axiosInstance.post(
-      reGenerateOtpUrl,
+      reGenerateNumberOtpUrl,
       { number },
       await getAutheticationHeader()
     );

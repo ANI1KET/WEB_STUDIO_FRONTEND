@@ -3,7 +3,6 @@
 import {
   Box,
   Menu,
-  Paper,
   Divider,
   MenuItem,
   MenuList,
@@ -11,25 +10,25 @@ import {
 } from "@mui/material";
 import { Check } from "lucide-react";
 import React, { useState } from "react";
-import { Permission } from "@prisma/client";
 
-import { categoryOptions } from "./config/CategorySelector";
-import { getCategoryIcon } from "./config/CategorySelectorIcon";
+import { groupedCategoryOptions } from "./config/CategorySelector";
+import { getCategoryIcon } from "@/app/common/icon/CategorySelector";
 
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
+import { Category } from "../config/SmartSearch";
 
 type CategorySelectorProps = {
-  category: Permission | "";
-  onCategoryChange: (value: Permission) => void;
+  category: string;
+  onCategoryChange: (value: Category) => void;
 };
 
 const CategorySelector = ({
   category,
   onCategoryChange,
 }: CategorySelectorProps) => {
-  const [searchTerm, setSearchTerm] = useState<Permission | "">("");
+  const [searchTerm, setSearchTerm] = useState<Category | "">("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -41,7 +40,7 @@ const CategorySelector = ({
     setAnchorEl(null);
   };
 
-  const handleCategorySelect = (value: Permission) => {
+  const handleCategorySelect = (value: Category) => {
     onCategoryChange(value);
     handleClose();
   };
@@ -51,10 +50,11 @@ const CategorySelector = ({
       <Label htmlFor="category" className="text-sm font-medium text-gray-700">
         Category
       </Label>
+
       <Button
         variant="outline"
-        className="w-full justify-between bg-background border border-green-200 hover:border-green-500"
         onClick={handleClick}
+        className="w-full justify-between bg-background border border-green-200 hover:border-green-500"
       >
         <span
           className={`${
@@ -82,58 +82,73 @@ const CategorySelector = ({
         slotProps={{
           paper: {
             style: {
-              // zIndex: 9999,
               maxHeight: 300,
               backgroundColor: "white",
               width: anchorEl ? anchorEl.clientWidth : undefined,
             },
-            className: "rounded-md shadow-lg",
           },
         }}
       >
         <Box sx={{ p: 1 }}>
-          <Typography variant="subtitle2" fontWeight="bold">
-            Categories
-          </Typography>
-        </Box>
-        <Divider />
-        <Box sx={{ p: 1 }}>
           <Input
             value={searchTerm}
             placeholder="Search categories..."
-            onChange={(e) => setSearchTerm(e.target.value as Permission | "")}
+            onChange={(e) => setSearchTerm(e.target.value as Category | "")}
           />
         </Box>
+
         <Divider />
 
-        <Paper sx={{ maxHeight: 200, overflow: "auto" }}>
+        <Box sx={{ maxHeight: 200, overflow: "auto" }}>
           <MenuList>
-            {categoryOptions
-              .filter((value) =>
-                value.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((value) => (
-                <MenuItem
-                  key={value}
-                  onClick={() => handleCategorySelect(value)}
-                  sx={{
-                    py: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span>{getCategoryIcon(value)}</span>
-                    {value}
+            {Object.entries(groupedCategoryOptions).map(
+              ([groupKey, group], index, arr) => {
+                const filteredOptions = group.filter((option) =>
+                  option.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+                if (filteredOptions.length === 0) return null;
+
+                return (
+                  <div key={groupKey}>
+                    <div className="flex items-center gap-2 px-2">
+                      <Typography
+                        fontWeight="bold"
+                        variant="subtitle2"
+                        sx={{ color: "success.main" }}
+                      >
+                        {groupKey}
+                      </Typography>
+                    </div>
+
+                    {filteredOptions.map((option) => (
+                      <MenuItem
+                        key={option}
+                        sx={{
+                          py: 1,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                        onClick={() => handleCategorySelect(option)}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span>{getCategoryIcon(option)}</span>
+                          {option}
+                        </div>
+
+                        {category === option && (
+                          <Check className="h-4 w-4 text-green-500" />
+                        )}
+                      </MenuItem>
+                    ))}
+                    {index < arr.length - 1 && <Divider />}
                   </div>
-                  {category === value && (
-                    <Check className="h-4 w-4 text-green-500" />
-                  )}
-                </MenuItem>
-              ))}
+                );
+              }
+            )}
           </MenuList>
-        </Paper>
+        </Box>
       </Menu>
     </div>
   );

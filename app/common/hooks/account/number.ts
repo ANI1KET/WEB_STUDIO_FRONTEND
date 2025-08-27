@@ -7,7 +7,7 @@ export const useNumberHandler = () => {
   const { toast } = useToast();
   const { data: session, update } = useSession();
 
-  const handleNumberVerification = async (
+  const handleSetNumberVerification = async (
     phoneNumber: string,
     otp: string
   ): Promise<boolean> => {
@@ -37,6 +37,6 @@ export const useNumberHandler = () => {
   };
 
   return {
-    handleNumberVerification,
+    handleSetNumberVerification,
   };
 };

@@ -14,7 +14,7 @@ interface OTPDialogProps {
   title: string;
   onClose: () => void;
   phoneNumber: string;
-  reGenerateOtp: (phoneNumber: string) => Promise<void>;
+  reGenerateNumberOtp: (phoneNumber: string) => Promise<boolean>;
   onVerified: (phoneNumber: string, otp: string) => Promise<boolean>;
 }
 
@@ -23,7 +23,7 @@ const OTPDialog: React.FC<OTPDialogProps> = ({
   onClose,
   onVerified,
   phoneNumber,
-  reGenerateOtp,
+  reGenerateNumberOtp,
 }) => {
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(300);
@@ -63,11 +63,13 @@ const OTPDialog: React.FC<OTPDialogProps> = ({
   };
 
   const handleResendOTP = async () => {
-    await reGenerateOtp(phoneNumber);
+    const response = await reGenerateNumberOtp(phoneNumber);
 
-    setTimeLeft(300);
-    setIsExpired(false);
-    setOtp("");
+    if (response) {
+      setTimeLeft(300);
+      setIsExpired(false);
+      setOtp("");
+    }
   };
 
   const handleClose = () => {

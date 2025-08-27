@@ -52,12 +52,12 @@ const Room = () => {
     setPhoneNumber,
     isOTPDialogOpen,
     isPhoneDialogOpen,
-    handleReGenerateOtp,
     handlePhoneVerified,
     setIsPhoneDialogOpen,
     handlePhoneSubmitted,
     handleCloseOTPDialog,
     handleClosePhoneDialog,
+    handleReGenerateNumberOtp,
   } = useSettingNumberVerificationFlow();
   const { isListing, setIsListing } = useListingFlow();
   const { furnishingStatus, setFurnishingStatus } = useFurnishingFlow();
@@ -218,8 +218,8 @@ const Room = () => {
           phoneNumber={phoneNumber}
           onClose={handleCloseOTPDialog}
           onVerified={handlePhoneVerified}
-          reGenerateOtp={handleReGenerateOtp}
           title="Complete verification to list room"
+          reGenerateNumberOtp={handleReGenerateNumberOtp}
         />
       )}
     </div>

@@ -5,9 +5,9 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { useToast } from "@/app/common/hooks/use-toast";
+import { useOtpHandler } from "@/app/common/hooks/account/otp";
 import { NEPALI_NUMBERS_VALIDATION } from "@/app/lib/constants";
-import { createOtp } from "@/app/common/serverAction/account/otp";
-import { updateEmailAndPhone } from "./ServerAction/PersonalInfoSection";
+import { useNumberHandler } from "@/app/common/hooks/account/number";
 
 import ProfileAvatar from "./PersonalInfoSection/ProfileAvatar";
 import PersonalInfoForm from "./PersonalInfoSection/PersonalInfoForm";
@@ -18,6 +18,9 @@ import OTPVerificationDialog from "./PersonalInfoSection/OTPVerificationDialog";
 const PersonalInfoSection = ({ session }: { session: Session | null }) => {
   const { toast } = useToast();
   const { data, update } = useSession();
+
+  const { handleCreateNumberOtp } = useOtpHandler();
+  const { handleSetNumberVerification } = useNumberHandler();
 
   const [isEditing, setIsEditing] = useState(false);
   const [showOTPDialog, setShowOTPDialog] = useState(false);
@@ -47,15 +50,9 @@ const PersonalInfoSection = ({ session }: { session: Session | null }) => {
         return;
       }
 
-      const { message, success } = await createOtp(phoneNumber as string);
+      const response = await handleCreateNumberOtp(phoneNumber as string);
 
-      if (success) setShowOTPDialog(true);
-
-      toast({
-        title: "OTP",
-        description: message,
-        variant: success ? "default" : "destructive",
-      });
+      if (response) setShowOTPDialog(true);
     }
   };
 
@@ -63,9 +60,9 @@ const PersonalInfoSection = ({ session }: { session: Session | null }) => {
     phoneNumber: string,
     otp: string
   ): Promise<boolean> => {
-    const { success, message } = await updateEmailAndPhone(otp, phoneNumber);
+    const response = await handleSetNumberVerification(phoneNumber, otp);
 
-    if (success) {
+    if (response) {
       await update({
         ...data,
         user: {
@@ -77,13 +74,7 @@ const PersonalInfoSection = ({ session }: { session: Session | null }) => {
       setIsEditing(false);
     }
 
-    toast({
-      title: "Account",
-      description: message,
-      variant: success ? "default" : "destructive",
-    });
-
-    return success;
+    return response;
   };
   return (
     <>

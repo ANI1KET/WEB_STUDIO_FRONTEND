@@ -43,14 +43,21 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   return (
     <div className="relative w-full aspect-video overflow-hidden bg-gray-100 group rounded-lg">
       {showVideo && videos ? (
-        <iframe
-          allow="autoplay; encrypted-media"
-          className="w-full h-full object-cover"
-          src={
-            videos +
-            "?autoplay=1&mute=1&controls=0&disablekb=1&modestbranding=1&rel=0&showinfo=0&fs=0&iv_load_policy=3"
-          }
-        ></iframe>
+        <div className="relative w-full aspect-video">
+          <iframe
+            allow="autoplay; encrypted-media"
+            className="w-full h-full object-cover"
+            src={
+              videos +
+              "?autoplay=1&mute=1&controls=0&disablekb=1&modestbranding=1&rel=0&showinfo=0&fs=0&iv_load_policy=3"
+            }
+          />
+
+          <div
+            className="absolute inset-0 z-10"
+            style={{ pointerEvents: "auto" }}
+          />
+        </div>
       ) : (
         <div className="overflow-hidden h-full" ref={emblaRef}>
           <div className="flex h-full">

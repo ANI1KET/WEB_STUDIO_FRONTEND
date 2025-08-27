@@ -1,24 +1,20 @@
 import { Role } from "@prisma/client";
 
-import {
-  setRoomSearchData,
-  setPropertySearchData,
-} from "@/app/providers/reactqueryProvider";
-import { PropertyType, CategorySearchData } from "@/app/types/types";
+import { setRoomSearchData } from "@/app/providers/reactqueryProvider";
 
 export const roles: Role[] = ["OWNER", "BROKER", "USER"];
 
-export const categorySearchData: CategorySearchData = {
+export const categorySearchData = {
   promote: () => {},
   room: setRoomSearchData,
+  land: setRoomSearchData,
+  house: setRoomSearchData,
   hostel: setRoomSearchData,
   vehicle: setRoomSearchData,
-  property: setPropertySearchData,
+  property: setRoomSearchData,
   reMarketItem: setRoomSearchData,
 };
-
-// PROPERTY OPTIONS DATA
-export const propertyTypes: PropertyType[] = ["House", "Land"];
+export type Category = keyof typeof categorySearchData;
 
 //
 

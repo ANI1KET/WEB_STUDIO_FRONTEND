@@ -11,7 +11,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   RoomFilters,
   RoomSearchQueries,
-  PropertySearchQueries,
+  // PropertySearchQueries,
 } from "../types/filters";
 
 export const searchRoomData = makeVar<RoomSearchQueries>({
@@ -27,25 +27,25 @@ export const searchRoomData = makeVar<RoomSearchQueries>({
   furnishingStatus: [],
 });
 
-export const searchPropertyData = makeVar<PropertySearchQueries>({
-  city: "",
-  locations: [],
-  propertyType: "House",
+// export const searchPropertyData = makeVar<PropertySearchQueries>({
+//   city: "",
+//   locations: [],
+//   propertyType: "House",
 
-  area: undefined,
-  price: undefined,
-  // verified: undefined,
+//   area: undefined,
+//   price: undefined,
+//   // verified: undefined,
 
-  // amenities: [],
-  // floors: undefined,
-  // bedrooms: undefined,
-  // kitchens: undefined,
-  // bathrooms: undefined,
-  builtUpArea: undefined,
+//   // amenities: [],
+//   // floors: undefined,
+//   // bedrooms: undefined,
+//   // kitchens: undefined,
+//   // bathrooms: undefined,
+//   builtUpArea: undefined,
 
-  // plotWidth: undefined,
-  // plotLength: undefined,
-});
+//   // plotWidth: undefined,
+//   // plotLength: undefined,
+// });
 
 export default function ReactQueryProvider({
   children,
@@ -118,24 +118,24 @@ export function useUpdateRoomFiletrsData() {
   };
 }
 
-// PROPERTY
-export function useGetPropertySearchData() {
-  return useReactiveVar(searchPropertyData);
-}
+// // PROPERTY
+// export function useGetPropertySearchData() {
+//   return useReactiveVar(searchPropertyData);
+// }
 
-export function setPropertySearchData(filtersToApply: PropertySearchQueries) {
-  const prevData = searchPropertyData();
+// export function setPropertySearchData(filtersToApply: PropertySearchQueries) {
+//   const prevData = searchPropertyData();
 
-  searchPropertyData({
-    ...prevData,
-    ...filtersToApply,
-  });
-}
+//   searchPropertyData({
+//     ...prevData,
+//     ...filtersToApply,
+//   });
+// }
 
-export function useUpdatePropertySearchData() {
-  return (filtersToApply: PropertySearchQueries) => {
-    searchPropertyData({
-      ...filtersToApply,
-    });
-  };
-}
+// export function useUpdatePropertySearchData() {
+//   return (filtersToApply: PropertySearchQueries) => {
+//     searchPropertyData({
+//       ...filtersToApply,
+//     });
+//   };
+// }

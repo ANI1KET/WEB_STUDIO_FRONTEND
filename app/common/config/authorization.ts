@@ -6,22 +6,56 @@ const PROMOTION = "promotion"; // Means the user can promote their listing
 const INTERESTED = "interested"; // Means the user can show interest in a listing
 const SCHEDULE_VISIT = "schedule_visit"; // Means the user whose posted listings can be scheduled visit
 const LISTING_SERVICE = "listing_service"; // Means the user who provide listing services
+const SHOW_INTERESTED = "show_interested"; // Means the user whose posted listings can be shown interest
 
 // AUTHORIZATION
 const rolePermissions: Record<Role, string[]> = {
+  BROKER: [
+    DASHBOARD,
+    PROMOTION,
+    INTERESTED,
+    SCHEDULE_VISIT,
+    LISTING_SERVICE,
+    SHOW_INTERESTED,
+  ],
   ADMIN: [DASHBOARD],
-  OWNER: [DASHBOARD, PROMOTION],
-  USER: [PROMOTE, INTERESTED, LISTING_SERVICE],
-  BROKER: [DASHBOARD, LISTING_SERVICE, PROMOTION, SCHEDULE_VISIT],
+  OWNER: [DASHBOARD, INTERESTED, PROMOTION, SHOW_INTERESTED],
+  USER: [PROMOTE, INTERESTED, LISTING_SERVICE, SCHEDULE_VISIT],
 };
 
 //
+export const canBook = ({
+  userId,
+  ownerId,
+  listerId,
+}: {
+  userId: string;
+  ownerId: string;
+  listerId: string;
+}): boolean => {
+  return listerId === userId || ownerId === userId;
+};
+
 export const canPromote = (role: Role | undefined): boolean => {
   return rolePermissions[role as Role].includes(PROMOTE);
 };
 
-export const canShowInterest = (role: Role | undefined): boolean => {
-  return rolePermissions[role as Role].includes(INTERESTED);
+export const canShowInterest = ({
+  userId,
+  ownerId,
+  listerId,
+  postedBy,
+}: {
+  userId: string;
+  postedBy: Role;
+  ownerId: string;
+  listerId: string;
+}): boolean => {
+  return (
+    ownerId !== userId &&
+    listerId !== userId &&
+    rolePermissions[postedBy as Role].includes(SHOW_INTERESTED)
+  );
 };
 
 export const canAccessDashboard = (role: Role | undefined): boolean => {
@@ -40,11 +74,25 @@ export const canAccessListingService = (role: Role | undefined): boolean => {
   return rolePermissions[role as Role].includes(LISTING_SERVICE);
 };
 
-export const canAcessScheduleVisit = (
-  role: Role | undefined,
-  available: boolean
-): boolean => {
-  return rolePermissions[role as Role].includes(SCHEDULE_VISIT) && available;
+export const canAcessScheduleVisit = ({
+  userId,
+  ownerId,
+  listerId,
+  postedBy,
+  available,
+}: {
+  userId: string;
+  ownerId: string;
+  listerId: string;
+  available: boolean;
+  postedBy: Role | undefined;
+}): boolean => {
+  return (
+    available &&
+    rolePermissions[postedBy as Role].includes(SCHEDULE_VISIT) &&
+    ownerId !== userId &&
+    listerId !== userId
+  );
 };
 
 // ROUTING VALIDATION

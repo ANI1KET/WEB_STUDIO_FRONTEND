@@ -9,9 +9,10 @@ import {
   useRoomDetails,
   useImageModalControl,
 } from "./hooks/RoomPageLayout";
+import { cn } from "@/app/lib/utils";
 import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constants";
-import { amenityIcons } from "./icons/RoomPageLayout";
+import { getAmenityIcon } from "@/app/common/icon/amenities";
 import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
 import RoomCard from "@/app/common/ui/Room";
@@ -20,6 +21,7 @@ import RoomDetailsMain from "./RoomPageLayout/RoomDetailsMain";
 import RoomAmenitiesLayout from "./RoomPageLayout/RoomAmenities";
 import RoomDetailsAction from "./RoomPageLayout/RoomDetailsAction";
 import OptimizedRoomGallery from "./RoomPageLayout/OptimizedRoomGallery";
+import FeaturedRoomsSection from "./RoomPageLayout/FeaturedRoomsSection";
 
 interface RoomLayoutProps {
   city: string;
@@ -35,6 +37,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
   const { open, next, prev, close, isOpen, currentIndex } =
     useImageModalControl(roomData?.photos.length);
 
+  const featuredRooms: RoomData[] = [];
   const {
     data,
     hasNextPage,
@@ -98,58 +101,95 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     return <ErrorLayout city={city} />;
   }
   return (
-    <div className="bg-gray-50/50 min-h-[calc(100vh-4rem)] font-sans antialiased">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <div className="overflow-hidden shadow-2xl border border-green-100/50 rounded-3xl bg-white/95 backdrop-blur-sm hover:shadow-green-200/40">
-          <OptimizedRoomGallery
-            title={roomData.title}
-            onImageModalOpen={open}
-            videos={roomData.videos}
-            photos={roomData.photos}
-          />
+    <div className="bg-white min-h-screen font-sans antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-8">
+          <div
+            style={{ animationDelay: "100ms" }}
+            className="overflow-hidden shadow-2xl border border-green-100/50 rounded-3xl bg-white/95 backdrop-blur-sm hover:shadow-green-200/40 transition-shadow duration-300 animate-fade-in"
+          >
+            <OptimizedRoomGallery
+              title={roomData.title}
+              onImageModalOpen={open}
+              photos={roomData.photos}
+              videos={roomData.videos}
+            />
+          </div>
+
+          <div
+            style={{ animationDelay: "200ms" }}
+            className={cn(
+              "grid gap-3 animate-fade-in grid-cols-1",
+              featuredRooms.length > 0 && "md:grid-cols-3"
+            )}
+          >
+            <div
+              className={cn(
+                "col-span-1",
+                featuredRooms.length > 0 && "md:col-span-2"
+              )}
+            >
+              <div className="space-y-8">
+                <RoomDetailsAction
+                  id={roomData.id}
+                  session={session}
+                  city={roomData.city}
+                  onShare={handleShare}
+                  title={roomData.title}
+                  price={roomData.price}
+                  onCompare={handleCompare}
+                  ratings={roomData.ratings}
+                  ownerId={roomData.ownerId}
+                  onInterest={handleInterest}
+                  postedBy={roomData.postedBy}
+                  listerId={roomData.listerId}
+                  location={roomData.location}
+                  verified={roomData.verified}
+                  available={roomData.available}
+                  listerName={roomData.listerName}
+                  primaryContact={roomData.primaryContact}
+                  secondaryContact={roomData.secondaryContact}
+                />
+
+                <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-100/50 overflow-hidden hover:shadow-green-200/40 transition-all duration-300">
+                  <RoomDetailsMain
+                    hall={roomData.hall}
+                    bedroom={roomData.bedroom}
+                    kitchen={roomData.kitchen}
+                    bathroom={roomData.bathroom}
+                    roomType={roomData.roomType}
+                    createdAt={roomData.createdAt}
+                    updatedAt={roomData.updatedAt}
+                    direction={roomData.direction}
+                    minCapacity={roomData.minCapacity}
+                    maxCapacity={roomData.maxCapacity}
+                    description={roomData.description}
+                    furnishingStatus={roomData.furnishingStatus}
+                  />
+                </div>
+
+                <RoomAmenitiesLayout
+                  amenities={roomData.amenities}
+                  getAmenityIcon={getAmenityIcon}
+                />
+              </div>
+            </div>
+
+            <div
+              className={cn(
+                "hidden",
+                featuredRooms.length > 0 && "md:block md:col-span-1"
+              )}
+            >
+              <div
+                className="h-full animate-fade-in"
+                style={{ animationDelay: "400ms" }}
+              >
+                <FeaturedRoomsSection featuredRooms={featuredRooms} />
+              </div>
+            </div>
+          </div>
         </div>
-
-        <RoomDetailsAction
-          id={roomData.id}
-          session={session}
-          city={roomData.city}
-          onShare={handleShare}
-          title={roomData.title}
-          price={roomData.price}
-          onCompare={handleCompare}
-          ratings={roomData.ratings}
-          onInterest={handleInterest}
-          postedBy={roomData.postedBy}
-          listerId={roomData.listerId}
-          location={roomData.location}
-          verified={roomData.verified}
-          available={roomData.available}
-          listerName={roomData.listerName}
-          primaryContact={roomData.primaryContact}
-          secondaryContact={roomData.secondaryContact}
-        />
-
-        <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-green-100/50 overflow-hidden hover:shadow-green-200/40">
-          <RoomDetailsMain
-            hall={roomData.hall}
-            bedroom={roomData.bedroom}
-            kitchen={roomData.kitchen}
-            bathroom={roomData.bathroom}
-            roomType={roomData.roomType}
-            createdAt={roomData.createdAt}
-            updatedAt={roomData.updatedAt}
-            direction={roomData.direction}
-            minCapacity={roomData.minCapacity}
-            maxCapacity={roomData.maxCapacity}
-            description={roomData.description}
-            furnishingStatus={roomData.furnishingStatus}
-          />
-        </div>
-
-        <RoomAmenitiesLayout
-          amenityIcons={amenityIcons}
-          amenities={roomData.amenities}
-        />
       </div>
 
       <div className="py-4 sm:py-8 px-4 bg-gradient-to-r from-green-50/80 via-white/50 to-green-50/80 border-t border-green-200/30">
@@ -185,6 +225,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
                 )}
 
                 <div ref={observerRef} className="h-1 "></div>
+
                 {isFetchingNextPage && (
                   <div className="flex justify-center items-center">
                     <div

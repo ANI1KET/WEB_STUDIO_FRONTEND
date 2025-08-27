@@ -3,7 +3,7 @@
 import { X, Phone, Shield } from "lucide-react";
 import React, { useState, useEffect } from "react";
 
-import { reGenerateOtp } from "@/app/common/serverAction/account/otp";
+import { useOtpHandler } from "@/app/common/hooks/account/otp";
 
 import {
   InputOTP,
@@ -23,6 +23,8 @@ const OTPVerificationDialog: React.FC<OTPVerificationDialogProps> = ({
   onVerified,
   phoneNumber,
 }) => {
+  const { handleReGenerateNumberOtp } = useOtpHandler();
+
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(300);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,9 +66,9 @@ const OTPVerificationDialog: React.FC<OTPVerificationDialogProps> = ({
   };
 
   const handleResendOTP = async () => {
-    const { success } = await reGenerateOtp({ number: phoneNumber });
+    const response = await handleReGenerateNumberOtp(phoneNumber);
 
-    if (success) {
+    if (response) {
       setTimeLeft(300);
       setIsExpired(false);
     }

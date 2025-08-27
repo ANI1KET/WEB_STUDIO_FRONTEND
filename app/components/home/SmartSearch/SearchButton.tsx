@@ -9,15 +9,15 @@ import { Button } from "@/app/components/ui/button";
 import { useIsMobile } from "@/app/common/hooks/use-mobile";
 
 interface SearchButtonProps {
+  category: string;
   onClick: () => void;
-  category: Permission | "";
 }
 
 const SearchButton: React.FC<SearchButtonProps> = ({ onClick, category }) => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="mt-2 flex justify-center">
+    <div className="mt-1 flex justify-center">
       <Button
         onClick={onClick}
         className={`bg-green-300 hover:bg-green-200 text-white ${

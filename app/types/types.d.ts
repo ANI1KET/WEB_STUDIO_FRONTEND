@@ -64,6 +64,7 @@ export type RoomWithMediaUrl = Room & {
 
 export type ListedRoom = RoomWithMediaUrl & {
   id: string;
+  ownerId: string;
   ratings: number;
   verified: boolean;
   available: boolean;
@@ -209,14 +210,4 @@ export type OwnerDetails = {
   number: string;
   ownerId: string;
   listerOwnerId: string;
-};
-
-// FUNCTIONS
-type CategorySearchData = {
-  promote: () => void;
-  room: (filters: RoomSearchQueries) => void;
-  hostel: (filters: HostelSearchQueries) => void;
-  vehicle: (filters: VehicleSearchQueries) => void;
-  property: (filters: PropertySearchQueries) => void;
-  reMarketItem: (filters: ReMarketItemSearchQueries) => void;
 };

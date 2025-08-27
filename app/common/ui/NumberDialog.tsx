@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { Phone, X, ArrowRight } from "lucide-react";
 
+import { useOtpHandler } from "../hooks/account/otp";
 import { useToast } from "@/app/common/hooks/use-toast";
-import { createOtp } from "../serverAction/account/otp";
 import { NEPALI_NUMBERS_VALIDATION } from "@/app/lib/constants";
 
 import { Input } from "@/app/components/ui/input";
@@ -26,6 +26,7 @@ const NumberDialog: React.FC<NumberDialogProps> = ({
   onPhoneSubmitted,
 }) => {
   const { toast } = useToast();
+  const { handleCreateNumberOtp } = useOtpHandler();
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -43,21 +44,15 @@ const NumberDialog: React.FC<NumberDialogProps> = ({
 
     setIsLoading(true);
 
-    const { message, success } = await createOtp(phoneNumber);
+    const response = await handleCreateNumberOtp(phoneNumber);
 
-    if (success) {
+    if (response) {
       setIsLoading(false);
       onClose();
       onPhoneSubmitted();
     }
 
     setIsLoading(false);
-
-    toast({
-      title: "OTP",
-      description: message,
-      variant: success ? "default" : "destructive",
-    });
   };
 
   const handleClose = () => {

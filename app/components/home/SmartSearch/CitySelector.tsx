@@ -70,7 +70,7 @@ const CitySelector = ({
           ) : selectedCategory ? (
             "Select a city"
           ) : (
-            "Select a category first"
+            "Select category first"
           )}
         </span>
         <Check

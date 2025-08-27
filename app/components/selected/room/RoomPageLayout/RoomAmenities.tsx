@@ -14,12 +14,12 @@ import {
 
 interface RoomAmenitiesProps {
   amenities: RoomAmenities[];
-  amenityIcons: { [key: string]: React.ReactNode };
+  getAmenityIcon: (amenity: RoomAmenities, size: number) => React.JSX.Element;
 }
 
 const RoomAmenitiesLayout: React.FC<RoomAmenitiesProps> = ({
   amenities,
-  amenityIcons,
+  getAmenityIcon,
 }) => (
   <Card className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-green-100/50 overflow-hidden hover:shadow-xl transition-all duration-300">
     <CardHeader className="border-b border-green-100/50">
@@ -39,7 +39,7 @@ const RoomAmenitiesLayout: React.FC<RoomAmenitiesProps> = ({
             className="flex items-center gap-3 p-3 bg-green-50/70 rounded-xl border border-green-100/80 transition-all duration-300 hover:bg-green-100 hover:shadow-md hover:scale-[1.03] cursor-pointer"
           >
             <div className="flex-shrink-0 flex items-center justify-center h-10 w-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg text-white shadow-md">
-              {amenityIcons[amenity] || <Sparkles size={20} />}
+              {getAmenityIcon(amenity, 20) || <Sparkles size={20} />}
             </div>
 
             <span className="text-sm font-semibold text-green-800">

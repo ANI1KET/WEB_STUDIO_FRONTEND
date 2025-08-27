@@ -7,9 +7,8 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, User, Mail, Phone, Lock } from "lucide-react";
 
 import { SignUpFormData } from "../Schema";
-import { useToast } from "@/app/common/hooks/use-toast";
 import { OTP_EXPIRATION_TIME } from "@/app/lib/constants";
-import { createOtp } from "@/app/common/serverAction/account/otp";
+import { useOtpHandler } from "@/app/common/hooks/account/otp";
 
 import {
   Card,
@@ -23,8 +22,9 @@ import { Button } from "@/app/components/ui/button";
 import SignupOTPDialog from "@/app/components/auth/signup/SignupOTPDialog";
 
 const Signup = () => {
-  const { toast } = useToast();
   const navigate = useRouter();
+
+  const { handleCreateNumberOtp } = useOtpHandler();
 
   const [timeLeft, setTimeLeft] = useState(0);
   const [isOtpSet, setIsOtpSet] = useState(false);
@@ -66,20 +66,14 @@ const Signup = () => {
       return;
     }
 
-    const { message, success } = await createOtp(data.number);
+    const response = await handleCreateNumberOtp(data.number);
 
-    if (success) {
+    if (response) {
       setTimeLeft(OTP_EXPIRATION_TIME);
       setIsOtpSet(true);
       setShowOTPDialog(true);
       startOtpCountdown();
     }
-
-    toast({
-      title: "OTP",
-      description: message,
-      variant: success ? "default" : "destructive",
-    });
   };
 
   return (

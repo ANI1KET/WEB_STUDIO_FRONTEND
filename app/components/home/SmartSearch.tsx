@@ -2,16 +2,14 @@
 
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { Permission } from "@prisma/client";
 import { useState, useEffect } from "react";
 
 import {
   FetchCategoryCityLocations,
   FetchCategoryCitiesLocations,
 } from "./hooks/SmartSearch";
-import { PropertyType } from "@/app/types/types";
 import { useToast } from "@/app/common/hooks/use-toast";
-import { propertyTypes, categorySearchData } from "./config/SmartSearch";
+import { Category, categorySearchData } from "./config/SmartSearch";
 
 const CategorySelector = dynamic(
   () => import("./SmartSearch/CategorySelector")
@@ -22,9 +20,6 @@ const LocationSelector = dynamic(
 const SmartSearchHeader = dynamic(
   () => import("./SmartSearch/SmartSearchHeader")
 );
-const PropertyTypeSelector = dynamic(
-  () => import("./SmartSearch/PropertyTypeSelector")
-);
 const CitySelector = dynamic(() => import("./SmartSearch/CitySelector"));
 const SearchButton = dynamic(() => import("./SmartSearch/SearchButton"));
 const FilterToggle = dynamic(() => import("./SmartSearch/FilterToggle"));
@@ -34,16 +29,10 @@ const SmartSearch = () => {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [category, setCategory] = useState<Permission | "">("");
-
-  const [selectedCity, setSelectedCity] = useState<string>("");
-
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-
-  const [showPropertyType, setShowPropertyType] = useState(false);
-  const [propertyType, setPropertyType] = useState<PropertyType | "">("");
-
   const [showFilters, setShowFilters] = useState(false);
+  const [category, setCategory] = useState<Category | "">("");
+  const [selectedCity, setSelectedCity] = useState<string>("");
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
   const {
     data: CitiesLocations,
@@ -62,38 +51,13 @@ const SmartSearch = () => {
   } = FetchCategoryCityLocations();
 
   useEffect(() => {
-    if (propertyType === "House") {
-      categorySearchData["property"]({
-        propertyType,
-        plotWidth: undefined,
-        plotLength: undefined,
-      });
-    } else if (propertyType === "Land") {
-      categorySearchData["property"]({
-        propertyType,
-        builtUpArea: undefined,
-        // amenities:[],
-        // floors: undefined,
-        // bedrooms: undefined,
-        // kitchens: undefined,
-        // bathrooms: undefined,
-      });
-    }
-  }, [propertyType]);
-
-  useEffect(() => {
     if (category) {
       // setSelectedCity("");
       setSelectedLocations([]);
-
-      setShowPropertyType(category === "property");
-      if (category !== "property") {
-        setPropertyType("");
-      }
     }
   }, [category]);
 
-  const handleCategoryChange = (value: Permission) => {
+  const handleCategoryChange = (value: Category) => {
     setCategory(value);
     setShowFilters(false);
   };
@@ -133,15 +97,6 @@ const SmartSearch = () => {
       return;
     }
 
-    if (category === "property" && !propertyType) {
-      toast({
-        title: "Search",
-        variant: "destructive",
-        description: "Select a property type",
-      });
-      return;
-    }
-
     categorySearchData[category]({
       city: selectedCity,
       locations: selectedLocations,
@@ -151,7 +106,7 @@ const SmartSearch = () => {
   };
 
   return (
-    <div className="relative w-full mx-auto p-4 max-w-3xl ">
+    <div className="relative w-full mx-auto max-w-lg">
       <div className="w-full rounded-2xl mx-auto border p-2 border-gray-100 shadow-lg overflow-hidden bg-white">
         <SmartSearchHeader />
 
@@ -172,45 +127,22 @@ const SmartSearch = () => {
             />
           </div>
 
-          {showPropertyType ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <PropertyTypeSelector
-                propertyType={propertyType}
-                setPropertyType={setPropertyType}
-                propertyTypeOptions={propertyTypes}
-              />
-
-              <LocationSelector
-                disabled={!category}
-                selectedCity={selectedCity}
-                toggleLocation={toggleLocation}
-                selectedLocations={selectedLocations}
-                availableLocations={CitiesLocations?.[selectedCity] ?? []}
-              />
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-2">
-              <LocationSelector
-                disabled={!category}
-                selectedCity={selectedCity}
-                toggleLocation={toggleLocation}
-                selectedLocations={selectedLocations}
-                availableLocations={CitiesLocations?.[selectedCity] ?? []}
-              />
-            </div>
-          )}
+          <div className="">
+            <LocationSelector
+              disabled={!category}
+              selectedCity={selectedCity}
+              toggleLocation={toggleLocation}
+              selectedLocations={selectedLocations}
+              availableLocations={CitiesLocations?.[selectedCity] ?? []}
+            />
+          </div>
 
           <FilterToggle
             showFilters={showFilters}
             setShowFilters={setShowFilters}
           />
 
-          {showFilters && (
-            <SearchFilters
-              category={category}
-              propertyTypeExist={!!propertyType}
-            />
-          )}
+          {showFilters && <SearchFilters category={category} />}
 
           <SearchButton category={category} onClick={handleSearch} />
         </div>
