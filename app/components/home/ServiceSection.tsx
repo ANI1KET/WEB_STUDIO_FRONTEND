@@ -236,7 +236,7 @@ const ServiceSection = () => {
         </div>
 
         <div className="flex justify-center mb-8">
-          <div className="inline-flex bg-slate-100 rounded-lg border border-green-300">
+          <div className="flex flex-wrap justify-center bg-slate-100 rounded-lg border border-green-300">
             {categories.map((category) => (
               <button
                 key={category.id}

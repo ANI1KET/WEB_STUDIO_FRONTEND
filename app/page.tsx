@@ -96,7 +96,7 @@ const Home = async () => {
               </span>
             </p>
 
-            <div className="">
+            <div className="p-1.5">
               <SmartSearch />
             </div>
           </div>
