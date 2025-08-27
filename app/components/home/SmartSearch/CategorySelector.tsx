@@ -14,10 +14,10 @@ import React, { useState } from "react";
 import { groupedCategoryOptions } from "./config/CategorySelector";
 import { getCategoryIcon } from "@/app/common/icon/CategorySelector";
 
+import { Category } from "../config/SmartSearch";
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
-import { Category } from "../config/SmartSearch";
 
 type CategorySelectorProps = {
   category: string;
