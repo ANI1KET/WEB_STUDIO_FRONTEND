@@ -1,32 +1,28 @@
-"use client";
-
 import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, Building, Car, Scale } from "lucide-react";
+import { GitCompare } from "lucide-react";
 
-interface CompareLayoutProps {
+import NavBar from "./navbar";
+
+export default function CompareLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-const CompareLayout = ({ children }: CompareLayoutProps) => {
-  const pathname = usePathname();
-
-  const navItems = [
-    { path: "/compare", label: "Overview", icon: Scale },
-    { path: "/compare/rooms", label: "Rooms", icon: Home },
-    { path: "/compare/properties", label: "Properties", icon: Building },
-    { path: "/compare/vehicles", label: "Vehicles", icon: Car },
-  ];
-
+}) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-blue-50 to-indigo-50">
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Compare Listings
-            </h1>
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-9 h-9 bg-gradient-to-br from-green-600 to-green-700 rounded-xl flex items-center justify-center shadow-lg">
+                <GitCompare className="w-6 h-6 text-white" />
+              </div>
+
+              <h1 className="text-2xl font-bold text-gray-900">
+                Compare Listings
+              </h1>
+            </div>
+
             <p className="text-gray-600 mt-2">
               Compare your selected listings side by side
             </p>
@@ -34,35 +30,11 @@ const CompareLayout = ({ children }: CompareLayoutProps) => {
         </div>
       </div>
 
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-1 overflow-x-auto">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.path;
-
-              return (
-                <Link key={item.path} href={item.path}>
-                  <button
-                    className={`flex items-center gap-2 whitespace-nowrap text-blue-600 text-lg py-1 px-4 rounded-sm ${
-                      isActive ? "bg-green-200" : "hover:text-green-400"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
-                  </button>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+      <NavBar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </div>
     </div>
   );
-};
-
-export default CompareLayout;
+}

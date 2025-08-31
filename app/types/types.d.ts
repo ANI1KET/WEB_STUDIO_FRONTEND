@@ -1,7 +1,37 @@
 import { Role } from "@prisma/client";
 
-export type PropertyType = "House" | "Land";
 export type CategoryCitiesLocations = Record<string, string[]>;
+
+// --------------------------------------------------------------------------------
+// LISTER DETAILS
+export type Lister = {
+  id: string;
+  role: Role;
+  name: string;
+  email: string;
+  image: string;
+  number: string;
+  createdAt: string;
+};
+
+// --------------------------------------------------------------------------------
+// OWNER DETAILS
+export type OwnerDetails = {
+  name: string;
+  email: string;
+  number: string;
+  ownerId: string;
+  listerOwnerId: string;
+};
+
+// --------------------------------------------------------------------------------
+// INTERESTED ROOMS
+export type InterestedRooms = {
+  id: string;
+  lister: Lister;
+  rooms: string[];
+  createdAt: string;
+};
 
 // --------------------------------------------------------------------------------
 // ROOM
@@ -74,13 +104,7 @@ export type ListedRoom = RoomWithMediaUrl & {
 };
 
 export type RoomData = ListedRoom & {
-  lister: {
-    id: string;
-    role: Role;
-    name: string;
-    email: string;
-    number: string;
-  };
+  lister: Lister;
   reviews: {
     id: string;
     rating: number;
@@ -90,124 +114,116 @@ export type RoomData = ListedRoom & {
   }[];
 };
 
-// --------------------------------------------------------------------------------
-// PROPERTY
-export type PropertyAreaUnits =
-  | "sqm"
-  | "sqft"
-  | "acre"
-  | "aana"
-  | "dhur"
-  | "bigha"
-  | "kattha";
-// | 'dam'
-// | 'paisa'
-// | 'ropani'
+// // --------------------------------------------------------------------------------
+// // PROPERTY
+// export type PropertyType = "House" | "Land";
 
-export type PropertyPlotUnits = "ft" | "mt";
-export type PropertyHouseAreaUnits = "sqft" | "sqm";
+// export type PropertyAreaUnits =
+//   | "sqm"
+//   | "sqft"
+//   | "acre"
+//   | "aana"
+//   | "dhur"
+//   | "bigha"
+//   | "kattha";
+// // | 'dam'
+// // | 'paisa'
+// // | 'ropani'
 
-export type PropertyAmenities =
-  | "CCTV"
-  | "LIFT"
-  | "GARDEN"
-  | "CAR PARK"
-  | "BIKE PARK"
-  | "FIRE SAFETY"
-  | "SOLAR PANELS"
-  | "SWIMMING POOL";
+// export type PropertyPlotUnits = "ft" | "mt";
+// export type PropertyHouseAreaUnits = "sqft" | "sqm";
 
-export type PropertyNearByAreas =
-  | "MALL"
-  | "PARK"
-  | "BANK"
-  | "SCHOOL"
-  | "MARKET"
-  | "TEMPLE"
-  | "CHURCH"
-  | "MOSQUE"
-  | "AIRPORT"
-  | "COLLEGE"
-  | "HOSPITAL"
-  | "BUS STOP"
-  | "FIRE STATION"
-  | "POLICE STATION";
+// export type PropertyAmenities =
+//   | "CCTV"
+//   | "LIFT"
+//   | "GARDEN"
+//   | "CAR PARK"
+//   | "BIKE PARK"
+//   | "FIRE SAFETY"
+//   | "SOLAR PANELS"
+//   | "SWIMMING POOL";
 
-export type BaseProperty = {
-  city: string;
-  area: number;
-  title: string;
-  // price: string | number;
-  price: number;
-  location: string;
-  description: string;
-  ownerContact: string;
-  primaryContact: string;
-  direction: string | null;
-  nearbyAreas: PropertyNearByAreas[];
-  // ENUM
-  postedBy: Role;
-  // RELATION
-  sellerId: string;
-};
+// export type PropertyNearByAreas =
+//   | "MALL"
+//   | "PARK"
+//   | "BANK"
+//   | "SCHOOL"
+//   | "MARKET"
+//   | "TEMPLE"
+//   | "CHURCH"
+//   | "MOSQUE"
+//   | "AIRPORT"
+//   | "COLLEGE"
+//   | "HOSPITAL"
+//   | "BUS STOP"
+//   | "FIRE STATION"
+//   | "POLICE STATION";
 
-export type House = BaseProperty & {
-  floors: number;
-  bedrooms: number;
-  kitchens: number;
-  bathrooms: number;
-  builtUpArea: number;
-  amenities: PropertyAmenities[];
+// export type BaseProperty = {
+//   city: string;
+//   area: number;
+//   title: string;
+//   // price: string | number;
+//   price: number;
+//   location: string;
+//   description: string;
+//   ownerContact: string;
+//   primaryContact: string;
+//   direction: string | null;
+//   nearbyAreas: PropertyNearByAreas[];
+//   // ENUM
+//   postedBy: Role;
+//   // RELATION
+//   sellerId: string;
+// };
 
-  // propertyType: "House";
-};
+// export type House = BaseProperty & {
+//   floors: number;
+//   bedrooms: number;
+//   kitchens: number;
+//   bathrooms: number;
+//   builtUpArea: number;
+//   amenities: PropertyAmenities[];
 
-export type Land = BaseProperty & {
-  plotWidth: number;
-  plotLength: number;
+//   // propertyType: "House";
+// };
 
-  // propertyType: "Land";
-};
+// export type Land = BaseProperty & {
+//   plotWidth: number;
+//   plotLength: number;
 
-export type Property = House | Land;
+//   // propertyType: "Land";
+// };
 
-export type PropertyWithMedia = Property & {
-  photos: File[];
-  documents: File[];
-  video: FileList | null;
-};
+// export type Property = House | Land;
 
-export type PropertyWithMediaUrl = Property & {
-  photos: string[];
-  documents: string[];
-  video: string | null;
-};
+// export type PropertyWithMedia = Property & {
+//   photos: File[];
+//   documents: File[];
+//   video: FileList | null;
+// };
 
-export type ListedProperty = PropertyWithMediaUrl & {
-  id: string;
-  verified: boolean;
-  available: boolean;
-  // DATE
-  createdAt: string;
-  updatedAt: string;
-};
+// export type PropertyWithMediaUrl = Property & {
+//   photos: string[];
+//   documents: string[];
+//   video: string | null;
+// };
 
-export type PropertyData = ListedProperty & {
-  seller: {
-    id: string;
-    role: Role;
-    name: string;
-    email: string;
-    number: string;
-  };
-};
+// export type ListedProperty = PropertyWithMediaUrl & {
+//   id: string;
+//   verified: boolean;
+//   available: boolean;
+//   // DATE
+//   createdAt: string;
+//   updatedAt: string;
+// };
 
-// --------------------------------------------------------------------------------
-// OWNER DETAILS
-export type OwnerDetails = {
-  name: string;
-  email: string;
-  number: string;
-  ownerId: string;
-  listerOwnerId: string;
-};
+// export type PropertyData = ListedProperty & {
+//   seller: {
+//     id: string;
+//     role: Role;
+//     name: string;
+//     email: string;
+//     number: string;
+//   };
+// };

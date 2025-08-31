@@ -1,76 +1,38 @@
-"use client";
-
 import React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Home, Building, Car, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 
-import { Button } from "@/app/components/ui/button";
+import NavBar from "./navbar";
 
-interface InterestedLayoutProps {
+export default function InterestedLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-const InterestedLayout = ({ children }: InterestedLayoutProps) => {
-  const pathname = usePathname();
-
-  const navItems = [
-    { path: "/interested", label: "Overview", icon: Heart },
-    { path: "/interested/rooms", label: "Rooms", icon: Home },
-    { path: "/interested/vehicles", label: "Vehicles", icon: Car },
-    { path: "/interested/properties", label: "Properties", icon: Building },
-  ];
-
+}) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
-      {/* Header */}
+    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-green-50 to-emerald-50">
       <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900">
-              My Interested Items
-            </h1>
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-9 h-9 bg-gradient-to-br from-green-600 to-green-700 rounded-xl flex items-center justify-center shadow-lg">
+                <Heart className="w-6 h-6 text-white" />
+              </div>
+
+              <h1 className="text-2xl font-bold text-gray-900">
+                My Interested Listings
+              </h1>
+            </div>
+
             <p className="text-gray-600 mt-2">
-              Manage your saved listings and favorites
+              Manage your interested listings and preferences
             </p>
           </div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-1 overflow-x-auto">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.path;
+      <NavBar />
 
-              return (
-                <Link key={item.path} href={item.path}>
-                  <Button
-                    variant={isActive ? "default" : "ghost"}
-                    className={`flex items-center gap-2 whitespace-nowrap ${
-                      isActive
-                        ? "hover:bg-green-200 text-white"
-                        : "text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    <Icon className="w-4 h-4" />
-                    {item.label}
-                  </Button>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </div>
+      {children}
     </div>
   );
-};
-
-export default InterestedLayout;
+}

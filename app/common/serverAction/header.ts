@@ -12,8 +12,8 @@ export const getAutheticationHeader = async (): Promise<
 
   return {
     headers: {
-      Cookie: `next-auth.session-token=${sessionToken}`,
       "Cache-Control": "no-cache",
+      Cookie: `next-auth.session-token=${sessionToken}`,
     },
   };
 };

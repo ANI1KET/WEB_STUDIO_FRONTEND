@@ -18,6 +18,7 @@ import { getRoomCitiesLocationDetails } from "./serverAction";
 import RoomsByCity from "@/app/components/home/RoomsByCity";
 import SmartSearch from "@/app/components/home/SmartSearch";
 import ServiceSection from "@/app/components/home/ServiceSection";
+// import AdvertisementSection from "./common/ui/AdvertisementSection";
 
 const Home = async () => {
   // const headersList = await headers();
@@ -103,6 +104,11 @@ const Home = async () => {
         </div>
 
         <ServiceSection />
+
+        {/* <div className="hidden md:block">
+          <AdvertisementSection />
+        </div> */}
+
         <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
 
         {/* <PropertiesByType /> */}

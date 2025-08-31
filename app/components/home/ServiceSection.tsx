@@ -223,7 +223,7 @@ const ServiceSection = () => {
   const services = getServicesForCategory(selectedCategory);
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-green-50/50 to-emerald-50/50">
+    <section className="py-12 px-4 bg-gradient-to-br from-green-50/50 to-emerald-50/50">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-green-600 mb-3">
