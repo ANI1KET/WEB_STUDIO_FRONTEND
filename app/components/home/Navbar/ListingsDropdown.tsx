@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { Permission } from "@prisma/client";
+import { ChevronDown, Plus } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Plus, Lock } from "lucide-react";
 
 import { listingItems } from "@/app/common/config/listings";
 
@@ -12,13 +12,11 @@ import { Button } from "@/app/components/ui/button";
 interface ListingsDropdownProps {
   scrolled: boolean;
   isAuthenticated: boolean;
-  userSubscriptions?: Permission[];
 }
 
 const ListingsDropdown = ({
   scrolled,
   isAuthenticated,
-  userSubscriptions = [],
 }: ListingsDropdownProps) => {
   const navigate = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -42,12 +40,10 @@ const ListingsDropdown = ({
     };
   }, [isOpen]);
 
-  const handleListingClick = (category: Permission, hasAccess: boolean) => {
-    if (hasAccess) {
-      navigate.push(`/list/${category}`);
-    } else {
-      navigate.push(`/subscription/${category}`);
-    }
+  const handleListingClick = (category: Permission) => {
+    navigate.push(
+      `https://list.${process.env.NEXT_PUBLIC_BASE_DOMAIN}/${category}`
+    );
 
     setIsOpen(false);
   };
@@ -114,13 +110,11 @@ const ListingsDropdown = ({
       >
         <div className="bg-white border border-gray-200/50 shadow-2xl rounded-xl overflow-hidden backdrop-blur-xl w-72 mt-1">
           {listingItems.map((item) => {
-            const hasAccess = userSubscriptions.includes(item.key);
-
             return (
               <div
                 key={item.key}
                 className="hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 focus:bg-gradient-to-r focus:from-green-50 focus:to-emerald-50 transition-all duration-200 cursor-pointer p-3 text-gray-700 hover:text-green-700 group border-b border-gray-100 last:border-b-0"
-                onClick={() => handleListingClick(item.key, hasAccess)}
+                onClick={() => handleListingClick(item.key)}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center flex-1">
@@ -128,21 +122,12 @@ const ListingsDropdown = ({
                     <div>
                       <div className="font-medium flex items-center gap-2">
                         {item.label}
-                        {!hasAccess && (
-                          <Lock size={14} className="text-orange-500" />
-                        )}
                       </div>
                       <div className="text-xs text-gray-500 mt-1">
                         {item.description}
                       </div>
                     </div>
                   </div>
-
-                  {!hasAccess && (
-                    <span className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">
-                      Upgrade
-                    </span>
-                  )}
                 </div>
               </div>
             );

@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import { Info } from "lucide-react";
 import { Role } from "@prisma/client";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -28,8 +29,9 @@ import { upload_Video } from "../../components/list/room/utils/uploadUtils";
 import { useSettingNumberVerificationFlow } from "@/app/common/hooks/account/account";
 
 import { Button } from "@/app/components/ui/button";
-import PhoneNumberDialog from "@/app/common/ui/NumberDialog";
 import InterestOTPDialog from "@/app/common/ui/OTPDialog";
+import PhoneNumberDialog from "@/app/common/ui/NumberDialog";
+import RequiredInfoGuide from "@/app/components/list/room/RequiredInfoGuide";
 import MediaUploadSection from "@/app/components/list/room/MediaUploadSection";
 import RoomDetailsSection from "@/app/components/list/room/RoomDetailsSection";
 import OwnerDetailsSection from "@/app/components/list/room/OwnerDetailsSection";
@@ -63,6 +65,8 @@ const Room = () => {
   const { furnishingStatus, setFurnishingStatus } = useFurnishingFlow();
   const { selectedAmenities, handleAmenityChange } = useAmenitiesFlow();
   const { selectedImages, handleImageUpload, removeImage } = useMediaFlow();
+
+  const [showGuide, setShowGuide] = useState(false);
 
   const {
     watch,
@@ -202,6 +206,21 @@ const Room = () => {
           </Button>
         </div>
       </form>
+
+      <div className="fixed bottom-6 right-6 z-40">
+        <Button
+          onClick={() => setShowGuide(true)}
+          className="bg-gradient-to-r from-green-300 to-green-400 hover:from-green-400 hover:to-green-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-5 py-3 rounded-full border-2 border-white/30"
+        >
+          <Info className="h-4 w-4 mr-1" />
+          Listing Guide
+        </Button>
+      </div>
+
+      <RequiredInfoGuide
+        isOpen={showGuide}
+        onClose={() => setShowGuide(false)}
+      />
 
       {isPhoneDialogOpen && (
         <PhoneNumberDialog

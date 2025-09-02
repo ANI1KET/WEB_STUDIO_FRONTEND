@@ -3,7 +3,6 @@
 import {
   User,
   Heart,
-  Rocket,
   GitCompare,
   CircleUserRound,
   LayoutDashboard,
@@ -13,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 import {
-  canPromote,
   canAccessDashboard,
   canAccessInterested,
 } from "../../../common/config/authorization";
@@ -85,19 +83,6 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
             Manage your account and preferences
           </p>
         </div>
-
-        <DropdownMenuItem
-          onClick={() => router.push("/compare")}
-          className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-orange-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
-        >
-          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg group-hover:from-orange-200 group-hover:to-orange-300 transition-all duration-200 shadow-sm">
-            <GitCompare size={16} className="text-orange-600" />
-          </div>
-          <div className="flex-1">
-            <span className="font-medium text-gray-800">Compare Listings</span>
-            <p className="text-xs text-gray-500">Compare saved listings</p>
-          </div>
-        </DropdownMenuItem>
 
         {session ? (
           <div>
@@ -175,7 +160,7 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
               </DropdownMenuItem>
             )}
 
-            {canPromote(session.user.role) && (
+            {/* {canPromote(session.user.role) && (
               <DropdownMenuItem
                 onClick={() =>
                   window.open(
@@ -195,7 +180,7 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
                   <p className="text-xs text-gray-500">Boost visibility</p>
                 </div>
               </DropdownMenuItem>
-            )}
+            )} */}
           </div>
         ) : (
           <>
@@ -228,6 +213,19 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
             </DropdownMenuItem>
           </>
         )}
+
+        <DropdownMenuItem
+          onClick={() => router.push("/compare")}
+          className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-green-50 hover:to-orange-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+        >
+          <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg group-hover:from-orange-200 group-hover:to-orange-300 transition-all duration-200 shadow-sm">
+            <GitCompare size={16} className="text-orange-600" />
+          </div>
+          <div className="flex-1">
+            <span className="font-medium text-gray-800">Compare Listings</span>
+            <p className="text-xs text-gray-500">Compare saved listings</p>
+          </div>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -25,7 +25,7 @@ export async function getRoomCitiesLocationDetails(city: string): Promise<{
   roomCityDetails: RoomData[];
   roomCitiesLocations: CategoryCitiesLocations;
 }> {
-  const url = `${process.env.BASE_URL}/room-service/aggregator?city=${city}&limit=${PAGE_SIZE}`;
+  const url = `${process.env.SERVER_BASE_URL}/room-service/aggregator?city=${city}&limit=${PAGE_SIZE}`;
 
   try {
     const res = await fetch(url, {

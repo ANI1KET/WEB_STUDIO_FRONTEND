@@ -112,21 +112,13 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center ">
-            <ListingsDropdown
-              scrolled={scrolled}
-              isAuthenticated={!!data}
-              userSubscriptions={data?.user.permission}
-            />
+            <ListingsDropdown scrolled={scrolled} isAuthenticated={!!data} />
 
             <AccountDropdown scrolled={scrolled} />
           </div>
 
           <div className="md:hidden flex items-center">
-            <ListingsDropdown
-              scrolled={scrolled}
-              isAuthenticated={!!data}
-              userSubscriptions={data?.user.permission}
-            />
+            <ListingsDropdown scrolled={scrolled} isAuthenticated={!!data} />
 
             <MobileMenuButton
               scrolled={scrolled}
