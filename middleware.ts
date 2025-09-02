@@ -13,43 +13,36 @@ import {
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function middleware(req: NextRequest) {
-  const token = (await getToken({ req, secret })) as unknown as {
+  const pathname = req.nextUrl.pathname;
+
+  const token = (await getToken({ req, secret })) as {
     role: Role;
     permission: Permission[];
   };
 
-  if (!token) {
+  if (token && pathname.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (!token && !pathname.startsWith("/auth")) {
     const loginUrl = new URL("/auth/login", req.url);
     loginUrl.searchParams.set("callbackUrl", encodeURIComponent(req.url));
     return NextResponse.redirect(loginUrl);
   }
 
-  const pathSegments = req.nextUrl.pathname.split("/");
+  const pathSegments = pathname.split("/");
   const secondSegment = pathSegments[2];
 
-  if (
-    req.nextUrl.pathname.startsWith("/list") &&
-    !hasPermission(secondSegment, token.permission)
-  ) {
+  if (pathname.startsWith("/interested") && !canRouteInterested(token.role)) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (pathname.startsWith("/promote") && !canRoutePromote(token.role)) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
   if (
-    req.nextUrl.pathname.startsWith("/interested") &&
-    !canRouteInterested(token.role)
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (
-    req.nextUrl.pathname.startsWith("/promote") &&
-    !canRoutePromote(token.role)
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (
-    req.nextUrl.pathname.startsWith("/dashboard") &&
+    pathname.startsWith("/dashboard") &&
     !canRouteDashboard(token.role, secondSegment)
   ) {
     return NextResponse.redirect(new URL("/", req.url));
@@ -65,7 +58,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    // "/list/:path*",
+    "/auth/:path*",
     "/account/:path*",
     "/promote/:path*",
     "/dashboard/:path*",
