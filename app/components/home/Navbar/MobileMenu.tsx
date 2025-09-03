@@ -179,7 +179,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   description="Manage shared listings"
                   onClick={() =>
                     window.open(
-                      `https://dashboard.${
+                      `https://shared.${
                         process.env.NEXT_PUBLIC_BASE_DOMAIN
                       }/${session.user.role?.toLowerCase()}`,
                       "_blank"
