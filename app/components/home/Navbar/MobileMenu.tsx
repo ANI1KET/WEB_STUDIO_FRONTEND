@@ -4,7 +4,7 @@ import {
   X,
   User,
   Heart,
-  Rocket,
+  Settings,
   GitCompare,
   CircleUserRound,
   LayoutDashboard,
@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
 import {
-  canPromote,
+  // canPromote,
   canAccessDashboard,
   canAccessInterested,
 } from "../../../common/config/authorization";
@@ -138,13 +138,6 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
               </h3>
             </div>
 
-            <MobileNavItem
-              label="Compare Listings"
-              description="Compare saved listings"
-              onClick={() => router.push("/compare")}
-              icon={<GitCompare size={18} className="text-orange-600" />}
-            />
-
             {session ? (
               <>
                 <MobileNavItem
@@ -181,6 +174,20 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   />
                 )}
 
+                <MobileNavItem
+                  label="Shared Listings"
+                  description="Manage shared listings"
+                  onClick={() =>
+                    window.open(
+                      `https://dashboard.${
+                        process.env.NEXT_PUBLIC_BASE_DOMAIN
+                      }/${session.user.role?.toLowerCase()}`,
+                      "_blank"
+                    )
+                  }
+                  icon={<Settings size={18} className="text-purple-600" />}
+                />
+
                 {canAccessInterested(session.user.role) && (
                   <MobileNavItem
                     label="Interested Listings"
@@ -195,7 +202,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   />
                 )}
 
-                {canPromote(session.user.role) && (
+                {/* {canPromote(session.user.role) && (
                   <MobileNavItem
                     label="Promote Listings"
                     description="Boost visibility"
@@ -207,7 +214,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                     }
                     icon={<Rocket size={18} className="text-green-600" />}
                   />
-                )}
+                )} */}
               </>
             ) : (
               <>
@@ -219,10 +226,23 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                 />
 
                 <MobileNavItem
+                  label="Shared Listings"
+                  description="Manage shared listings"
+                  onClick={() => router.push("/auth/login")}
+                  icon={<Heart size={18} className="text-red-600" />}
+                />
+                <MobileNavItem
                   label="Interested Listings"
                   description="Your favorites"
                   onClick={() => router.push("/auth/login")}
                   icon={<Heart size={18} className="text-red-600" />}
+                />
+
+                <MobileNavItem
+                  label="Compare Listings"
+                  description="Compare saved listings"
+                  onClick={() => router.push("/compare")}
+                  icon={<GitCompare size={18} className="text-orange-600" />}
                 />
               </>
             )}

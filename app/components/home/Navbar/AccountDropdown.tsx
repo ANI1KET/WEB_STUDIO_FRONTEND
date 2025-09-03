@@ -3,6 +3,7 @@
 import {
   User,
   Heart,
+  Settings,
   GitCompare,
   CircleUserRound,
   LayoutDashboard,
@@ -136,6 +137,28 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
               </DropdownMenuItem>
             )}
 
+            <DropdownMenuItem
+              onClick={() =>
+                window.open(
+                  `https://shared.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+                  "_blank"
+                )
+              }
+              className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
+                <Settings size={16} className="text-red-600" />
+              </div>
+
+              <div className="flex-1">
+                <span className="font-medium text-gray-800">
+                  Shared Listings
+                </span>
+
+                <p className="text-xs text-gray-500">Manage shared listings</p>
+              </div>
+            </DropdownMenuItem>
+
             {canAccessInterested(session.user.role) && (
               <DropdownMenuItem
                 onClick={() =>
@@ -191,6 +214,7 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
               <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg group-hover:from-blue-200 group-hover:to-blue-300 transition-all duration-200 shadow-sm">
                 <User size={16} className="text-blue-600" />
               </div>
+
               <div className="flex-1">
                 <span className="font-medium text-gray-800">Login</span>
                 <p className="text-xs text-gray-500">Access your account</p>
@@ -204,6 +228,23 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
               <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
                 <Heart size={16} className="text-red-600" />
               </div>
+
+              <div className="flex-1">
+                <span className="font-medium text-gray-800">
+                  Shared Listings
+                </span>
+                <p className="text-xs text-gray-500">Manage shared listings</p>
+              </div>
+            </DropdownMenuItem>
+
+            <DropdownMenuItem
+              onClick={() => router.push("/auth/login")}
+              className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
+            >
+              <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
+                <Heart size={16} className="text-red-600" />
+              </div>
+
               <div className="flex-1">
                 <span className="font-medium text-gray-800">
                   Interested Listings

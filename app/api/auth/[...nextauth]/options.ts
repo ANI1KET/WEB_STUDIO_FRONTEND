@@ -51,6 +51,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 24 hours for session expiry (cookie will follow this setting)
+    // updateAge: 6 * 60 * 60, // touch session every 6h
   },
   jwt: {
     maxAge: 24 * 60 * 60, // 24 hours maxAge for JWT specifically
