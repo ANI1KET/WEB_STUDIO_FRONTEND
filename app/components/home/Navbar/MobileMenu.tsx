@@ -192,12 +192,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   <MobileNavItem
                     label="Interested Listings"
                     description="Your favorites"
-                    onClick={() =>
-                      window.open(
-                        `https://interested.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
-                        "_blank"
-                      )
-                    }
+                    onClick={() => router.push("/interested")}
                     icon={<Heart size={18} className="text-red-600" />}
                   />
                 )}

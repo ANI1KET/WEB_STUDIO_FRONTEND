@@ -161,12 +161,7 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
 
             {canAccessInterested(session.user.role) && (
               <DropdownMenuItem
-                onClick={() =>
-                  window.open(
-                    `https://interested.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
-                    "_blank"
-                  )
-                }
+                onClick={() => router.push("/interested")}
                 className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
               >
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-red-100 to-red-200 rounded-lg group-hover:from-red-200 group-hover:to-red-300 transition-all duration-200 shadow-sm">
