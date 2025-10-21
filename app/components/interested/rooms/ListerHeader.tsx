@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 import { Lister } from "@/app/types/types";
 
@@ -35,10 +35,14 @@ const ListerHeader: React.FC<ListerHeaderProps> = ({
   // onChatWithLister,
   onToggleExpanded,
 }) => {
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleViewMoreListings = () => {
-    router.push(`/lister/${lister.id}/rooms`);
+    window.open(
+      `https://listing.${process.env.NEXT_PUBLIC_BASE_DOMAIN}`,
+      "_blank"
+    );
+    // router.push(`/lister/${lister.id}/rooms`);
   };
 
   return (

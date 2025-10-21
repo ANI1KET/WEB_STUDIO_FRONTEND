@@ -216,7 +216,7 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
               </div>
             </DropdownMenuItem>
 
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => router.push("/auth/login")}
               className="flex items-center space-x-2 hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 rounded-lg transition-all duration-200 my-1 px-3 py-2.5 group cursor-pointer"
             >
@@ -230,7 +230,7 @@ const AccountDropdown = ({ scrolled = false }: AccountDropdownProps) => {
                 </span>
                 <p className="text-xs text-gray-500">Manage shared listings</p>
               </div>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
 
             <DropdownMenuItem
               onClick={() => router.push("/auth/login")}

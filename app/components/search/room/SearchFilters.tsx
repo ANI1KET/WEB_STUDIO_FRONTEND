@@ -9,7 +9,7 @@ import {
   formatCapacity,
 } from "@/app/lib/formatters";
 import {
-  postedBy,
+  // postedBy,
   roomType,
   roomAmenities,
   furnishingStatus,
@@ -37,10 +37,10 @@ const RoomFilterComponent = () => {
     () => new Set(roomSearchData.amenities ?? []),
     [roomSearchData.amenities]
   );
-  const roomPostedBySet = React.useMemo(
-    () => new Set(roomSearchData.postedBy ?? []),
-    [roomSearchData.postedBy]
-  );
+  // const roomPostedBySet = React.useMemo(
+  //   () => new Set(roomSearchData.postedBy ?? []),
+  //   [roomSearchData.postedBy]
+  // );
 
   return (
     <div className="flex flex-col gap-2">
@@ -163,9 +163,9 @@ const RoomFilterComponent = () => {
         </div>
       </div>
 
-      <Divider />
+      {/* <Divider /> */}
 
-      <div className="text-center">
+      {/* <div className="text-center">
         <Label className="">Posted By</Label>
         <div className="w-full flex">
           {postedBy.map((value) => (
@@ -187,7 +187,7 @@ const RoomFilterComponent = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

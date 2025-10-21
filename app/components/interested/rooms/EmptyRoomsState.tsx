@@ -45,8 +45,10 @@ const EmptyRoomsState = () => {
                 <Link key={index} href={suggestion.link}>
                   <Card className="group hover:shadow-md transition-all duration-300 border-gray-200 hover:border-green-300 cursor-pointer">
                     <CardContent className="p-4">
-                      <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-2 group-hover:bg-green-600 transition-colors duration-300">
-                        <Icon className="w-6 h-6 text-green-600 group-hover:text-white transition-colors duration-300" />
+                      <div className="flex items-center justify-center mb-2">
+                        <span className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300">
+                          <Icon className="w-6 h-6 text-green-600 group-hover:text-white transition-colors duration-300" />
+                        </span>
                       </div>
 
                       <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-green-600 transition-colors">

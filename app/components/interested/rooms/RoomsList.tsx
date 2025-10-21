@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Eye,
+  // Eye,
   Bed,
   Bath,
   Star,
@@ -334,7 +334,7 @@ const CompactRoomCard: React.FC<CompactRoomCardProps> = ({
           </div>
         </div>
 
-        <div className="flex gap-3 pt-2">
+        {/* <div className="flex gap-3 pt-2">
           <Button
             size="sm"
             className="flex-1  bg-gradient-to-r from-green-200/75 to-emerald-200/75 shadow-lg"
@@ -342,7 +342,7 @@ const CompactRoomCard: React.FC<CompactRoomCardProps> = ({
             <Eye className="w-4 h-4 mr-2" />
             View Details
           </Button>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

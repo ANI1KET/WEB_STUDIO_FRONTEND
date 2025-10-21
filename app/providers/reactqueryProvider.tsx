@@ -17,7 +17,7 @@ import {
 export const searchRoomData = makeVar<RoomSearchQueries>({
   city: "",
   roomType: [],
-  postedBy: [],
+  // postedBy: [],
   amenities: [],
   locations: [],
   price: undefined,

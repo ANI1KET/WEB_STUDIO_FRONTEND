@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 
 const PROMOTE = "promote"; // Means the user can promote lister's listing
 const DASHBOARD = "dashboard"; // Means the user can access the dashboard
+const CAN_BOOK = "can_book"; // Means the user who can book their listed listings
 const PROMOTION = "promotion"; // Means the user can promote their listing
 const INTERESTED = "interested"; // Means the user can show interest in a listing
 const SCHEDULE_VISIT = "schedule_visit"; // Means the user whose posted listings can be scheduled visit
@@ -11,6 +12,7 @@ const SHOW_INTERESTED = "show_interested"; // Means the user whose posted listin
 // AUTHORIZATION
 const rolePermissions: Record<Role, string[]> = {
   BROKER: [
+    CAN_BOOK,
     DASHBOARD,
     PROMOTION,
     INTERESTED,
@@ -19,21 +21,26 @@ const rolePermissions: Record<Role, string[]> = {
     SHOW_INTERESTED,
   ],
   ADMIN: [DASHBOARD],
-  OWNER: [DASHBOARD, INTERESTED, PROMOTION, SHOW_INTERESTED],
   USER: [PROMOTE, INTERESTED, LISTING_SERVICE, SCHEDULE_VISIT],
+  OWNER: [CAN_BOOK, DASHBOARD, INTERESTED, PROMOTION, SHOW_INTERESTED],
 };
 
 //
 export const canBook = ({
+  role,
   userId,
   ownerId,
   listerId,
 }: {
+  role: Role;
   userId: string;
   ownerId: string;
   listerId: string;
 }): boolean => {
-  return listerId === userId || ownerId === userId;
+  return (
+    rolePermissions[role].includes(CAN_BOOK) &&
+    (listerId === userId || ownerId === userId)
+  );
 };
 
 export const canPromote = (role: Role | undefined): boolean => {
@@ -52,9 +59,9 @@ export const canShowInterest = ({
   listerId: string;
 }): boolean => {
   return (
+    rolePermissions[postedBy].includes(SHOW_INTERESTED) &&
     ownerId !== userId &&
-    listerId !== userId &&
-    rolePermissions[postedBy as Role].includes(SHOW_INTERESTED)
+    listerId !== userId
   );
 };
 

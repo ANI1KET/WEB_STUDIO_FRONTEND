@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useSession } from "next-auth/react";
+import { Session } from "next-auth";
 import { useState, useEffect, useCallback } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
@@ -15,8 +15,7 @@ const AccountDropdown = dynamic(() => import("./Navbar/AccountDropdown"));
 const MobileMenuButton = dynamic(() => import("./Navbar/MobileMenuButton"));
 const ListingsDropdown = dynamic(() => import("./Navbar/ListingsDropdown"));
 
-const Navbar = () => {
-  const { data } = useSession();
+const Navbar = ({ session }: { session: Session | null }) => {
   const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll();
@@ -112,13 +111,13 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center ">
-            <ListingsDropdown scrolled={scrolled} isAuthenticated={!!data} />
+            <ListingsDropdown scrolled={scrolled} isAuthenticated={!!session} />
 
             <AccountDropdown scrolled={scrolled} />
           </div>
 
           <div className="md:hidden flex items-center">
-            <ListingsDropdown scrolled={scrolled} isAuthenticated={!!data} />
+            <ListingsDropdown scrolled={scrolled} isAuthenticated={!!session} />
 
             <MobileMenuButton
               scrolled={scrolled}

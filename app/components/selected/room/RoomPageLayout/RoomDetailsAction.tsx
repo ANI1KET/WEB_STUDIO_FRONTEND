@@ -59,6 +59,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
   // secondaryContact,
 }) => {
   const router = useRouter();
+  const role = session?.user.role as Role;
   const userId = session?.user.userId as string;
 
   const {
@@ -258,23 +259,29 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
           </div>
         </div>
 
-        {session && canBook({ userId, ownerId, listerId }) && (
-          <div className="p-2">
-            <button
-              // onClick={handleBookRoom}
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-lg transition-colors flex items-center justify-center"
-            >
-              <svg
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                className="w-5 h-5 mr-2"
+        {session &&
+          canBook({
+            role,
+            userId,
+            ownerId,
+            listerId,
+          }) && (
+            <div className="p-2">
+              <button
+                // onClick={handleBookRoom}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg text-lg transition-colors flex items-center justify-center"
               >
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-              </svg>
-              BOOK ROOM
-            </button>
-          </div>
-        )}
+                <svg
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  className="w-5 h-5 mr-2"
+                >
+                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                </svg>
+                BOOK ROOM
+              </button>
+            </div>
+          )}
 
         {session ? (
           canAcessScheduleVisit({

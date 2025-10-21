@@ -220,12 +220,13 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
                   icon={<User size={18} className="text-blue-600" />}
                 />
 
-                <MobileNavItem
+                {/* <MobileNavItem
                   label="Shared Listings"
                   description="Manage shared listings"
                   onClick={() => router.push("/auth/login")}
                   icon={<Heart size={18} className="text-red-600" />}
-                />
+                /> */}
+
                 <MobileNavItem
                   label="Interested Listings"
                   description="Your favorites"

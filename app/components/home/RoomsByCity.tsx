@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useToast } from "@/app/common/hooks/use-toast";
 
-import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constants";
 import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
@@ -104,10 +103,21 @@ const RoomsByCity: React.FC<{
           ) : (
             <>
               {data?.pages.map((page) =>
-                page.map((room) => (
-                  <RoomCard key={room.id} room={room as RoomData} />
-                ))
+                page.map((room) => <RoomCard key={room.id} room={room} />)
               )}
+
+              {/* <div className="grid grid-rows-2 gap-4">
+                {data?.pages.map((page, pageIndex) =>
+                  page.map((room, roomIndex) => {
+                    const i = pageIndex * page.length + roomIndex;
+                    return (
+                      <div key={room.id} style={{ gridRow: (i % 2) + 1 }}>
+                        <RoomCard room={room} />
+                      </div>
+                    );
+                  })
+                )}
+              </div> */}
 
               <div ref={observerRef} className="h-1 "></div>
               {isFetchingNextPage && (

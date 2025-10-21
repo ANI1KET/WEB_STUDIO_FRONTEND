@@ -39,6 +39,7 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
               videos={room.videos}
               roomTitle={room.title}
             />
+
             <RoomStatus verified={room.verified} available={room.available} />
           </div>
 

@@ -1,4 +1,4 @@
-import { Role } from "@prisma/client";
+// import { Role } from "@prisma/client";
 
 import {
   RoomType,
@@ -11,7 +11,7 @@ import {
 type NumberOrRange = number | number[];
 
 export type RoomFilters = Partial<{
-  postedBy: Role[];
+  // postedBy: Role[];
   verified: boolean;
   roomType: RoomType[];
   price: NumberOrRange;

@@ -48,9 +48,9 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     queryKey: [`room${roomData?.city}`],
     queryFn: ({ pageParam = 0 }) =>
       getCategoryDetails({
-        city,
         category: "room",
         offset: pageParam,
+        city: roomData?.city,
       }),
     getNextPageParam: (lastPage, allPages) => {
       const currentOffset = allPages.length * PAGE_SIZE;
@@ -219,9 +219,7 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
             ) : (
               <>
                 {data?.pages.map((page) =>
-                  page.map((room) => (
-                    <RoomCard key={room.id} room={room as RoomData} />
-                  ))
+                  page.map((room) => <RoomCard key={room.id} room={room} />)
                 )}
 
                 <div ref={observerRef} className="h-1 "></div>
