@@ -1,13 +1,17 @@
 import "next-auth";
 import { DefaultSession } from "next-auth";
-import { Permission, Role } from "@prisma/client";
+import { Gender, Permission, Role } from "@prisma/client";
 
 declare module "next-auth" {
   interface User {
     // _id?: string;
+    age?: number;
     role?: string;
+    gender?: Gender;
     userId?: string;
     number?: string;
+    address?: string;
+    documentId?: string;
     promoting?: Permission[];
     permission?: Permission[];
     servicesOffered?: Permission[];
@@ -16,8 +20,12 @@ declare module "next-auth" {
     user: {
       id?: string;
       role?: Role;
+      age?: number;
       userId?: string;
       number?: string;
+      gender?: Gender;
+      address?: string;
+      documentId?: string;
       access_token?: string;
       refresh_token?: string;
       promoting?: Permission[];

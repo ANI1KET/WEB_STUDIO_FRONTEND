@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import { NextAuthOptions } from "next-auth";
-import { Permission, Role } from "@prisma/client";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -119,12 +118,16 @@ export const authOptions: NextAuthOptions = {
 
           const {
             id,
+            age,
             name,
             role,
             email,
+            gender,
             number,
+            address,
             promoting,
             permission,
+            documentId,
             servicesOffered,
           } = user;
 
@@ -136,7 +139,11 @@ export const authOptions: NextAuthOptions = {
             promoting,
             permission,
             servicesOffered,
+            age: age ?? undefined,
+            gender: gender ?? undefined,
             number: number ?? undefined,
+            address: address ?? undefined,
+            documentId: documentId ?? undefined,
           };
         } catch (error: unknown) {
           if (error instanceof Error) {
@@ -161,12 +168,19 @@ export const authOptions: NextAuthOptions = {
               email: user.email as string,
             },
           });
-          user.role = userDetails.role;
-          user.userId = userDetails.id;
-          user.promoting = userDetails.promoting;
-          user.permission = userDetails.permission;
-          user.number = userDetails.number as string;
-          user.servicesOffered = userDetails.servicesOffered;
+
+          Object.assign(user, {
+            age: userDetails.age,
+            role: userDetails.role,
+            userId: userDetails.id,
+            number: userDetails.number,
+            gender: userDetails.gender,
+            address: userDetails.address,
+            promoting: userDetails.promoting,
+            permission: userDetails.permission,
+            documentId: userDetails.documentId,
+            servicesOffered: userDetails.servicesOffered,
+          });
 
           return true;
         } catch (error) {
@@ -190,15 +204,21 @@ export const authOptions: NextAuthOptions = {
     // },
     async jwt({ user, token, trigger, session }) {
       if (user) {
-        token.id = user.id?.toString();
-        token.name = user.name;
-        token.role = user.role;
-        token.email = user.email;
-        token.userId = user.userId;
-        token.number = user.number;
-        token.promoting = user.promoting;
-        token.permission = user.permission;
-        token.servicesOffered = user.servicesOffered;
+        Object.assign(token, {
+          id: user.id,
+          age: user.age,
+          name: user.name,
+          role: user.role,
+          email: user.email,
+          number: user.number,
+          userId: user.userId,
+          gender: user.gender,
+          address: user.address,
+          promoting: user.promoting,
+          permission: user.permission,
+          documentId: user.documentId,
+          servicesOffered: user.servicesOffered,
+        });
 
         // if (account?.provider === 'google') {
         //   token.refresh_token = account.refresh_token;
@@ -213,15 +233,21 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user.role = token.role as Role;
-      session.user.id = token.id as string | undefined;
-      session.user.number = token.number as string | undefined;
-      session.user.userId = token.userId as string | undefined;
-      session.user.promoting = token.promoting as Permission[] | [];
-      session.user.permission = token.permission as Permission[] | [];
-      session.user.servicesOffered = token.servicesOffered as Permission[] | [];
-      // session.user.refresh_token = token?.refresh_token;
-      // session.user.access_token = token?.access_token;
+      Object.assign(session.user, {
+        id: token.id,
+        age: token.age,
+        role: token.role,
+        userId: token.userId,
+        number: token.number,
+        gender: token.gender,
+        address: token.address,
+        promoting: token.promoting,
+        documentId: token.documentId,
+        permission: token.permission,
+        servicesOffered: token.servicesOffered,
+        // access_token: token?.access_token,
+        // refresh_token: token?.refresh_token,
+      });
 
       return session;
     },

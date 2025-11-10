@@ -33,7 +33,12 @@ const CitiesSection = ({
     if (trimmedCity && !alreadyExists) {
       setValue("supportedCities", [
         ...cities,
-        { city: trimmedCity, locations: [] },
+        {
+          city:
+            trimmedCity.charAt(0).toUpperCase() +
+            trimmedCity.slice(1).toLowerCase(),
+          locations: [],
+        },
       ]);
       setSelectedCity("");
       onEditStart("");

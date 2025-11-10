@@ -1,3 +1,5 @@
+"use server";
+
 import React from "react";
 import { getServerSession } from "next-auth";
 
@@ -33,8 +35,8 @@ const AccountLayout = async () => {
             <div className="p-6 bg-white border border-green-200 rounded-md text-center">
               <p className="text-green-700">
                 As a <span className="font-medium">{role}</span>, you do not
-                provide listings directly. You can continue to view and manage
-                your own listings from your dashboard.
+                provide listings service directly. You can continue to view and
+                manage your own listings from your dashboard.
               </p>
             </div>
           )}

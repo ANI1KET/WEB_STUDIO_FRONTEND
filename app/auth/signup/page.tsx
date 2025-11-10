@@ -6,8 +6,11 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, User, Mail, Phone, Lock } from "lucide-react";
 
+import {
+  OTP_EXPIRATION_TIME,
+  NEPALI_NUMBERS_VALIDATION,
+} from "@/app/lib/constants";
 import { SignUpFormData } from "../Schema";
-import { OTP_EXPIRATION_TIME } from "@/app/lib/constants";
 import { useOtpHandler } from "@/app/common/hooks/account/otp";
 
 import {
@@ -153,8 +156,8 @@ const Signup = () => {
                 {...register("number", {
                   required: "Phone number is required",
                   pattern: {
-                    value: /^\d{10}$/,
-                    message: "Phone number must be exactly 10 digits",
+                    value: NEPALI_NUMBERS_VALIDATION,
+                    message: "Enter valid Phone number",
                   },
                 })}
                 onInput={(e) => {

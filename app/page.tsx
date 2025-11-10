@@ -15,8 +15,9 @@ import {
 } from "./types/types";
 import { getRoomCitiesLocationDetails } from "./serverAction";
 
-import RoomsByCity from "@/app/components/home/RoomsByCity";
+// import RoomsByCity from "@/app/components/home/RoomsByCity";
 import SmartSearch from "@/app/components/home/SmartSearch";
+import RentalSection from "./components/home/RentalSection";
 import ServiceSection from "@/app/components/home/ServiceSection";
 // import AdvertisementSection from "./common/ui/AdvertisementSection";
 
@@ -67,7 +68,7 @@ const Home = async () => {
   // );
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <section className="flex-grow bg-gradient-to-br from-green-50 via-green-100 to-emerald-50">
+      <section className="flex-grow">
         <div
           style={{
             backgroundSize: "103.5% 200%",
@@ -117,7 +118,8 @@ const Home = async () => {
           <AdvertisementSection />
         </div> */}
 
-        <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} />
+        {/* <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} /> */}
+        <RentalSection city={city} cities={Object.keys(roomCitiesLocations)} />
 
         {/* <PropertiesByType /> */}
         {/* <VehiclesByCity /> */}

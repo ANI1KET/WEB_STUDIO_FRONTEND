@@ -87,10 +87,10 @@ const serviceMap: Record<Category, Service[]> = {
       icon: Truck,
       buttonTitle: "Book Shifter",
       title: "Room Shifting Assistance",
-      description:
-        "Professional room shifting with secure packing, careful furniture handling, and organized transport of belongings",
       hoverDescription:
         "Complete shifitng service ensuring appliances setup, furniture arrangement, and safe delivery to your new room",
+      description:
+        "Professional room shifting with secure packing, careful furniture handling, and organized transport of belongings",
     },
     {
       id: 2,
@@ -189,15 +189,15 @@ const categoryTitleMap: Record<Category, string> = {
 };
 
 const categoryDescriptionMap: Record<Category, string> = {
-  vehicle:
-    "Complete vehicle services in Nepal, including expert buying and selling support, professional brokerage, reliable maintenance, secure transportation, and safe delivery",
-  property:
-    "Comprehensive property solutions, providing professional brokerage, property shifting, management services, and expert guidance for buying, selling, and investing in homes and lands",
   listing:
     "Professional listing services connecting verified clients for rooms, houses, hostels, lands, and vehicles, offering reliable support for both owners and seekers",
+  room: "Complete room services covering finding, packing, cleaning, organizing, and tenant management, with expert assistance to ensure smooth and efficient operations",
+  vehicle:
+    "Complete vehicle services in Nepal, including expert buying and selling support, professional brokerage, reliable maintenance, secure transportation, and safe delivery",
   general:
     "Full-service moving and delivery solutions, including expert home and office shifting, store-to-door delivery, and on-demand professional helpers for all relocation needs",
-  room: "Complete room services covering finding, packing, cleaning, organizing, and tenant management, with expert assistance to ensure smooth and efficient operations",
+  property:
+    "Comprehensive property solutions, providing professional brokerage, property shifting, management services, and expert guidance for buying, selling, and investing in homes and lands",
 };
 // const categoryDescriptionMap: Record<Category, string> = {
 //   vehicle:
@@ -223,11 +223,11 @@ const ServiceSection = () => {
   const services = getServicesForCategory(selectedCategory);
 
   return (
-    <section className="py-12 px-4 bg-gradient-to-br from-green-50/50 to-emerald-50/50">
+    <section className="py-12 px-4">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-green-600 mb-3">
-            Explore AfnoSansaar {getCategoryTitle(selectedCategory)}
+            Explore AfnoProperty {getCategoryTitle(selectedCategory)}
           </h2>
 
           <p className="text-slate-600 max-w-2xl mx-auto text-sm md:text-base">
@@ -236,15 +236,15 @@ const ServiceSection = () => {
         </div>
 
         <div className="flex justify-center mb-8">
-          <div className="flex flex-wrap justify-center bg-slate-100 rounded-lg border border-green-300">
+          <div className="flex flex-wrap gap-2 justify-center p-1 rounded-lg bg-green-50/30 border border-green-200">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 m-1 rounded-md text-sm font-medium transition-all duration-200 ${
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                   selectedCategory === category.id
                     ? "bg-green-600 text-white shadow-sm"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-green-100"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-green-200/75"
                 }`}
               >
                 {category.name}
@@ -263,10 +263,10 @@ const ServiceSection = () => {
                 key={service.id}
                 onMouseLeave={() => setHoveredCard(null)}
                 onMouseEnter={() => setHoveredCard(service.id)}
-                className="relative p-4 rounded-xl border-green-300 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
+                className="relative p-4 rounded-xl bg-green-50/30 border-green-200 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden"
               >
-                <div className="w-10 mx-auto h-10 rounded-lg mb-2 flex items-center justify-center transition-all duration-300 ease-in-out bg-green-100">
-                  <IconComponent className="w-5 h-5 transition-all duration-500 ease-in-out hover:scale-110 text-green-600" />
+                <div className="w-10 mx-auto h-10 rounded-lg mb-2 flex items-center justify-center transition-all duration-300 ease-in-out bg-green-600">
+                  <IconComponent className="w-5 h-5 transition-all duration-500 ease-in-out hover:scale-[1.2] text-white" />
                 </div>
 
                 <h3 className="font-semibold text-sm mb-2 transition-all duration-300 ease-in-out text-slate-800">
@@ -277,9 +277,9 @@ const ServiceSection = () => {
                   {isHovered ? service.hoverDescription : service.description}
                 </p>
 
-                <button className="w-full font-medium rounded-md p-1 bg-green-100 shadow-sm flex items-center justify-center group transition-all">
+                <button className="w-full font-medium rounded-md p-1 bg-green-600 text-white border border-green-200 shadow-sm flex items-center justify-center group transition-all">
                   {service.buttonTitle}
-                  <ExternalLink className="w-4 h-4 ml-2 group-hover:scale-110 transition-all" />
+                  <ExternalLink className="w-4 h-4 ml-2 group-hover:scale-[1.2] transition-all" />
                 </button>
               </Card>
             );
@@ -287,7 +287,7 @@ const ServiceSection = () => {
         </div>
 
         <div className="lg:hidden">
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          <div className="flex gap-4 overflow-x-auto pb-4">
             {services.map((service) => {
               const IconComponent = service.icon;
               const isHovered = hoveredCard === service.id;
@@ -297,10 +297,10 @@ const ServiceSection = () => {
                   key={service.id}
                   onMouseLeave={() => setHoveredCard(null)}
                   onMouseEnter={() => setHoveredCard(service.id)}
-                  className="relative p-4 border-green-300 rounded-xl border transition-all duration-300 ease-in-out cursor-pointer overflow-hidden flex-shrink-0 w-64"
+                  className="relative p-4 rounded-xl bg-green-50/30 border-green-200 transition-all duration-300 ease-in-out cursor-pointer overflow-hidden flex-shrink-0 w-64"
                 >
-                  <div className="w-10 mx-auto h-10 rounded-lg mb-2 flex items-center justify-center transition-all duration-300 ease-in-out bg-green-100">
-                    <IconComponent className="w-5 h-5 hover:scale-110 transition-all duration-300 ease-in-out text-green-600" />
+                  <div className="w-10 mx-auto h-10 rounded-lg mb-2 flex items-center justify-center transition-all duration-300 ease-in-out bg-green-600">
+                    <IconComponent className="w-5 h-5 hover:scale-[1.2] transition-all duration-300 ease-in-out text-white" />
                   </div>
 
                   <h3 className="font-semibold text-sm mb-2 transition-all duration-300 ease-in-out text-slate-800">
@@ -311,7 +311,7 @@ const ServiceSection = () => {
                     {isHovered ? service.hoverDescription : service.description}
                   </p>
 
-                  <button className="w-full font-medium rounded-md p-1 bg-green-100 shadow-sm flex items-center justify-center group transition-all">
+                  <button className="w-full font-medium rounded-md p-1 bg-green-600 text-white border border-green-200 shadow-sm flex items-center justify-center group transition-all">
                     {service.buttonTitle}
                     <ExternalLink className="w-4 h-4 ml-2 group-hover:scale-110 transition-all" />
                   </button>
