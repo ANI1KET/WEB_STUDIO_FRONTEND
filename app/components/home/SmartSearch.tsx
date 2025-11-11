@@ -9,7 +9,7 @@ import {
   FetchCategoryCitiesLocations,
 } from "./hooks/SmartSearch";
 import { useToast } from "@/app/common/hooks/use-toast";
-import { Category, categorySearchData } from "./config/SmartSearch";
+import { Category, categorySearchData } from "@/app/common/config/SmartSearch";
 
 const CategorySelector = dynamic(
   () => import("./SmartSearch/CategorySelector")

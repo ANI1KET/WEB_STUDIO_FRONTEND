@@ -1,4 +1,4 @@
-import { Category } from "../../config/SmartSearch";
+import { Category } from "../../../../common/config/SmartSearch";
 
 export const groupedCategoryOptions: {
   Rental: Category[];

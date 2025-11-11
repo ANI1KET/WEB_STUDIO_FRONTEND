@@ -7,10 +7,11 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 import { useIsMobile } from "@/app/common/hooks/use-mobile";
-// import { propertyItems, roomItems, vehicleItems } from "./config/Navbar";
+import { rentalItems, listingItems } from "@/app/common/config/navBar";
+
+import EnhancedNavbarDropdown from "./Navbar/EnhancedNavbarDropdown";
 
 const MobileMenu = dynamic(() => import("./Navbar/MobileMenu"));
-const NavbarDropdown = dynamic(() => import("./Navbar/NavbarDropdown"));
 const AccountDropdown = dynamic(() => import("./Navbar/AccountDropdown"));
 const MobileMenuButton = dynamic(() => import("./Navbar/MobileMenuButton"));
 const ListingsDropdown = dynamic(() => import("./Navbar/ListingsDropdown"));
@@ -77,6 +78,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
               >
                 Afno
               </span>
+
               <span
                 className={
                   "bg-black bg-clip-text text-transparent transition-all duration-300 drop-shadow-sm"
@@ -88,25 +90,22 @@ const Navbar = ({ session }: { session: Session | null }) => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            <NavbarDropdown
-              // items={roomItems}
-              route={"/explore/rooms"}
+            <EnhancedNavbarDropdown
+              label="Rentals"
+              items={rentalItems}
               scrolled={scrolled}
-              label="Explore Rooms"
             />
 
-            <NavbarDropdown
+            {/* <EnhancedNavbarDropdown
+              label="Buy & Sell"
+              items={}
               scrolled={scrolled}
-              route={"/explore/properties"}
-              // items={propertyItems}
-              label="Explore Properties"
-            />
+            /> */}
 
-            <NavbarDropdown
-              route={"/explore/vehicles"}
+            <EnhancedNavbarDropdown
               scrolled={scrolled}
-              // items={vehicleItems}
-              label="Explore Vehicles"
+              items={listingItems}
+              label="Listing Services"
             />
           </div>
 

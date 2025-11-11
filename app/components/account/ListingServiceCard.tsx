@@ -14,7 +14,7 @@ import {
 } from "./ServerAction/ListingServiceCard";
 import { useToast } from "@/app/common/hooks/use-toast";
 import { ServiceData } from "./types/ListingServiceCard";
-import { serviceItems } from "@/app/common/config/listings";
+import { serviceItems } from "@/app/common/config/account";
 
 import CitiesSection from "./ListingServiceCard/CitiesSection";
 import PricingSection from "./ListingServiceCard/PricingSection";

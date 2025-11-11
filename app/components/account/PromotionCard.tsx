@@ -13,7 +13,7 @@ import {
 } from "./ServerAction/PromotionCard";
 import { PromotionData } from "./types/PromotionCard";
 import { useToast } from "@/app/common/hooks/use-toast";
-import { promotionItems } from "@/app/common/config/listings";
+import { promotionItems } from "@/app/common/config/account";
 
 import PromotionItem from "./PromotionCard/PromotionItem";
 import PromotionPricing from "./PromotionCard/PromotionPricing";
