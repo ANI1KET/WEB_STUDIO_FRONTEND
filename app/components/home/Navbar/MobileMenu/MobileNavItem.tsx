@@ -28,10 +28,12 @@ const MobileNavItem = ({
         <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl mr-4 group-hover:scale-110 transition-transform duration-200 group-hover:from-green-200 group-hover:to-emerald-200">
           {icon}
         </div>
+
         <div className="text-left flex-1">
           <div className="font-medium text-gray-800 group-hover:text-green-700 text-base">
             {label}
           </div>
+
           {description && (
             <div className="text-sm text-gray-500 mt-1 group-hover:text-green-600">
               {description}
@@ -39,6 +41,7 @@ const MobileNavItem = ({
           )}
         </div>
       </div>
+
       <ChevronRight
         size={18}
         className="text-green-500 group-hover:text-green-600 group-hover:translate-x-1 transition-all duration-200 flex-shrink-0"

@@ -10,8 +10,8 @@ import { Button } from "@/app/components/ui/button";
 
 interface SubFeature {
   name: string;
-  routingPath: string;
   description: string;
+  routingPath: string;
 }
 
 interface DropdownItem {
