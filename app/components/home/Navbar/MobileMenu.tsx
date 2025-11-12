@@ -18,7 +18,7 @@ import {
   canAccessDashboard,
   canAccessInterested,
 } from "../../../common/config/authorization";
-import { rentalItems } from "@/app/common/config/navBar";
+import { listingItems, rentalItems } from "@/app/common/config/navBar";
 
 import { Button } from "@/app/components/ui/button";
 import MobileNavItem from "./MobileMenu/MobileNavItem";
@@ -113,6 +113,11 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
         <div className="px-4 py-6 space-y-4 min-h-[calc(100vh-80px)] bg-gradient-to-br from-green-50 to-white">
           <div className="space-y-3">
             <MobileEnhancedNavDropdown label="Rentals" items={rentalItems} />
+
+            <MobileEnhancedNavDropdown
+              items={listingItems}
+              label="Listing Services"
+            />
           </div>
 
           <hr className="my-6 border-green-200" />
