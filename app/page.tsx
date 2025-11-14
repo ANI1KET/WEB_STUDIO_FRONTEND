@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import {
   dehydrate,
   QueryClient,
@@ -8,16 +6,11 @@ import {
 } from "@tanstack/react-query";
 // import { headers } from "next/headers";
 
-import {
-  RoomData,
-  // PropertyData,
-  CategoryCitiesLocations,
-} from "./types/types";
 import { getRoomCitiesLocationDetails } from "./serverAction";
+import { RoomData, CategoryCitiesLocations } from "./types/types";
 
-// import RoomsByCity from "@/app/components/home/RoomsByCity";
 import SmartSearch from "@/app/components/home/SmartSearch";
-import RentalSection from "./components/home/RentalSection";
+import RentalSection from "@/app/components/home/RentalSection";
 import ServiceSection from "@/app/components/home/ServiceSection";
 // import AdvertisementSection from "./common/ui/AdvertisementSection";
 
@@ -36,14 +29,6 @@ const Home = async () => {
     roomCitiesLocations: CategoryCitiesLocations;
   } = await getRoomCitiesLocationDetails(city);
 
-  // const {
-  //   propertyCityDetails,
-  //   propertyCitiesLocations,
-  // }: {
-  //   propertyCityDetails: PropertyData[];
-  //   propertyCitiesLocations: CategoryCitiesLocations;
-  // } = await ;
-
   // queryClient.setQueryData<string>(["city"], city);
 
   queryClient.setQueryData<CategoryCitiesLocations>(
@@ -55,17 +40,6 @@ const Home = async () => {
     pages: [roomCityDetails],
   });
 
-  // queryClient.setQueryData<CategoryCitiesLocations>(
-  //   ["propertyCitiesLocations"],
-  //   roomCitiesLocations
-  // );
-  // queryClient.setQueryData<InfiniteData<PropertyData[]>>(
-  //   [`property${city}`],
-  //   {
-  //     pageParams: [0],
-  //     pages: [propertyCityDetails],
-  //   }
-  // );
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <section className="flex-grow">
@@ -87,28 +61,8 @@ const Home = async () => {
             className="absolute inset-0 w-full h-full object-cover"
           /> */}
 
-          {/* <div className="absolute inset-0 bg-gradient-to-b from-green-400/20 via-green-300/10 to-green-400/30"></div> */}
-
-          <div className="max-w-xl mx-auto text-center relative z-10 w-full">
-            {/* <h1 className="text-3xl font-bold mb-4 sm:mb-6 leading-tight">
-              <span className="text-green-800 drop-shadow-lg relative inline-block">
-                Find Your Perfect Space in Nepal
-                <span className="absolute -inset-1 rounded-lg bg-white/5 blur-md -z-10"></span>
-              </span>
-            </h1> */}
-
-            {/* <p className="text-base sm:text-lg md:text-xl mb-8 max-w-3xl mx-auto font-light drop-shadow-md">
-              Discover rooms, properties, vehicles and more - all in one place
-              with
-              <span className="font-bold relative ml-2 inline-block">
-                AfnoSansaar
-                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-green-500/0 via-green-500 to-green-500/0"></span>
-              </span>
-            </p> */}
-
-            <div className="p-[5px]">
-              <SmartSearch />
-            </div>
+          <div className="max-w-xl mx-auto text-center relative z-10 w-full p-[5px]">
+            <SmartSearch />
           </div>
         </div>
 
@@ -118,12 +72,7 @@ const Home = async () => {
           <AdvertisementSection />
         </div> */}
 
-        {/* <RoomsByCity city={city} cities={Object.keys(roomCitiesLocations)} /> */}
         <RentalSection city={city} cities={Object.keys(roomCitiesLocations)} />
-
-        {/* <PropertiesByType /> */}
-        {/* <VehiclesByCity /> */}
-        {/* <CallToAction /> */}
       </section>
     </HydrationBoundary>
   );

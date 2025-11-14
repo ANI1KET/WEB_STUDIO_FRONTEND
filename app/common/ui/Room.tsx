@@ -20,6 +20,7 @@ import { RoomData } from "@/app/types/types";
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/app/components/ui/card";
+import { useRoomActions } from "@/app/components/selected/room/hooks/RoomPageLayout";
 
 interface RoomCardProps {
   room: RoomData;
@@ -27,6 +28,7 @@ interface RoomCardProps {
 
 const RoomCard = memo(({ room }: RoomCardProps) => {
   const router = useRouter();
+  const { handleCompare } = useRoomActions(room);
 
   const [showVideo, setShowVideo] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -64,8 +66,8 @@ const RoomCard = memo(({ room }: RoomCardProps) => {
   };
 
   return (
-    <Card className="w-[320px] shadow-xl bg-white/95 backdrop-blur-sm border-t border-l border-white/40">
-      <div className="w-[320px] relative rounded-t-xl overflow-hidden group">
+    <Card className="w-[306px] shadow-xl bg-white/95 backdrop-blur-sm border-t border-l border-white/40">
+      <div className="w-[306px] relative rounded-t-xl overflow-hidden group">
         {showVideo && room.videos ? (
           <div className="relative w-full aspect-video">
             <iframe
@@ -159,9 +161,6 @@ const RoomCard = memo(({ room }: RoomCardProps) => {
         )}
 
         <div className="absolute top-2 right-2 flex flex-col gap-1 z-20">
-          {room.verified && (
-            <Badge className="bg-green-600 shadow-lg text-xs">Verified</Badge>
-          )}
           <Badge
             className={`${
               room.available ? "bg-green-600" : "bg-red-600"
@@ -170,9 +169,21 @@ const RoomCard = memo(({ room }: RoomCardProps) => {
             {room.available ? "Available" : "Occupied"}
           </Badge>
         </div>
+
+        <div className="absolute bottom-2 right-2 flex flex-col gap-1 z-20">
+          <button
+            title="Add to Compare List"
+            onClick={handleCompare}
+            className="p-1 text-green-400 hover:bg-green-50 hover:scale-105 rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 4a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 12a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H4a1 1 0 01-1-1v-4zM11 4a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V4zM11 12a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      <CardContent className="py-2">
+      <CardContent className="px-3 py-2">
         <h3 className="font-semibold text-base sm:text-lg mb-2 text-gray-800 line-clamp-2">
           {room.title}
         </h3>

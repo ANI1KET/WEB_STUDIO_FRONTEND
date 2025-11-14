@@ -129,6 +129,7 @@ const RoomFilterComponent = () => {
                   updateFilter("furnishingStatus", updated);
                 }}
               />
+
               <label htmlFor={`furnishing-${value}`} className="text-sm">
                 {value}
               </label>

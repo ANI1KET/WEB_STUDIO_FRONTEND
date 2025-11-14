@@ -14,13 +14,11 @@ import useEmblaCarousel from "embla-carousel-react";
 
 import { useToast } from "@/app/common/hooks/use-toast";
 
-import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 
 interface RoomMediaSectionProps {
   id: string;
   photos: string[];
-  verified: boolean;
   onRemove: () => void;
   videos?: string | null;
 }
@@ -29,7 +27,6 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
   id,
   photos,
   videos,
-  verified,
   onRemove,
 }) => {
   const { toast } = useToast();
@@ -149,12 +146,6 @@ const RoomMediaSection: React.FC<RoomMediaSectionProps> = ({
           </Button>
         )}
       </div>
-
-      {!verified === true && (
-        <div className="absolute top-2 right-2 z-20">
-          <Badge className="bg-green-500 text-white">✓ Verified</Badge>
-        </div>
-      )}
 
       <button
         onClick={() =>

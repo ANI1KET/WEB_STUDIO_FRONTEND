@@ -23,6 +23,7 @@ const ComparisonHeader = ({
   const roomsCities = useMemo(() => {
     return [...new Set(rooms.map((room) => room.city))];
   }, [rooms]);
+
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
       <div className="flex flex-col w-full gap-2">
@@ -50,14 +51,16 @@ const ComparisonHeader = ({
           sx={{ minWidth: 120, width: { xs: "100%", sm: "auto" } }}
         >
           <InputLabel>City</InputLabel>
+
           <Select
-            value={selectedCity}
             label="City"
+            value={selectedCity}
             onChange={(e) => onCityChange(e.target.value)}
           >
             <MenuItem value="">
               <em>All Cities</em>
             </MenuItem>
+
             {roomsCities.map((city) => (
               <MenuItem key={city} value={city}>
                 {city}
@@ -114,6 +117,7 @@ const SortingControls = ({
         sx={{ minWidth: 120, width: { xs: "100%", sm: "auto" } }}
       >
         <InputLabel>Sort By</InputLabel>
+
         <Select
           value={sortBy}
           label="Sort By"
@@ -141,9 +145,10 @@ const SortingControls = ({
           sx={{ minWidth: 100, width: { xs: "100%", sm: "auto" } }}
         >
           <InputLabel>Order</InputLabel>
+
           <Select
-            value={sortOrder}
             label="Order"
+            value={sortOrder}
             onChange={(e) =>
               onSortOrderChange(e.target.value as "asc" | "desc")
             }

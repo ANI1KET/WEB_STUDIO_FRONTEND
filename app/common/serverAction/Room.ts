@@ -1,17 +1,17 @@
 "use server";
 
+import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constants";
 import axiosInstance from "@/app/lib/axiosInstance";
-import { RoomData } from "@/app/types/types";
 
 export const getCategoryDetails = async ({
   city,
   category,
-  offset = 0,
+  lastDataId,
 }: {
   city: string;
-  offset: number;
   category: string;
+  lastDataId?: string;
 }): Promise<RoomData[]> => {
   "use server";
 
@@ -23,7 +23,7 @@ export const getCategoryDetails = async ({
       {
         params: {
           city,
-          offset,
+          lastDataId,
           limit: PAGE_SIZE,
         },
         headers: { "Cache-Control": "no-cache" },

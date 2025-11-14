@@ -1,6 +1,7 @@
 "use client";
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   // Car,
@@ -11,6 +12,7 @@ import {
   // Building,
 } from "lucide-react";
 
+import { RoomData } from "@/app/types/types";
 import { PAGE_SIZE } from "@/app/lib/constants";
 import { getCategoryDetails } from "@/app/common/serverAction/Room";
 
@@ -21,32 +23,40 @@ const RentalSection: React.FC<{
   city: string;
   cities: string[];
 }> = ({ city, cities }) => {
+  const router = useRouter();
+
   const [activeCity, setActiveCity] = useState(city);
-  const [activeCategory, setActiveCategory] = useState("room");
+  const [activeCategory, setActiveCategory] = useState("rooms");
 
   const categories = [
-    { id: "room", name: "Rooms", icon: Home },
-    // { id: "hostel", name: "Hostels", icon: Users },
-    // { id: "apartment", name: "Apartments", icon: Building },
+    { id: "rooms", name: "Rooms", icon: Home },
+    // { id: "hostels", name: "Hostels", icon: Users },
+    // { id: "apartments", name: "Apartments", icon: Building },
   ];
 
   const { data, hasNextPage, isFetchingNextPage, isLoading, fetchNextPage } =
-    useInfiniteQuery({
+    useInfiniteQuery<
+      RoomData[],
+      Error,
+      InfiniteData<RoomData[]>,
+      [string],
+      string | undefined
+    >({
       queryKey: [`room${activeCity}`],
-      queryFn: ({ pageParam = 0 }) =>
+      queryFn: async ({ pageParam }) =>
         getCategoryDetails({
           city: activeCity,
           category: "room",
-          offset: pageParam,
+          lastDataId: pageParam,
         }),
-      getNextPageParam: (lastPage, allPages) => {
-        const currentOffset = allPages.length * PAGE_SIZE;
-        return lastPage.length === PAGE_SIZE ? currentOffset : undefined;
+      getNextPageParam: (lastPage) => {
+        if (!lastPage || lastPage.length < PAGE_SIZE) return undefined;
+        return lastPage[lastPage.length - 1].id;
       },
-      initialPageParam: 0,
       gcTime: 1000 * 60 * 10,
       staleTime: 1000 * 60 * 10,
       refetchOnReconnect: false,
+      initialPageParam: undefined,
       refetchOnWindowFocus: false,
     });
 
@@ -138,18 +148,15 @@ const RentalSection: React.FC<{
 
         <div className="flex justify-between items-center mb-3">
           <h3 className="text-lg font-medium text-blue-900">
-            {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
-            {"s "}
+            {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}{" "}
             in {activeCity}
           </h3>
 
           <Button
             variant="outline"
-            // onClick={() =>
-            //   navigate(`/${activeCategory}/${activeCity.toLowerCase()}`)
-            // }
+            onClick={() => router.push(`/${activeCategory}/${activeCity}`)}
           >
-            View All {activeCategory}s
+            View All {activeCategory}
           </Button>
         </div>
 
@@ -178,9 +185,9 @@ const RentalSection: React.FC<{
                 {Array.from({ length: 5 }).map((_, idx) => (
                   <div
                     key={idx}
-                    className="w-[320px] h-[46vh] md:h-[58vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
+                    className="w-[320px] h-[46vh] md:h-[52vh] bg-gray-200 animate-pulse rounded-lg overflow-hidden"
                   >
-                    <div className="w-full h-[20vh] md:h-[26vh] bg-gray-300/30"></div>
+                    <div className="w-full h-[20vh] md:h-[24vh] bg-gray-300/30"></div>
                   </div>
                 ))}
               </div>
@@ -190,7 +197,7 @@ const RentalSection: React.FC<{
                   page.map((room) => <RoomCard key={room.id} room={room} />)
                 )}
 
-                <div ref={observerRef} className="h-1 "></div>
+                <div ref={observerRef} className="h-1"></div>
                 {isFetchingNextPage && (
                   <div className="flex justify-center items-center">
                     <div

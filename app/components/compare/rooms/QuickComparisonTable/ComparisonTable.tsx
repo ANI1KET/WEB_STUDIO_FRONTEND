@@ -83,17 +83,12 @@ const TableRow = ({ field, rooms }: TableRowProps) => {
       <td className="p-2 sm:p-3 font-medium sticky left-0 bg-inherit z-20 text-xs sm:text-sm shadow-sm border-r border-gray-200">
         {field.label}
       </td>
+
       {rooms.map((room) => (
         <td key={room.id} className="p-2 sm:p-3 text-center text-xs sm:text-sm">
           <div
             className={`${
-              field.key === "price"
-                ? "font-bold text-green-600"
-                : field.key === "verified" && room.verified
-                ? "text-green-600"
-                : field.key === "verified" && !room.verified
-                ? "text-red-600"
-                : ""
+              field.key === "price" ? "font-bold text-green-600" : ""
             }`}
           >
             {field.format(room[field.key as keyof RoomData], room)}

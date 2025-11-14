@@ -96,7 +96,6 @@ export type ListedRoom = RoomWithMediaUrl & {
   id: string;
   ownerId: string;
   ratings: number;
-  verified: boolean;
   available: boolean;
   // DATE
   createdAt: string;

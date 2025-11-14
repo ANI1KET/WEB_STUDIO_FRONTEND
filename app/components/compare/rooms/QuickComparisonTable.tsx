@@ -25,6 +25,7 @@ const QuickComparisonTable = ({ rooms }: QuickComparisonTableProps) => {
       (room) => room.city.toLowerCase() === selectedCity.toLowerCase()
     );
   }, [rooms, selectedCity]);
+
   const sortedRooms = useMemo(() => {
     if (!sortBy) return filteredRoomsByCity;
 

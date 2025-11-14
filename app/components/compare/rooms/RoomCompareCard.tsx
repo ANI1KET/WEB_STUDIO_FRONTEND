@@ -30,7 +30,6 @@ const RoomCompareCard = ({ room, onRemove }: RoomCompareCardProps) => {
             photos={room.photos}
             videos={room.videos}
             onRemove={handleRemove}
-            verified={room.verified}
           />
 
           <RoomCardHeader

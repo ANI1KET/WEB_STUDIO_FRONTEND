@@ -25,11 +25,13 @@ export async function getRoomCitiesLocationDetails(city: string): Promise<{
   roomCityDetails: RoomData[];
   roomCitiesLocations: CategoryCitiesLocations;
 }> {
+  "use server";
+
   const url = `${process.env.SERVER_BASE_URL}/room-service/aggregator?city=${city}&limit=${PAGE_SIZE}`;
 
   try {
     const res = await fetch(url, {
-      next: { revalidate: 300 },
+      next: { revalidate: 600 },
     });
 
     if (!res.ok) {

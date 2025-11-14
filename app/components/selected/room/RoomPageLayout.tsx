@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useCallback, useEffect, useRef } from "react";
 
 import {
@@ -44,23 +44,29 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
     fetchNextPage,
     isFetchingNextPage,
     isLoading: isLoadingData,
-  } = useInfiniteQuery({
+  } = useInfiniteQuery<
+    RoomData[],
+    Error,
+    InfiniteData<RoomData[]>,
+    [string],
+    string | undefined
+  >({
     queryKey: [`room${roomData?.city}`],
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: async ({ pageParam }) =>
       getCategoryDetails({
         category: "room",
-        offset: pageParam,
         city: roomData?.city,
+        lastDataId: pageParam,
       }),
-    getNextPageParam: (lastPage, allPages) => {
-      const currentOffset = allPages.length * PAGE_SIZE;
-      return lastPage.length === PAGE_SIZE ? currentOffset : undefined;
+    getNextPageParam: (lastPage) => {
+      if (!lastPage || lastPage.length < PAGE_SIZE) return undefined;
+      return lastPage[lastPage.length - 1].id;
     },
-    initialPageParam: 0,
     gcTime: 1000 * 60 * 10,
     staleTime: 1000 * 60 * 10,
     enabled: !!roomData?.city,
     refetchOnReconnect: false,
+    initialPageParam: undefined,
     refetchOnWindowFocus: false,
   });
 
@@ -144,7 +150,6 @@ const RoomLayout: React.FC<RoomLayoutProps> = ({ city, roomId }) => {
                   postedBy={roomData.postedBy}
                   listerId={roomData.listerId}
                   location={roomData.location}
-                  verified={roomData.verified}
                   available={roomData.available}
                   listerName={roomData.listerName}
                   primaryContact={roomData.primaryContact}

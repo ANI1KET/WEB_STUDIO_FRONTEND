@@ -84,7 +84,7 @@ const Navbar = ({ session }: { session: Session | null }) => {
                   "bg-black bg-clip-text text-transparent transition-all duration-300 drop-shadow-sm"
                 }
               >
-                Sansaar
+                Property
               </span>
             </h1>
           </Link>

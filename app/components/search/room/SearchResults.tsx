@@ -40,7 +40,7 @@ const SearchResults: React.FC<SearchResultsProps> = memo(({ rooms }) => {
               roomTitle={room.title}
             />
 
-            <RoomStatus verified={room.verified} available={room.available} />
+            <RoomStatus available={room.available} />
           </div>
 
           <CardContent className="flex-grow flex flex-col p-0">
