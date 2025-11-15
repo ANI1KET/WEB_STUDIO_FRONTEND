@@ -4,6 +4,7 @@ import React from "react";
 import { Sparkles } from "lucide-react";
 
 import { RoomAmenities } from "@/app/types/types";
+import { getAmenityIcon } from "@/app/common/icon/amenities";
 
 import {
   Card,
@@ -14,13 +15,9 @@ import {
 
 interface RoomAmenitiesProps {
   amenities: RoomAmenities[];
-  getAmenityIcon: (amenity: RoomAmenities, size: number) => React.JSX.Element;
 }
 
-const RoomAmenitiesLayout: React.FC<RoomAmenitiesProps> = ({
-  amenities,
-  getAmenityIcon,
-}) => (
+const RoomAmenitiesLayout: React.FC<RoomAmenitiesProps> = ({ amenities }) => (
   <Card className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border border-green-100/50 overflow-hidden hover:shadow-xl transition-all duration-300">
     <CardHeader className="border-b border-green-100/50">
       <CardTitle className="flex items-center gap-3 text-xl font-bold text-gray-800">

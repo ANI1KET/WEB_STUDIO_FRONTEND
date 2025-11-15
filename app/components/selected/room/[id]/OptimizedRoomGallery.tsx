@@ -4,6 +4,9 @@ import Image from "next/image";
 import React, { useState, useCallback, memo } from "react";
 import { ChevronLeft, ChevronRight, Eye, Play } from "lucide-react";
 
+import { useImageModalControl } from "../[id]/hooks/RoomPageLayout";
+
+import RoomImageModal from "./RoomImageModal";
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 
@@ -11,15 +14,16 @@ interface OptimizedRoomGalleryProps {
   title: string;
   photos: string[];
   videos: string | null;
-  onImageModalOpen: (index: number) => void;
 }
 
 const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
   title,
   photos,
   videos,
-  onImageModalOpen,
 }) => {
+  const { open, next, prev, close, isOpen, currentIndex } =
+    useImageModalControl(photos.length);
+
   const [showVideo, setShowVideo] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -56,9 +60,9 @@ const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
               fill
               loading="eager"
               src={photos[currentImageIndex]}
+              onClick={() => open(currentImageIndex)}
               priority={!showVideo && currentImageIndex === 0}
               alt={`${title} - Image ${currentImageIndex + 1}`}
-              onClick={() => onImageModalOpen(currentImageIndex)}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 60vw"
               className="w-full h-full object-cover transition-all duration-300 cursor-pointer"
             />
@@ -111,7 +115,7 @@ const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
           )}
           <Button
             size="sm"
-            onClick={() => onImageModalOpen(currentImageIndex)}
+            onClick={() => open(currentImageIndex)}
             className="bg-black/60 text-white hover:bg-black/80"
           >
             <Eye className="h-4 w-4 mr-2" />
@@ -144,6 +148,16 @@ const OptimizedRoomGallery: React.FC<OptimizedRoomGalleryProps> = ({
           ))}
         </div>
       </div>
+
+      <RoomImageModal
+        title={title}
+        onNext={next}
+        onPrev={prev}
+        photos={photos}
+        isOpen={isOpen}
+        onClose={close}
+        currentImageIndex={currentIndex}
+      />
     </div>
   );
 };

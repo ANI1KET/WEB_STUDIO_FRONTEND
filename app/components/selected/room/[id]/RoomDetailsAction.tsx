@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "next-auth";
 import { Phone } from "lucide-react";
 import { Role } from "@prisma/client";
 import React, { useState } from "react";
@@ -11,6 +10,8 @@ import {
   canShowInterest,
   canAcessScheduleVisit,
 } from "@/app/common/config/authorization";
+import { RoomData } from "@/app/types/types";
+import { useRoomActions } from "../[id]/hooks/RoomPageLayout";
 import { useSettingNumberVerificationFlow } from "@/app/common/hooks/account/account";
 
 import OTPDialog from "@/app/common/ui/OTPDialog";
@@ -18,47 +19,24 @@ import NumberDialog from "@/app/common/ui/NumberDialog";
 import ScheduleVisitDialog from "./RoomDetailsAction/ScheduleVisitDialog";
 
 interface RoomDetailsActionrProps {
-  id: string;
-  city: string;
-  title: string;
-  price: number;
-  postedBy: Role;
-  ratings: number;
-  ownerId: string;
-  location: string;
-  listerId: string;
-  available: boolean;
-  listerName: string;
-  onShare: () => void;
-  onCompare: () => void;
-  primaryContact: string;
-  session: Session | null;
-  secondaryContact: string;
-  onInterest: (userId: string) => Promise<void>;
+  role: Role;
+  userId: string;
+  roomData: RoomData;
+  isAuthenticated: boolean;
+  number: string | undefined;
 }
 
 const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
-  id,
-  city,
-  title,
-  price,
-  ownerId,
-  session,
-  onShare,
-  ratings,
-  listerId,
-  postedBy,
-  location,
-  available,
-  onCompare,
-  listerName,
-  onInterest,
-  primaryContact,
-  // secondaryContact,
+  role,
+  number,
+  userId,
+  roomData,
+  isAuthenticated,
 }) => {
   const router = useRouter();
-  const role = session?.user.role as Role;
-  const userId = session?.user.userId as string;
+
+  const { handleShare, handleCompare, handleInterest } =
+    useRoomActions(roomData);
 
   const {
     phoneNumber,
@@ -80,10 +58,10 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
   };
 
   const handleInterestClick = async () => {
-    if (!session?.user.number) {
+    if (Boolean(number)) {
       setIsPhoneDialogOpen(true);
     } else {
-      await onInterest(userId);
+      await handleInterest();
     }
   };
   return (
@@ -92,7 +70,9 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
         <div className="p-4">
           <div className="flex items-center justify-between mb-2">
             <div className="flex flex-col flex-wrap">
-              <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">
+                {roomData.title}
+              </h1>
 
               <div className="flex items-center">
                 <svg
@@ -106,17 +86,17 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
                     d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
                   />
                 </svg>
-                {location}, {city}
+                {roomData.location}, {roomData.city}
               </div>
             </div>
 
             <div className="flex gap-3 mr-2">
-              {session ? (
+              {isAuthenticated ? (
                 canShowInterest({
                   userId,
-                  ownerId,
-                  listerId,
-                  postedBy,
+                  ownerId: roomData.ownerId,
+                  listerId: roomData.listerId,
+                  postedBy: roomData.postedBy,
                 }) && (
                   <button
                     title="Show Interest"
@@ -162,7 +142,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
 
               <button
                 title="Compare"
-                onClick={onCompare}
+                onClick={handleCompare}
                 className="p-2 text-green-500 hover:bg-green-50 hover:scale-105 rounded-lg transition-colors"
               >
                 <svg
@@ -176,7 +156,7 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
 
               <button
                 title="Share"
-                onClick={onShare}
+                onClick={handleShare}
                 className="p-2 text-blue-500 hover:bg-blue-50 hover:scale-105 rounded-lg transition-colors"
               >
                 <svg
@@ -200,17 +180,17 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
                 >
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
-                {ratings} Rating
+                {roomData.ratings} Rating
               </span>
 
               <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                {available ? "Available" : "Occupied"}
+                {roomData.available ? "Available" : "Occupied"}
               </span>
             </div>
 
             <div className="text-right bg-green-50 px-4 py-1 rounded-lg border-2 border-green-200">
               <span className="text-2xl font-bold text-green-600">
-                ₹&nbsp;{price.toLocaleString()}
+                ₹&nbsp;{roomData.price.toLocaleString()}
               </span>
 
               <span className="text-gray-500 block text-sm text-center">
@@ -226,26 +206,26 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
               <h3 className="font-semibold text-gray-800">Contact Details</h3>
 
               <p className="text-sm">
-                Listed by {postedBy} • {listerName}
+                Listed by {roomData.postedBy} • {roomData.listerName}
               </p>
             </div>
 
             <button
-              onClick={() => handleCall(primaryContact)}
+              onClick={() => handleCall(roomData.primaryContact)}
               className="flex items-center gap-2 bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
             >
               <Phone className="h-4 w-4 text-green-600" />
-              +977-{primaryContact}
+              +977-{roomData.primaryContact}
             </button>
           </div>
         </div>
 
-        {session &&
+        {isAuthenticated &&
           canBook({
             role,
             userId,
-            ownerId,
-            listerId,
+            ownerId: roomData.ownerId,
+            listerId: roomData.listerId,
           }) && (
             <div className="p-2">
               <button
@@ -264,13 +244,13 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
             </div>
           )}
 
-        {session ? (
+        {isAuthenticated ? (
           canAcessScheduleVisit({
             userId,
-            ownerId,
-            listerId,
-            postedBy,
-            available,
+            ownerId: roomData.ownerId,
+            listerId: roomData.listerId,
+            postedBy: roomData.postedBy,
+            available: roomData.available,
           }) && (
             <div className="bg-gray-50 p-2 flex items-center justify-between border-t border-gray-100">
               <button
@@ -340,14 +320,14 @@ const RoomDetailsAction: React.FC<RoomDetailsActionrProps> = ({
       )}
 
       <ScheduleVisitDialog
-        id={id}
-        city={city}
-        title={title}
-        price={price}
-        location={location}
-        listerName={listerName}
+        id={roomData.id}
+        city={roomData.city}
+        title={roomData.title}
+        price={roomData.price}
+        location={roomData.location}
         isOpen={isScheduleDialogOpen}
-        primaryContact={primaryContact}
+        listerName={roomData.listerName}
+        primaryContact={roomData.primaryContact}
         onClose={() => setIsScheduleDialogOpen(false)}
       />
     </>

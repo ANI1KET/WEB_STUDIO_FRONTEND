@@ -1,50 +1,8 @@
 import { useCallback, useState } from "react";
-import { InfiniteData, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { RoomData } from "@/app/types/types";
 import { useToast } from "@/app/common/hooks/use-toast";
-import { useGetRoomSearchData } from "@/app/providers/reactqueryProvider";
-import { fetchRoom, pushInterestedRoom } from "../ServerAction/RoomPageLayout";
-
-const findMatchingRoom = (
-  roomId: string,
-  cachedData: { pages: RoomData[][] }
-): RoomData | undefined => {
-  for (const page of cachedData.pages)
-    for (const room of page) if (room.id === roomId) return room;
-};
-
-export const useRoomDetails = (city: string, roomId: string) => {
-  const queryClient = useQueryClient();
-  const searchData = useGetRoomSearchData();
-
-  const cachedData = city
-    ? queryClient.getQueryData<InfiniteData<RoomData[]>>([`room${city}`])
-    : queryClient.getQueryData<InfiniteData<RoomData[]>>([
-        "search/room",
-        searchData,
-      ]);
-
-  const roomFromCache = cachedData
-    ? findMatchingRoom(roomId, cachedData)
-    : undefined;
-
-  const {
-    isError,
-    isLoading,
-    data: fallbackRoomDetails,
-  } = useQuery<RoomData>({
-    queryKey: ["selectedRoom", roomId],
-    queryFn: () => fetchRoom(roomId),
-    enabled: !roomFromCache,
-    staleTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-
-  const roomData = roomFromCache ?? (fallbackRoomDetails as RoomData);
-
-  return { roomData, isLoading, isError };
-};
+import { pushInterestedRoom } from "../ServerAction/RoomPageLayout";
 
 export function useImageModalControl(totalImages: number) {
   const [isOpen, setIsOpen] = useState(false);
@@ -124,9 +82,8 @@ export function useRoomActions(roomData: RoomData) {
     }
   };
 
-  const handleInterest = async (userId: string): Promise<void> => {
+  const handleInterest = async (): Promise<void> => {
     const { success, message } = await pushInterestedRoom({
-      userId,
       roomId: roomData.id,
       listerId: roomData.listerId,
     });

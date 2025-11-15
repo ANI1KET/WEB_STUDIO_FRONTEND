@@ -199,7 +199,7 @@ const CompactRoomCard: React.FC<CompactRoomCardProps> = ({
               try {
                 await navigator.clipboard.writeText(
                   `https://${process.env.NEXT_PUBLIC_BASE_DOMAIN}/room/${btoa(
-                    `${room.id},${room.city}`
+                    room.id
                   )}`
                 );
 

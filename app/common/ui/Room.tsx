@@ -20,7 +20,7 @@ import { RoomData } from "@/app/types/types";
 import { Badge } from "@/app/components/ui/badge";
 import { Button } from "@/app/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/app/components/ui/card";
-import { useRoomActions } from "@/app/components/selected/room/hooks/RoomPageLayout";
+import { useRoomActions } from "@/app/components/selected/room/[id]/hooks/RoomPageLayout";
 
 interface RoomCardProps {
   room: RoomData;
@@ -238,9 +238,7 @@ const RoomCard = memo(({ room }: RoomCardProps) => {
       <CardFooter>
         <Button
           variant="outline"
-          onClick={() =>
-            router.push(`/room/${btoa(`${room.id},${room.city}`)}`)
-          }
+          onClick={() => router.push(`/room/${btoa(room.id)}`)}
           className="w-full border-green-200 text-green-600 hover:text-green-700 hover:bg-green-50 shadow-sm text-sm sm:text-base"
         >
           View Details

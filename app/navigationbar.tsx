@@ -16,7 +16,7 @@ const NavigationBar = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(authOptions);
 
   return (
-    <main className="min-h-screen flex flex-col overflow-x-hidden">
+    <main className="min-h-screen flex flex-col">
       <Navbar session={session} />
 
       <section className="pt-16">{children}</section>

@@ -11,21 +11,15 @@ import { getAutheticationHeader } from "@/app/common/serverAction/header";
 export const fetchRoom = async (roomId: string): Promise<RoomData> => {
   "use server";
 
-  try {
-    const { data } = await axiosInstance.get(`${baseRoomUrl}/room/${roomId}`);
-    return data;
-  } catch (error) {
-    throw new Error(error?.toString() || "An unknown error occurred");
-  }
+  const { data } = await axiosInstance.get(`${baseRoomUrl}/room/${roomId}`);
+  return data;
 };
 
 export const pushInterestedRoom = async ({
   roomId,
-  userId,
   listerId,
 }: {
   roomId: string;
-  userId: string;
   listerId: string;
 }): Promise<{ success: boolean; message: string }> => {
   "use server";
@@ -34,7 +28,6 @@ export const pushInterestedRoom = async ({
     const { data } = await axiosInstance.post(
       pushInterestedRoomUrl,
       {
-        userId,
         roomId,
         listerId,
       },

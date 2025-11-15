@@ -91,7 +91,7 @@ const RentalSection: React.FC<{
   }, [handleLoadMore]);
 
   return (
-    <section className="py-12 px-4 relative overflow-hidden bg-[linear-gradient(to_bottom,theme(colors.green.50/0.5)_0%,white_10%)]">
+    <section className="py-12 px-4 relative overflow-hidden bg-[linear-gradient(to_bottom,theme(colors.green.50)_1%,white_10%)]">
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-4">
           <h2 className="text-2xl md:text-3xl font-bold mb-2 text-green-600">

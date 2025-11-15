@@ -54,7 +54,14 @@ export type RoomAmenities =
   | "FIRE SAFETY"
   | "POWER BACKUP"
   | "WASHING MANCHINE";
-export type RoomType = "FLAT" | "1BHK" | "2BHK" | "3BHK" | "4BHK";
+export type RoomType =
+  | "1BK"
+  | "2BK"
+  | "FLAT"
+  | "1BHK"
+  | "2BHK"
+  | "3BHK"
+  | "4BHK";
 export type FurnishingStatus = "FURNISHED" | "SEMIFURNISHED" | "UNFURNISHED";
 
 export type Room = {

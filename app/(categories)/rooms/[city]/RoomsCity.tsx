@@ -173,12 +173,13 @@ const RoomsCity = ({ city }: { city: string }) => {
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="flex flex-wrap justify-center md:justify-start gap-4">
           <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Sort By</InputLabel>
+
             <Select
-              value={filters.sortBy}
               label="Sort By"
+              value={filters.sortBy}
               onChange={(e) => setFilter("sortBy", e.target.value)}
             >
               {sortOptions.map((opt) => (
@@ -189,11 +190,12 @@ const RoomsCity = ({ city }: { city: string }) => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" sx={{ minWidth: 120 }}>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Room Type</InputLabel>
+
             <Select
-              value={filters.roomShape}
               label="Room Type"
+              value={filters.roomShape}
               onChange={(e) => setFilter("roomShape", e.target.value)}
             >
               <MenuItem value="">
@@ -208,11 +210,12 @@ const RoomsCity = ({ city }: { city: string }) => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" sx={{ minWidth: 140 }}>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Furnishing</InputLabel>
+
             <Select
-              value={filters.furnishing}
               label="Furnishing"
+              value={filters.furnishing}
               onChange={(e) =>
                 setFilter("furnishing", e.target.value as FurnishingStatus | "")
               }
@@ -229,11 +232,12 @@ const RoomsCity = ({ city }: { city: string }) => {
             </Select>
           </FormControl>
 
-          <FormControl size="small" sx={{ minWidth: 120 }}>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
             <InputLabel>Availability</InputLabel>
+
             <Select
-              value={filters.availability}
               label="Availability"
+              value={filters.availability}
               onChange={(e) => setFilter("availability", e.target.value)}
             >
               <MenuItem value="">
@@ -257,7 +261,7 @@ const RoomsCity = ({ city }: { city: string }) => {
               value ? (
                 <Badge
                   key={key}
-                  onClick={() => setFilter(key, "")} // now ✔ no TS error
+                  onClick={() => setFilter(key, "")}
                   className="bg-green-200 text-green-800 hover:bg-red-500 hover:text-black cursor-pointer flex items-center gap-1"
                 >
                   {key}: {String(value)}
@@ -271,9 +275,11 @@ const RoomsCity = ({ city }: { city: string }) => {
 
       {rooms.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="flex flex-wrap justify-evenly">
             {rooms.map((room) => (
-              <RoomCard key={room.id} room={room} />
+              <div key={room.id} className="mb-4">
+                <RoomCard room={room} />
+              </div>
             ))}
           </div>
 
@@ -307,4 +313,3 @@ const RoomsCity = ({ city }: { city: string }) => {
 };
 
 export default RoomsCity;
-
