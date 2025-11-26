@@ -2,11 +2,14 @@ import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
+  darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
+  prefix: "",
   theme: {
     container: {
       center: true,
@@ -60,19 +63,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        green: {
-          50: "#f2fce2",
-          100: "#e3f7cc",
-          200: "#c7ee9e",
-          300: "#a2e169",
-          400: "#7fcf3f",
-          500: "#59b31d",
-          600: "#3f8d13",
-          700: "#306a13",
-          800: "#295114",
-          900: "#264514",
-          950: "#112709",
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        gold: "hsl(var(--gold))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -96,51 +95,10 @@ export default {
             height: "0",
           },
         },
-        "fade-in": {
-          "0%": {
-            opacity: "0",
-            transform: "translateY(10px)",
-          },
-          "100%": {
-            opacity: "1",
-            transform: "translateY(0)",
-          },
-        },
-        "slide-in-right": {
-          "0%": { transform: "translateX(100%)" },
-          "100%": { transform: "translateX(0)" },
-        },
-        "card-hover": {
-          "0%": { transform: "translateY(0) scale(1)" },
-          "100%": { transform: "translateY(-5px) scale(1.03)" },
-        },
-        "image-slide": {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-100%)" },
-        },
-        "tilt-3d": {
-          "0%, 100%": {
-            transform: "perspective(1000px) rotateX(0deg) rotateY(0deg)",
-          },
-          "50%": {
-            transform: "perspective(1000px) rotateX(1deg) rotateY(1deg)",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.5s ease-out",
-        "slide-in-right": "slide-in-right 0.5s ease-out",
-        "card-hover": "card-hover 0.3s ease-out forwards",
-        "image-slide": "image-slide 0.5s ease-in-out",
-        "tilt-3d": "tilt-3d 5s ease-in-out infinite",
-      },
-      backgroundImage: {
-        "green-gradient":
-          "linear-gradient(108deg, rgba(89,179,29,0.68) 17.7%, rgba(202,245,139,1) 91.2%)",
-        "cta-gradient":
-          "linear-gradient(90deg, rgba(79,181,29,1) 0%, rgba(139,210,68,1) 100%)",
       },
     },
   },

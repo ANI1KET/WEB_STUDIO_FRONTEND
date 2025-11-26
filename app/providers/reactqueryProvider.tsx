@@ -23,7 +23,6 @@ export const searchRoomData = makeVar<RoomSearchQueries>({
   price: undefined,
   rating: undefined,
   capacity: undefined,
-  verified: undefined,
   furnishingStatus: [],
 });
 

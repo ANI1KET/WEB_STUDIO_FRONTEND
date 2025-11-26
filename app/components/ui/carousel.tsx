@@ -1,34 +1,31 @@
-"use client";
-
+import * as React from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import * as React from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { cn } from "@/app/lib/utils";
-
 import { Button } from "@/app/components/ui/button";
 
 type CarouselApi = UseEmblaCarouselType[1];
-type CarouselPlugin = UseCarouselParameters[1];
-type CarouselOptions = UseCarouselParameters[0];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
+type CarouselOptions = UseCarouselParameters[0];
+type CarouselPlugin = UseCarouselParameters[1];
 
 type CarouselProps = {
   opts?: CarouselOptions;
   plugins?: CarouselPlugin;
-  setApi?: (api: CarouselApi) => void;
   orientation?: "horizontal" | "vertical";
+  setApi?: (api: CarouselApi) => void;
 };
 
 type CarouselContextProps = {
+  carouselRef: ReturnType<typeof useEmblaCarousel>[0];
+  api: ReturnType<typeof useEmblaCarousel>[1];
   scrollPrev: () => void;
   scrollNext: () => void;
   canScrollPrev: boolean;
   canScrollNext: boolean;
-  api: ReturnType<typeof useEmblaCarousel>[1];
-  carouselRef: ReturnType<typeof useEmblaCarousel>[0];
 } & CarouselProps;
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
@@ -49,12 +46,12 @@ const Carousel = React.forwardRef<
 >(
   (
     {
+      orientation = "horizontal",
       opts,
       setApi,
       plugins,
-      children,
       className,
-      orientation = "horizontal",
+      children,
       ...props
     },
     ref
@@ -124,23 +121,23 @@ const Carousel = React.forwardRef<
     return (
       <CarouselContext.Provider
         value={{
-          opts,
-          api: api,
-          scrollPrev,
-          scrollNext,
           carouselRef,
-          canScrollPrev,
-          canScrollNext,
+          api: api,
+          opts,
           orientation:
             orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
+          scrollPrev,
+          scrollNext,
+          canScrollPrev,
+          canScrollNext,
         }}
       >
         <div
           ref={ref}
-          role="region"
-          aria-roledescription="carousel"
           onKeyDownCapture={handleKeyDown}
           className={cn("relative", className)}
+          role="region"
+          aria-roledescription="carousel"
           {...props}
         >
           {children}
@@ -204,17 +201,17 @@ const CarouselPrevious = React.forwardRef<
   return (
     <Button
       ref={ref}
-      size={size}
       variant={variant}
-      disabled={!canScrollPrev}
-      onClick={scrollPrev}
+      size={size}
       className={cn(
-        "absolute h-8 w-8 rounded-full z-20",
+        "absolute h-8 w-8 rounded-full",
         orientation === "horizontal"
           ? "-left-12 top-1/2 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
+      disabled={!canScrollPrev}
+      onClick={scrollPrev}
       {...props}
     >
       <ArrowLeft className="h-4 w-4" />
@@ -233,17 +230,17 @@ const CarouselNext = React.forwardRef<
   return (
     <Button
       ref={ref}
-      size={size}
       variant={variant}
-      onClick={scrollNext}
-      disabled={!canScrollNext}
+      size={size}
       className={cn(
-        "absolute h-8 w-8 rounded-full z-20",
+        "absolute h-8 w-8 rounded-full",
         orientation === "horizontal"
           ? "-right-12 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
+      disabled={!canScrollNext}
+      onClick={scrollNext}
       {...props}
     >
       <ArrowRight className="h-4 w-4" />
@@ -256,8 +253,8 @@ CarouselNext.displayName = "CarouselNext";
 export {
   type CarouselApi,
   Carousel,
-  CarouselItem,
-  CarouselNext,
   CarouselContent,
+  CarouselItem,
   CarouselPrevious,
+  CarouselNext,
 };

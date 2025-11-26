@@ -10,171 +10,55 @@ datasource db {
 enum Role {
   USER
   ADMIN
-  OWNER
-  BROKER
-  // TENANT
 }
 
-enum Gender {
-  MALE
-  FEMALE
-}
-
-enum Permission {
-  room
-  hostel
-  promote
-  vehicle
-  property
-  reMarketItem
-}
-
-// ************************************************************************************** //
-// USER
-// ************************************************************************************** //
-model User {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  age        Int?
-  name       String
-  image      String?
-  email      String  @unique
-  number     String?
-  address    String?
-  password   String?
-  documentId String?
+model EventUser {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  name     String
+  email    String @unique
+  password String
 
   // ENUM
-  role            Role         @default(USER)
-  gender          Gender?
-  promoting       Permission[] @default([])
-  permission      Permission[] @default([])
-  servicesOffered Permission[] @default([])
-
-  // RELATIONSHIP
-  subscription          Subscription?                @relation("Subscriber")
-  // RELATIONSHIP
-  interestedUser        ListerRoomsInterestedUsers[] @relation("InterestedUser")
-  listersInterest       ListerRoomsInterestedUsers[] @relation("ListersInterest")
-  // RELATIONSHIP
-  promotionDeals        RoomPromotionAgreement[]     @relation("PromotionAgreement")
-  // RELATIONSHIP
-  listerRoomService     ListerRoomService?           @relation("ListerRoomService")
-  listerVehicleService  ListerVehicleService?        @relation("ListerVehicleService")
-  listerPropertyService ListerPropertyService?       @relation("ListerPropertyService")
+  role Role @default(USER)
 
   // TIMESTAMPS
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   @@index([role])
-  @@map("Users")
+  @@map("EventUsers")
 }
 
-// ************************************************************************************** //
-// USER SUBSCRIPTION
-// ************************************************************************************** //
-model Subscription {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  permissions Json   @default("{}")
+enum EventType {
+  WEDDING
+  BIRTHDAY
+  ENGAGEMENT
+  BEACH_POOL
+  ANNIVERSARY
+  BABY_SHOWER
+  MUSIC_NIGHT
+  BRAND_LAUNCH
+  GENDER_REVEAL
+  PRIVATE_PARTY
+  FAMILY_GATHERING
+  FESTIVAL_CELEBRATION
+}
 
-  // RELATIONSHIP
-  userId String @unique @db.ObjectId
-  user   User   @relation(name: "Subscriber", fields: [userId], references: [id], onDelete: Cascade)
+model Event {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  slug            String   @unique
+  title           String
+  location        String
+  reviewText      String?
+  isFeatured      Boolean  @default(false)
+  shortSummary    String
+  coverImageUrl   String
+  galleryImages   String[]
+  fullDescription String
 
-  // TIMESTAMPS
-  expiresAt DateTime
+  // ENUM
+  eventType EventType
+
+  date      DateTime
   createdAt DateTime @default(now())
-
-  @@index([expiresAt])
-  @@map("Subscriptions")
-}
-
-// ************************************************************************************** //
-// LISTER SERVICES
-// ************************************************************************************** //
-type CityLocations {
-  city      String
-  locations String[]
-}
-
-model ListerRoomService {
-  virtualPrice       Int
-  physicalPrice      Int
-  supportedLanguages String[]
-
-  // TYPE
-  supportedCities CityLocations[]
-
-  // RELATIONSHIP
-  lister   User   @relation(fields: [listerId], references: [id], name: "ListerRoomService", onDelete: Cascade)
-  listerId String @id @map("_id") @db.ObjectId
-}
-
-model ListerPropertyService {
-  virtualPrice       Int
-  physicalPrice      Int
-  supportedLanguages String[]
-
-  // TYPE
-  supportedCities CityLocations[]
-
-  // RELATIONSHIP
-  lister   User   @relation(fields: [listerId], references: [id], name: "ListerPropertyService", onDelete: Cascade)
-  listerId String @id @map("_id") @db.ObjectId
-}
-
-model ListerVehicleService {
-  virtualPrice       Int
-  physicalPrice      Int
-  supportedLanguages String[]
-
-  // TYPE
-  supportedCities CityLocations[]
-
-  // RELATIONSHIP
-  lister   User   @relation(fields: [listerId], references: [id], name: "ListerVehicleService", onDelete: Cascade)
-  listerId String @id @map("_id") @db.ObjectId
-}
-
-// ************************************************************************************** //
-// INTERESTED ROOM
-// ************************************************************************************** //
-model ListerRoomsInterestedUsers {
-  id    String   @id @default(auto()) @map("_id") @db.ObjectId
-  rooms String[]
-
-  // RELATIONSHIP
-  userId   String @db.ObjectId
-  user     User   @relation(name: "InterestedUser", fields: [userId], references: [id], onDelete: Cascade)
-  // RELATIONSHIP
-  listerId String @db.ObjectId
-  lister   User   @relation(name: "ListersInterest", fields: [listerId], references: [id], onDelete: Cascade)
-
-  // TIMESTAMPS
-  createdAt DateTime @default(now())
-
-  @@unique([listerId, userId])
-  @@index([userId])
-  @@index([listerId])
-}
-
-// ************************************************************************************** //
-// ROOM AGREEMENT
-// ************************************************************************************** //
-model RoomPromotionAgreement {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  pricePerClick Float
-  totalEarned   Float   @default(0)
-  canPromote    Boolean @default(true)
-
-  // RELATIONSHIP
-  lister   User   @relation("PromotionAgreement", fields: [listerId], references: [id], onDelete: Cascade)
-  listerId String @db.ObjectId
-
-  // TIMESTAMPS
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-
-  @@unique([listerId])
-  @@index([updatedAt])
 }

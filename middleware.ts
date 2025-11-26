@@ -1,14 +1,7 @@
+import { Role } from "@prisma/client";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { Permission, Role } from "@prisma/client";
-
-import {
-  hasPermission,
-  canRoutePromote,
-  canRouteDashboard,
-  canRouteInterested,
-} from "./app/common/config/authorization";
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -17,39 +10,20 @@ export async function middleware(req: NextRequest) {
 
   const token = (await getToken({ req, secret })) as {
     role: Role;
-    permission: Permission[];
   };
 
-  if (token && pathname.startsWith("/auth")) {
+  const isLoginRoute = pathname.startsWith("/login");
+  const isAdminRoute = pathname.startsWith("/admin");
+
+  if (token && pathname.startsWith("/login")) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (!token && !pathname.startsWith("/auth")) {
-    const loginUrl = new URL("/auth/login", req.url);
-    loginUrl.searchParams.set("callbackUrl", encodeURIComponent(req.url));
-    return NextResponse.redirect(loginUrl);
+  if (!token && !isLoginRoute) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  const pathSegments = pathname.split("/");
-  const secondSegment = pathSegments[2];
-
-  if (pathname.startsWith("/interested") && !canRouteInterested(token.role)) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (pathname.startsWith("/promote") && !canRoutePromote(token.role)) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  if (
-    pathname.startsWith("/dashboard") &&
-    !canRouteDashboard(token.role, secondSegment)
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
-
-  const thirdSegment = pathSegments[3];
-  if (thirdSegment && !hasPermission(thirdSegment, token.permission)) {
+  if (isAdminRoute && token?.role !== Role.ADMIN) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -57,11 +31,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/auth/:path*",
-    "/account/:path*",
-    "/promote/:path*",
-    "/dashboard/:path*",
-    "/interested/:path*",
-  ],
+  matcher: ["/login", "/admin/:path*"],
 };
