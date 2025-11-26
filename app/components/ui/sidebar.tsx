@@ -10,10 +10,10 @@ import {
   TooltipProvider,
 } from "@/app/components/ui/tooltip";
 import { cn } from "@/app/lib/utils";
-import { useIsMobile } from "@/app/hooks/use-mobile";
 import { Input } from "@/app/components/ui/input";
 import { Button } from "@/app/components/ui/button";
 import { Skeleton } from "@/app/components/ui/skeleton";
+import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 import { Separator } from "@/app/components/ui/separator";
 import { Sheet, SheetContent } from "@/app/components/ui/sheet";
 
